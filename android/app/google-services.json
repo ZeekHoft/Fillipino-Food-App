@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "253763428896",
+    "project_id": "cpugad-dappli",
+    "storage_bucket": "cpugad-dappli.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:253763428896:android:033194e109f709e4d55245",
+        "android_client_info": {
+          "package_name": "com.example.flilipino_food_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAN7AClHciBVeCAR5lpzbLwErBJ956ywKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
