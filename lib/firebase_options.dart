@@ -85,4 +85,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'cpugad-dappli.firebasestorage.app',
     measurementId: 'G-V125181L7R',
   );
+
 }
