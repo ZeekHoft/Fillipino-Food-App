@@ -1,44 +1,49 @@
-import 'package:flilipino_food_app/themse/color_themes.dart';
+import 'package:flilipino_food_app/util/filter_chips_enums.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Input extends StatefulWidget {
-  const Input({super.key});
+class UserInput extends StatefulWidget {
+  const UserInput({super.key});
 
   @override
-  State<Input> createState() => _InputState();
+  State<UserInput> createState() => _UserInputState();
 }
 
-class _InputState extends State<Input> {
+class _UserInputState extends State<UserInput> {
+  final List<bool> _toggleButtonSelection =
+      List.generate(DietaryRestrictionsFilter.values.length, (_) => false);
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("DAPPLI"),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('recipes').snapshots(),
-        builder: (context, snapshot) {
-          List<Widget> clientWidgets = [];
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text("Restrictions"),
+          const SizedBox(height: 10),
+          ToggleButtons(
+              isSelected: _toggleButtonSelection,
+              onPressed: (int index) {
+                setState(() {
+                  _toggleButtonSelection[index] =
+                      !_toggleButtonSelection[index];
 
-          if (snapshot.hasData) {
-            final recipe = snapshot.data?.docs.reversed.toList();
-            for (var recipes in recipe!) {
-              final clientWidget = Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(recipes['name']),
-                  Expanded(child: Text(recipes['ingredients'])),
-                  Expanded(child: Text(recipes['process']))
-                ],
-              );
-              clientWidgets.add(clientWidget);
-            }
-          }
-          return ListView(
-            children: clientWidgets,
-          );
-        },
+                  DietaryRestrictionsFilter selectedEnum =
+                      DietaryRestrictionsFilter.values[index];
+                  if (kDebugMode) {
+                    print(selectedEnum);
+                  }
+                });
+              },
+              constraints: const BoxConstraints(
+                minHeight: 32.0,
+                minWidth: 56.0,
+              ),
+              children: dietaryRestrictionOPtions
+                  .map(((DietaryRestrictionsFilter, String) restriction) =>
+                      Text(restriction.$2))
+                  .toList()),
+        ],
       ),
     );
   }

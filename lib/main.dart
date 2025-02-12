@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/pages/recipe_output.dart';
 import 'package:flilipino_food_app/pages/user_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -23,7 +24,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: "DAPPLI",
       debugShowCheckedModeBanner: false,
-      home: Input(),
+      home: UserInput(),
     );
   }
 }
