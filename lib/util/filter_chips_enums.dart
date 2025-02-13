@@ -27,6 +27,24 @@ enum DietaryRestrictionsFilter {
   soyAllergies,
 }
 
+const List<(BasicIngredientsFilter, String)> basicIngredientsOptions =
+    <(BasicIngredientsFilter, String)>[
+  (BasicIngredientsFilter.oil, "oil"),
+  (BasicIngredientsFilter.rice, "rice"),
+  (BasicIngredientsFilter.garlic, "garlic"),
+  (BasicIngredientsFilter.onions, "onions"),
+  (BasicIngredientsFilter.tomatoes, "tomatoes"),
+  (BasicIngredientsFilter.soy_sauce, "soy_sauce"),
+  (BasicIngredientsFilter.vinegar, "vinegar"),
+  (BasicIngredientsFilter.pork, "pork"),
+  (BasicIngredientsFilter.chicken, "chicken"),
+  (BasicIngredientsFilter.fish, "fish"),
+  (BasicIngredientsFilter.bay_leaves, "obay_leavesil"),
+  (BasicIngredientsFilter.black_peppercorns, "black_peppercorns"),
+  (BasicIngredientsFilter.ginger, "ginger"),
+  (BasicIngredientsFilter.green_onions, "green_onions"),
+];
+
 const List<(DietaryRestrictionsFilter, String)> dietaryRestrictionOPtions =
     <(DietaryRestrictionsFilter, String)>[
   (DietaryRestrictionsFilter.none, "none"),

@@ -10,23 +10,25 @@ class UserInput extends StatefulWidget {
 }
 
 class _UserInputState extends State<UserInput> {
-  final List<bool> _toggleButtonSelection =
+  final List<bool> _toggleButtonSelectionDietary =
       List.generate(DietaryRestrictionsFilter.values.length, (_) => false);
+  final List<bool> _toggleButtonSelectionIngredients =
+      List.generate(BasicIngredientsFilter.values.length, (_) => false);
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           const Text("Restrictions"),
           const SizedBox(height: 10),
           ToggleButtons(
-              isSelected: _toggleButtonSelection,
+              isSelected: _toggleButtonSelectionDietary,
               onPressed: (int index) {
                 setState(() {
-                  _toggleButtonSelection[index] =
-                      !_toggleButtonSelection[index];
+                  _toggleButtonSelectionDietary[index] =
+                      !_toggleButtonSelectionDietary[index];
 
                   DietaryRestrictionsFilter selectedEnum =
                       DietaryRestrictionsFilter.values[index];
@@ -43,6 +45,29 @@ class _UserInputState extends State<UserInput> {
                   .map(((DietaryRestrictionsFilter, String) restriction) =>
                       Text(restriction.$2))
                   .toList()),
+          const SizedBox(height: 20),
+          const Text('Ingredients'),
+          const SizedBox(height: 10),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ToggleButtons(
+                isSelected: _toggleButtonSelectionIngredients,
+                onPressed: (int index) {
+                  setState(() {
+                    _toggleButtonSelectionIngredients[index] =
+                        !_toggleButtonSelectionIngredients[index];
+                  });
+                },
+                constraints:
+                    const BoxConstraints(minHeight: 32.0, minWidth: 56.0),
+                children: basicIngredientsOptions
+                    .map(((BasicIngredientsFilter, String) ingredients) =>
+                        Text(ingredients.$2))
+                    .toList(),
+              )
+            ],
+          )
         ],
       ),
     );
