@@ -18,24 +18,25 @@ class _RecipeOutputState extends State<RecipeOutput> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('recipes').snapshots(),
         builder: (context, snapshot) {
-          List<Widget> clientWidgets = [];
+          List<Widget> recipeWidgets = [];
 
           if (snapshot.hasData) {
             final recipe = snapshot.data?.docs.reversed.toList();
+
             for (var recipes in recipe!) {
-              final clientWidget = Row(
+              final recipeWidget = Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(child: Text(recipes['name'])),
-                  Expanded(child: Text(recipes['ingredients'])),
-                  Expanded(child: Text(recipes['process']))
+                  Expanded(child: Text(recipes['name'].toString())),
+                  Expanded(child: Text(recipes['ingredients'].toString())),
+                  Expanded(child: Text(recipes['process'].toString()))
                 ],
               );
-              clientWidgets.add(clientWidget);
+              recipeWidgets.add(recipeWidget);
             }
           }
           return ListView(
-            children: clientWidgets,
+            children: recipeWidgets,
           );
         },
       ),
