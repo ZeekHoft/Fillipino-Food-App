@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Input extends StatefulWidget {
-  const Input({super.key});
+class RecipeOutput extends StatefulWidget {
+  const RecipeOutput({super.key});
 
   @override
-  State<Input> createState() => _InputState();
+  State<RecipeOutput> createState() => _RecipeOutputState();
 }
 
-class _InputState extends State<Input> {
+class _RecipeOutputState extends State<RecipeOutput> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +26,7 @@ class _InputState extends State<Input> {
               final clientWidget = Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(recipes['name']),
+                  Expanded(child: Text(recipes['name'])),
                   Expanded(child: Text(recipes['ingredients'])),
                   Expanded(child: Text(recipes['process']))
                 ],

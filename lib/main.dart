@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: "DAPPLI",
       debugShowCheckedModeBanner: false,
-      home: UserInput(),
+      home: RecipeOutput(),
     );
   }
 }
