@@ -41,6 +41,7 @@ class _SearchRecipeState extends State<SearchRecipe> {
       List<String> searchIngredients = _searchController.text
           .toLowerCase()
           .split(',')
+          //trim all spaces so it can be read as a list in the FBA
           .map((ingredient) => ingredient.trim())
           .toList();
 
