@@ -33,12 +33,25 @@ class _SearchRecipeState extends State<SearchRecipe> {
     searchResultList();
   }
 
+  //might need fixing here for the search parameter to take more than just 1 ingredients
   searchResultList() {
     var showResults = [];
     if (_searchController.text != "") {
+      //split the search querry to take more than 1 value
+      List<String> searchIngredients = _searchController.text
+          .toLowerCase()
+          .split(',')
+          .map((ingredient) => ingredient.trim())
+          .toList();
+
       for (var recipesSnapShot in _allResult) {
-        var name = recipesSnapShot['ingredients'].toString().toLowerCase();
-        if (name.contains(_searchController.text.toLowerCase())) {
+        var ingredients =
+            recipesSnapShot['ingredients'].toString().toLowerCase();
+        //check if all thats being search is present
+        bool containsAllIngredients = searchIngredients
+            .every((ingredient) => ingredients.contains(ingredient));
+
+        if (containsAllIngredients) {
           showResults.add(recipesSnapShot);
         }
       }
@@ -86,6 +99,7 @@ class _SearchRecipeState extends State<SearchRecipe> {
         backgroundColor: AppColors.blueTheme,
         title: CupertinoSearchTextField(
           controller: _searchController,
+          placeholder: "Enter ingredients...",
         ),
       ),
       body: ListView.builder(
