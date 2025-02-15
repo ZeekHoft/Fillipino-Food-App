@@ -20,7 +20,9 @@ class _RecipeOutputState extends State<RecipeOutput> {
         builder: (context, snapshot) {
           List<Widget> recipeWidgets = [];
 
-          if (snapshot.hasData) {
+          if (snapshot.hasError) {
+            return const Text("Failed to retrieve data");
+          } else if (snapshot.hasData || snapshot.data != null) {
             final recipe = snapshot.data?.docs.reversed.toList();
 
             for (var recipes in recipe!) {

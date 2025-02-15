@@ -9,7 +9,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: ".env");
+  // await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: "DAPPLI",
       debugShowCheckedModeBanner: false,
-      home: SearchRecipe(),
+      home: RecipeOutput(),
     );
   }
 }
