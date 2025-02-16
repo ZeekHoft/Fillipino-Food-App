@@ -1,8 +1,5 @@
 import 'package:flilipino_food_app/pages/recipe_output.dart';
-import 'package:flilipino_food_app/pages/search_recipe.dart';
-import 'package:flilipino_food_app/pages/user_input.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 

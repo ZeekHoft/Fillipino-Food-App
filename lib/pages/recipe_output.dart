@@ -30,8 +30,11 @@ class _RecipeOutputState extends State<RecipeOutput> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(child: Text(recipes['name'].toString())),
-                  Expanded(child: Text(recipes['ingredients'].toString())),
-                  Expanded(child: Text(recipes['process'].toString()))
+                  // Expanded(child: Text(recipes['ingredients'].toString())),
+                  // Expanded(child: Text(recipes['process'].toString())),
+                  Expanded(
+                    child: Image.network(recipes['image'].toString()),
+                  ),
                 ],
               );
               recipeWidgets.add(recipeWidget);
