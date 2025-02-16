@@ -1,3 +1,5 @@
+import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
+import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,12 +13,14 @@ class RecipeOutput extends StatefulWidget {
 class _RecipeOutputState extends State<RecipeOutput> {
   @override
   Widget build(BuildContext context) {
+    final recipeStream = RecipeStreamBuilder.of(context)!.recipeStream;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("DAPPLI"),
       ),
       body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('recipes').snapshots(),
+        stream: recipeStream,
         builder: (context, snapshot) {
           List<Widget> recipeWidgets = [];
 
@@ -32,8 +36,17 @@ class _RecipeOutputState extends State<RecipeOutput> {
                   Expanded(child: Text(recipes['name'].toString())),
                   // Expanded(child: Text(recipes['ingredients'].toString())),
                   // Expanded(child: Text(recipes['process'].toString())),
+                  // Expanded(
+                  //   child: Image.network(recipes['image'].toString()),
+                  // ),
                   Expanded(
-                    child: Image.network(recipes['image'].toString()),
+                    child: GestureDetector(
+                      child: Image.network(recipes['image'].toString()),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const DisplayRecipe()));
+                      },
+                    ),
                   ),
                 ],
               );
