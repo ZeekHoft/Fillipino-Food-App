@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/themse/color_themes.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
 import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
 import 'package:flutter/material.dart';
@@ -24,8 +25,12 @@ class _RecipeOutputState extends State<RecipeOutput> {
         builder: (context, snapshot) {
           List<Widget> recipeWidgets = [];
 
-          if (snapshot.hasError) {
-            return const Text("Failed to retrieve data");
+          if (snapshot.hasError ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+                child: CircularProgressIndicator(
+              color: AppColors.yellowTheme,
+            ));
           } else if (snapshot.hasData || snapshot.data != null) {
             final recipe = snapshot.data?.docs.reversed.toList();
 
@@ -43,8 +48,20 @@ class _RecipeOutputState extends State<RecipeOutput> {
                     child: GestureDetector(
                       child: Image.network(recipes['image'].toString()),
                       onTap: () {
+                        var food_name = (recipes['name'].toString());
+                        var food_ingredients =
+                            (recipes['ingredients'].toString());
+                        var food_process = (recipes['process'].toString());
+
+                        var food_image = (recipes['image'].toString());
+
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const DisplayRecipe()));
+                            builder: (context) => DisplayRecipe(
+                                  recipe_name: food_name,
+                                  recipe_ingredients: food_ingredients,
+                                  recipe_process: food_process,
+                                  recipe_image: food_image,
+                                )));
                       },
                     ),
                   ),
