@@ -67,28 +67,49 @@ class RecipeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(child: Text(name)),
-        Expanded(
-          child: GestureDetector(
-            child: Image.network(imageUrl),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DisplayRecipe(
-                    recipe_name: name,
-                    recipe_ingredients: ingredients,
-                    recipe_process: process,
-                    recipe_image: imageUrl,
-                  ),
-                ),
-              );
-            },
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            name,
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
-        ),
-      ],
+          Container(
+            height: 300,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            clipBehavior: Clip.antiAlias,
+            child: GestureDetector(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.fitWidth,
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DisplayRecipe(
+                      recipe_name: name,
+                      recipe_ingredients: ingredients,
+                      recipe_process: process,
+                      recipe_image: imageUrl,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Opacity(
+            opacity: 0.6,
+            child: Text(
+              process,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            ),
+          ),
+          SizedBox(height: 24)
+        ],
+      ),
     );
   }
 }
