@@ -14,12 +14,33 @@ class DisplayRecipe extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
-      body: Column(
+      body: ListView(
         children: [
-          Text("Recipe name: $recipeName"),
-          Text("Recipe ingredients: $recipeIngredients"),
-          Text("Recipe process: $recipeProcess"),
-          Image.network(recipeImage),
+          SizedBox(
+              height: 300,
+              child: Image.network(
+                recipeImage,
+                fit: BoxFit.fitWidth,
+              )),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
+                Text(
+                  recipeName,
+                  style: const TextStyle(fontSize: 48, height: 0.8),
+                ),
+                const SizedBox(height: 16),
+                const Text("Ingredients", style: TextStyle(fontSize: 24)),
+                Text(recipeIngredients),
+                const SizedBox(height: 16),
+                const Text("Process", style: TextStyle(fontSize: 24)),
+                Text(recipeProcess),
+              ],
+            ),
+          ),
         ],
       ),
     );
