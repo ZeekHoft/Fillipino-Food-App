@@ -74,7 +74,7 @@ class RecipeWidget extends StatelessWidget {
         children: [
           Text(
             name,
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
           Container(
             height: 300,
@@ -89,10 +89,10 @@ class RecipeWidget extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => DisplayRecipe(
-                      recipe_name: name,
-                      recipe_ingredients: ingredients,
-                      recipe_process: process,
-                      recipe_image: imageUrl,
+                      recipeName: name,
+                      recipeIngredients: ingredients,
+                      recipeProcess: process,
+                      recipeImage: imageUrl,
                     ),
                   ),
                 );
@@ -107,7 +107,7 @@ class RecipeWidget extends StatelessWidget {
               softWrap: false,
             ),
           ),
-          SizedBox(height: 24)
+          const SizedBox(height: 24)
         ],
       ),
     );

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class DisplayRecipe extends StatelessWidget {
-  final String recipe_name, recipe_ingredients, recipe_process, recipe_image;
+  final String recipeName, recipeIngredients, recipeProcess, recipeImage;
 
-  DisplayRecipe(
+  const DisplayRecipe(
       {super.key,
-      required this.recipe_name,
-      required this.recipe_ingredients,
-      required this.recipe_process,
-      required this.recipe_image});
+      required this.recipeName,
+      required this.recipeIngredients,
+      required this.recipeProcess,
+      required this.recipeImage});
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +16,10 @@ class DisplayRecipe extends StatelessWidget {
       appBar: AppBar(),
       body: Column(
         children: [
-          Text("Recipe name: ${recipe_name}"),
-          Text("Recipe ingredients: ${recipe_ingredients}"),
-          Text("Recipe process: ${recipe_process}"),
-          Image.network(recipe_image),
+          Text("Recipe name: $recipeName"),
+          Text("Recipe ingredients: $recipeIngredients"),
+          Text("Recipe process: $recipeProcess"),
+          Image.network(recipeImage),
         ],
       ),
     );
