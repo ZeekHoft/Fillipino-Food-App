@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/pages/search_recipe.dart';
 import 'package:flilipino_food_app/themse/color_themes.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
 import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
@@ -19,6 +20,14 @@ class _RecipeOutputState extends State<RecipeOutput> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("DAPPLI"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SearchRecipe()));
+              },
+              icon: Icon(Icons.search))
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: recipeStream,
