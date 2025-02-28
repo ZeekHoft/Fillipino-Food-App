@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/pages/search_recipe.dart';
 import 'package:flilipino_food_app/themse/color_themes.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
 import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
@@ -19,6 +20,14 @@ class _RecipeOutputState extends State<RecipeOutput> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("DAPPLI"),
+        actions: [
+          IconButton(
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => SearchRecipe()));
+              },
+              icon: Icon(Icons.search))
+        ],
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: recipeStream,
@@ -35,38 +44,11 @@ class _RecipeOutputState extends State<RecipeOutput> {
             final recipe = snapshot.data?.docs.reversed.toList();
 
             for (var recipes in recipe!) {
-              final recipeWidget = Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(child: Text(recipes['name'].toString())),
-                  // Expanded(child: Text(recipes['ingredients'].toString())),
-                  // Expanded(child: Text(recipes['process'].toString())),
-                  // Expanded(
-                  //   child: Image.network(recipes['image'].toString()),
-                  // ),
-                  Expanded(
-                    child: GestureDetector(
-                      child: Image.network(recipes['image'].toString()),
-                      onTap: () {
-                        var food_name = (recipes['name'].toString());
-                        var food_ingredients =
-                            (recipes['ingredients'].toString());
-                        var food_process = (recipes['process'].toString());
-
-                        var food_image = (recipes['image'].toString());
-
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DisplayRecipe(
-                                  recipe_name: food_name,
-                                  recipe_ingredients: food_ingredients,
-                                  recipe_process: food_process,
-                                  recipe_image: food_image,
-                                )));
-                      },
-                    ),
-                  ),
-                ],
-              );
+              final recipeWidget = RecipeWidget(
+                  name: recipes['name'].toString(),
+                  imageUrl: recipes['image'].toString(),
+                  ingredients: recipes['ingredients'].toString(),
+                  process: recipes['process'].toString());
               recipeWidgets.add(recipeWidget);
             }
           }
@@ -74,6 +56,68 @@ class _RecipeOutputState extends State<RecipeOutput> {
             children: recipeWidgets,
           );
         },
+      ),
+    );
+  }
+}
+
+class RecipeWidget extends StatelessWidget {
+  const RecipeWidget(
+      {super.key,
+      required this.name,
+      required this.imageUrl,
+      required this.ingredients,
+      required this.process});
+
+  final String name;
+  final String imageUrl;
+  final String ingredients;
+  final String process;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 48),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            name,
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          Container(
+            height: 300,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+            clipBehavior: Clip.antiAlias,
+            child: GestureDetector(
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.fitWidth,
+              ),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => DisplayRecipe(
+                      recipeName: name,
+                      recipeIngredients: ingredients,
+                      recipeProcess: process,
+                      recipeImage: imageUrl,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Opacity(
+            opacity: 0.6,
+            child: Text(
+              process,
+              overflow: TextOverflow.ellipsis,
+              softWrap: false,
+            ),
+          ),
+          const SizedBox(height: 24)
+        ],
       ),
     );
   }
