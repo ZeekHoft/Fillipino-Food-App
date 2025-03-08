@@ -1,4 +1,6 @@
+import 'package:flilipino_food_app/pages/image_picker.dart';
 import 'package:flilipino_food_app/pages/recipe_output.dart';
+import 'package:flilipino_food_app/pages/search_recipe.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,7 +18,7 @@ void main() async {
   runApp(RecipeStreamBuilder(
     child: const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RecipeOutput(),
+      home: Image_Picker(),
     ),
   ));
 }
