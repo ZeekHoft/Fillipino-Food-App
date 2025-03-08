@@ -23,10 +23,10 @@ class _RecipeOutputState extends State<RecipeOutput> {
         actions: [
           IconButton(
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SearchRecipe()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const SearchRecipe()));
               },
-              icon: Icon(Icons.search))
+              icon: const Icon(Icons.search))
         ],
       ),
       body: StreamBuilder<QuerySnapshot>(
