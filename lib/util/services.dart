@@ -14,6 +14,7 @@ class UploadApiImage {
       "file",
       http.ByteStream.fromBytes(bytes),
       bytes.length,
+      filename: fileName,
     );
     request.files.add(myFile);
     final response = await request.send();

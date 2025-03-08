@@ -13,6 +13,7 @@ class Image_Picker extends StatefulWidget {
 
 class _Image_PickerState extends State<Image_Picker> {
   @override
+  String IsImageUpload = "";
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
@@ -30,7 +31,9 @@ class _Image_PickerState extends State<Image_Picker> {
                     UploadApiImage()
                         .uploadImage(bytes, image.name)
                         .then((value) {
-                      setState(() {});
+                      setState(() {
+                        IsImageUpload = value['location'].toString();
+                      });
                       print(
                           "uplaode successfully eto link par: ${value.toString()}");
                     }).onError(
