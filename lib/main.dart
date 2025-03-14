@@ -1,4 +1,4 @@
-import 'package:flilipino_food_app/pages/image_picker.dart';
+import 'package:flilipino_food_app/pages/upload_image.dart';
 import 'package:flilipino_food_app/pages/recipe_output.dart';
 import 'package:flilipino_food_app/pages/search_recipe.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
@@ -16,9 +16,12 @@ void main() async {
   );
   //RecipeStreamBuilder is placed at the top of all widgets or global access
   runApp(RecipeStreamBuilder(
-    child: const MaterialApp(
+    child: MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Image_Picker(),
+      home: AddImageToPromptWidget(
+        height: 110,
+        width: 111,
+      ),
     ),
   ));
 }
