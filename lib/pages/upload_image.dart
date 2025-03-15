@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/prompts/prompt_view_model.dart';
 import 'package:flilipino_food_app/widget_designs/highlight_border_on_hover_widget.dart';
 
 import 'package:camera/camera.dart';
@@ -11,8 +12,8 @@ import 'package:flilipino_food_app/widget_designs/upload_widget.dart';
 import 'package:flilipino_food_app/themse/color_themes.dart';
 import '../../../util/device_info.dart';
 import 'package:flilipino_food_app/widget_designs/prompt_image_widget.dart';
-
-// import '../prompt_view_model.dart';
+import 'package:flilipino_food_app/util/device_info.dart';
+import 'package:flilipino_food_app/prompts/prompt_model.dart';
 
 class AddImageToPromptWidget extends StatefulWidget {
   const AddImageToPromptWidget({
@@ -37,7 +38,7 @@ class _AddImageToPromptWidgetState extends State<AddImageToPromptWidget> {
   @override
   void initState() {
     super.initState();
-    if (DeviceInfo.isPhysicalDeviceWithCamera(deviceinfo)) {
+    if (DeviceInfo.isPhysicalDeviceWithCamera(deviceInfo)) {
       _controller = CameraController(
         camera,
         ResolutionPreset.medium,
