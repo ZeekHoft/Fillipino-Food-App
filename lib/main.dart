@@ -1,3 +1,5 @@
+import 'package:flilipino_food_app/pages/authentication_page/authenticate.dart';
+import 'package:flilipino_food_app/pages/authentication_page/login_page.dart';
 import 'package:flilipino_food_app/pages/image_picker.dart';
 import 'package:flilipino_food_app/pages/recipe_output.dart';
 import 'package:flilipino_food_app/pages/search_recipe.dart';
@@ -10,7 +12,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: ".env");
+  // await dotenv.load(fileName: ".env");
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -19,7 +21,7 @@ void main() async {
   runApp(RecipeStreamBuilder(
     child: const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Image_Picker(),
+      home: Authenticate(),
     ),
   ));
 }
