@@ -42,6 +42,9 @@ dependencies:
   material_symbols_icons: ^4.2805.1
   image_picker: ^1.1.2
   http: ^1.3.0
+  flutter_bloc: ^9.1.0
+  equatable: ^2.0.7
+  firebase_auth: ^5.5.1
 
 dev_dependencies:
   flutter_test:
