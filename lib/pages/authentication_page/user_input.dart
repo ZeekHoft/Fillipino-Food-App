@@ -1,4 +1,4 @@
-import 'package:flilipino_food_app/util/filter_chips_enums.dart';
+import 'package:flilipino_food_app/pages/authentication_page/allergy_and_dietary/filter_chips_enums.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
