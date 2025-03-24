@@ -154,7 +154,7 @@ class _SignupPageState extends State<SignupPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text("Already a member?"),
+                const Text("Already a member?"),
                 RegisterLoginButtonText(
                   onTap: widget.onTap,
                   someText: ' Login Here',

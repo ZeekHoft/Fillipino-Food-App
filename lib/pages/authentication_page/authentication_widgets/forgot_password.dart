@@ -12,7 +12,7 @@ class ForgotPassword extends StatelessWidget {
       onTap: onTap,
       child: Container(
         color: AppColors.balckTheme,
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: const Text("Forgot password"),
       ),
     );
