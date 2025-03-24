@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credentials.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/register_login_button_text.dart';
-import 'package:flilipino_food_app/themse/color_themes.dart';
+import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/sign_in_log_in_button.dart';
 import 'package:flutter/material.dart';
 
@@ -76,11 +76,14 @@ class _SignupPageState extends State<SignupPage> {
         child: Column(
           children: [
             const SizedBox(
-              height: 50,
+              height: 48,
             ),
             const Icon(
               Icons.food_bank,
               size: 100,
+            ),
+            const SizedBox(
+              height: 48,
             ),
             Credentials(
               controller: usernameController,
@@ -104,21 +107,7 @@ class _SignupPageState extends State<SignupPage> {
               obscureText: true,
             ),
             const SizedBox(
-              height: 20,
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     children: [
-            //       ForgotPassword(
-            //         onTap: forgotPassword,
-            //       )
-            //     ],
-            //   ),
-            // ),
-            const SizedBox(
-              height: 50,
+              height: 48,
             ),
             SignInLogInButton(
               buttonName: "Register",
@@ -131,25 +120,17 @@ class _SignupPageState extends State<SignupPage> {
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Expanded(
-                      child: Divider(
-                    thickness: 5,
-                    color: AppColors.balckTheme,
-                  )),
+                  Expanded(child: Divider(color: AppColors.blackTheme)),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text("Or sign in another way."),
                   ),
-                  Expanded(
-                      child: Divider(
-                    thickness: 5,
-                    color: AppColors.balckTheme,
-                  )),
+                  Expanded(child: Divider(color: AppColors.blackTheme)),
                 ],
               ),
             ),
             const SizedBox(
-              height: 50,
+              height: 48,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

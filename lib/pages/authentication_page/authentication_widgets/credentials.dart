@@ -1,4 +1,4 @@
-import 'package:flilipino_food_app/themse/color_themes.dart';
+import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flutter/material.dart';
 
 class Credentials extends StatelessWidget {

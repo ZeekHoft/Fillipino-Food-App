@@ -13,7 +13,10 @@ class SignInLogInButton extends StatelessWidget {
       child: Container(
         color: Colors.pink,
         padding: const EdgeInsets.all(10),
-        child: Text(buttonName),
+        child: Text(
+          buttonName,
+          style: TextStyle(color: Colors.white),
+        ),
       ),
     );
   }

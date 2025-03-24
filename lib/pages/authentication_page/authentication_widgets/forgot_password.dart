@@ -1,4 +1,3 @@
-import 'package:flilipino_food_app/themse/color_themes.dart';
 import 'package:flutter/material.dart';
 
 class ForgotPassword extends StatelessWidget {
@@ -10,10 +9,9 @@ class ForgotPassword extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
-        color: AppColors.balckTheme,
-        padding: const EdgeInsets.all(10),
-        child: const Text("Forgot password"),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        child: Text("Forgot password"),
       ),
     );
   }

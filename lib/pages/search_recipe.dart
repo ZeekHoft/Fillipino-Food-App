@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flilipino_food_app/themse/color_themes.dart';
+import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
 import 'package:flutter/cupertino.dart';
 
