@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
-import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -15,6 +14,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -34,7 +34,7 @@ class _SignupPageState extends State<SignupPage> {
     try {
       if (passwordController.text == confirmPasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: usernameController.text,
+          email: emailController.text,
           password: passwordController.text,
         );
       } else {
@@ -72,76 +72,93 @@ class _SignupPageState extends State<SignupPage> {
         child: Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 48,
-            ),
-            const Icon(
-              Icons.food_bank,
-              size: 100,
-            ),
-            const SizedBox(
-              height: 48,
-            ),
-            CredentialField(
-              controller: usernameController,
-              hintText: "Email",
-              obscureText: false,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CredentialField(
-              controller: passwordController,
-              hintText: "Password",
-              obscureText: true,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            CredentialField(
-              controller: confirmPasswordController,
-              hintText: "Confirm Password",
-              obscureText: true,
-            ),
-            const SizedBox(
-              height: 48,
-            ),
-            ElevatedButton(
-              onPressed: registerUser,
-              child: const Text("Register"),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(child: Divider(color: AppColors.blackTheme)),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Or sign in another way."),
-                  ),
-                  Expanded(child: Divider(color: AppColors.blackTheme)),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 48,
               ),
-            ),
-            const SizedBox(
-              height: 48,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text("Already a member?"),
-                LinkTextButton(
-                  onTap: widget.onTap,
-                  text: ' Login Here',
-                )
-              ],
-            )
-          ],
+              const Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("Create an account",
+                      style: TextStyle(fontSize: 24))),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Let's help you set up your account, it won't take long.",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.secondary),
+                ),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              CredentialField(
+                controller: usernameController,
+                hintText: "Username",
+                obscureText: false,
+              ),
+              const SizedBox(height: 10),
+              CredentialField(
+                controller: emailController,
+                hintText: "Email",
+                obscureText: false,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CredentialField(
+                controller: passwordController,
+                hintText: "Password",
+                obscureText: true,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CredentialField(
+                controller: confirmPasswordController,
+                hintText: "Confirm Password",
+                obscureText: true,
+              ),
+              const SizedBox(
+                height: 48,
+              ),
+              ElevatedButton(
+                onPressed: registerUser,
+                child: const Text("Register"),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text("Or sign in another way."),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 48,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already a member?"),
+                  LinkTextButton(
+                    onTap: widget.onTap,
+                    text: ' Login Here',
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     ));
