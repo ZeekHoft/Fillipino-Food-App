@@ -17,7 +17,7 @@ class _UserInputState extends State<UserInput> {
 
   // Store filters in a set
   final Set<DietaryRestrictionsFilter> _dietaryRestrictionsFilters =
-      <DietaryRestrictionsFilter>{};
+      <DietaryRestrictionsFilter>{DietaryRestrictionsFilter.none};
 
   final Set<BasicIngredientsFilter> _basicIngredientsFilters =
       <BasicIngredientsFilter>{};

@@ -1,8 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credentials.dart';
-import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/register_login_button_text.dart';
+import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
+import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
 import 'package:flilipino_food_app/themes/color_themes.dart';
-import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/sign_in_log_in_button.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -85,7 +84,7 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(
               height: 48,
             ),
-            Credentials(
+            CredentialField(
               controller: usernameController,
               hintText: "Email",
               obscureText: false,
@@ -93,7 +92,7 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(
               height: 10,
             ),
-            Credentials(
+            CredentialField(
               controller: passwordController,
               hintText: "Password",
               obscureText: true,
@@ -101,7 +100,7 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(
               height: 10,
             ),
-            Credentials(
+            CredentialField(
               controller: confirmPasswordController,
               hintText: "Confirm Password",
               obscureText: true,
@@ -109,9 +108,9 @@ class _SignupPageState extends State<SignupPage> {
             const SizedBox(
               height: 48,
             ),
-            SignInLogInButton(
-              buttonName: "Register",
-              onTap: registerUser,
+            ElevatedButton(
+              onPressed: registerUser,
+              child: const Text("Register"),
             ),
             const SizedBox(
               height: 10,
@@ -136,9 +135,9 @@ class _SignupPageState extends State<SignupPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Already a member?"),
-                RegisterLoginButtonText(
+                LinkTextButton(
                   onTap: widget.onTap,
-                  someText: ' Login Here',
+                  text: ' Login Here',
                 )
               ],
             )

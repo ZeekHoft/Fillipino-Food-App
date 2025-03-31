@@ -3,6 +3,16 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static ThemeData dark = ThemeData(
     colorScheme: darkColorScheme,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        foregroundColor: darkColorScheme.onSecondaryContainer,
+        textStyle: TextStyle(fontWeight: FontWeight.bold),
+        backgroundColor: darkColorScheme.secondaryContainer,
+        padding: EdgeInsets.symmetric(vertical: 24, horizontal: 48),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 2,
+      ),
+    ),
   );
 }
 
