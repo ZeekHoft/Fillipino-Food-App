@@ -78,16 +78,18 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(
                 height: 48,
               ),
-              const Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text("Create an account",
-                      style: TextStyle(fontSize: 24))),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Create an account",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
                   "Let's help you set up your account, it won't take long.",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.secondary),
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
               ),
               const SizedBox(

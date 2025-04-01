@@ -12,7 +12,7 @@ class LinkTextButton extends StatelessWidget {
       onTap: onTap,
       child: Text(
         text,
-        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
       ),
     );
   }

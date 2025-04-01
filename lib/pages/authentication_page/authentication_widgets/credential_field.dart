@@ -1,4 +1,3 @@
-import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flutter/material.dart';
 
 class CredentialField extends StatelessWidget {
@@ -22,8 +21,7 @@ class CredentialField extends StatelessWidget {
             borderSide: BorderSide.none,
             borderRadius: BorderRadius.circular(8)),
         focusedBorder: OutlineInputBorder(
-          borderSide:
-              BorderSide(color: Theme.of(context).colorScheme.secondary),
+          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
           borderRadius: BorderRadius.circular(8),
         ),
         filled: true,

@@ -76,19 +76,15 @@ class _LoginPageState extends State<LoginPage> {
                 size: 100,
               ),
               const SizedBox(height: 10),
-              const Align(
+              Align(
                 alignment: Alignment.centerLeft,
-                child: Text("Hello,", style: TextStyle(fontSize: 24)),
+                child: Text("Hello,",
+                    style: Theme.of(context).textTheme.headlineMedium),
               ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  "Welcome back!",
-                  style: TextStyle(
-                    fontSize: 24,
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
+                child: Text("Welcome back!",
+                    style: Theme.of(context).textTheme.headlineLarge),
               ),
               const SizedBox(height: 24),
               CredentialField(
