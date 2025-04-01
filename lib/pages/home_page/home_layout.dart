@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
-import 'package:flilipino_food_app/pages/search_recipe.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';
 import 'package:flutter/material.dart';
 
 class HomeLayout extends StatefulWidget {

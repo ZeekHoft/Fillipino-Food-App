@@ -1,4 +1,4 @@
-import 'package:flilipino_food_app/pages/recipe_output.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -26,7 +26,9 @@ class HomePage extends StatelessWidget {
           "Recipes",
           style: Theme.of(context).textTheme.displaySmall,
         ),
-        const RecipeOutput(),
+        const SizedBox(height: 16),
+        const RecipeFeed(),
+        const SizedBox(height: 24),
       ],
     );
   }
