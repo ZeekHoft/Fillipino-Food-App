@@ -13,7 +13,6 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -94,11 +93,6 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(
                 height: 24,
               ),
-              CredentialField(
-                controller: usernameController,
-                hintText: "Username",
-                obscureText: false,
-              ),
               const SizedBox(height: 10),
               CredentialField(
                 controller: emailController,
@@ -150,10 +144,10 @@ class _SignupPageState extends State<SignupPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text("Already a member?"),
+                  const Text("Already a member? "),
                   LinkTextButton(
                     onTap: widget.onTap,
-                    text: ' Login Here',
+                    text: 'Login Here',
                   )
                 ],
               )
