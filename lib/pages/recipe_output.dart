@@ -1,4 +1,3 @@
-import 'package:flilipino_food_app/pages/search_recipe.dart';
 import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
 import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
@@ -17,46 +16,34 @@ class _RecipeOutputState extends State<RecipeOutput> {
   Widget build(BuildContext context) {
     final recipeStream = RecipeStreamBuilder.of(context)!.recipeStream;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("DAPPLI"),
-        actions: [
-          IconButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const SearchRecipe()));
-              },
-              icon: const Icon(Icons.search))
-        ],
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: recipeStream,
-        builder: (context, snapshot) {
-          List<Widget> recipeWidgets = [];
+    return StreamBuilder<QuerySnapshot>(
+      stream: recipeStream,
+      builder: (context, snapshot) {
+        List<Widget> recipeWidgets = [];
 
-          if (snapshot.hasError ||
-              snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator(
-              color: AppColors.yellowTheme,
-            ));
-          } else if (snapshot.hasData || snapshot.data != null) {
-            final recipe = snapshot.data?.docs.reversed.toList();
+        if (snapshot.hasError ||
+            snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(
+              child: CircularProgressIndicator(
+            color: AppColors.yellowTheme,
+          ));
+        } else if (snapshot.hasData || snapshot.data != null) {
+          final recipe = snapshot.data?.docs.reversed.toList();
 
-            for (var recipes in recipe!) {
-              final recipeWidget = RecipeWidget(
-                  name: recipes['name'].toString(),
-                  imageUrl: recipes['image'].toString(),
-                  ingredients: recipes['ingredients'].toString(),
-                  process: recipes['process'].toString());
-              recipeWidgets.add(recipeWidget);
-            }
+          for (var recipes in recipe!) {
+            final recipeWidget = RecipeWidget(
+                name: recipes['name'].toString(),
+                imageUrl: recipes['image'].toString(),
+                ingredients: recipes['ingredients'].toString(),
+                process: recipes['process'].toString());
+            recipeWidgets.add(recipeWidget);
           }
-          return ListView(
-            children: recipeWidgets,
-          );
-        },
-      ),
+        }
+        return ListView(
+          shrinkWrap: true,
+          children: recipeWidgets,
+        );
+      },
     );
   }
 }
@@ -76,49 +63,46 @@ class RecipeWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 48),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            name,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
-          Container(
-            height: 300,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
-            clipBehavior: Clip.antiAlias,
-            child: GestureDetector(
-              child: Image.network(
-                imageUrl,
-                fit: BoxFit.fitWidth,
-              ),
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => DisplayRecipe(
-                      recipeName: name,
-                      recipeIngredients: ingredients,
-                      recipeProcess: process,
-                      recipeImage: imageUrl,
-                    ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          name,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+        Container(
+          height: 300,
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+          clipBehavior: Clip.antiAlias,
+          child: GestureDetector(
+            child: Image.network(
+              imageUrl,
+              fit: BoxFit.fitWidth,
+            ),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DisplayRecipe(
+                    recipeName: name,
+                    recipeIngredients: ingredients,
+                    recipeProcess: process,
+                    recipeImage: imageUrl,
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
-          Opacity(
-            opacity: 0.6,
-            child: Text(
-              process,
-              overflow: TextOverflow.ellipsis,
-              softWrap: false,
-            ),
+        ),
+        Opacity(
+          opacity: 0.6,
+          child: Text(
+            process,
+            overflow: TextOverflow.ellipsis,
+            softWrap: false,
           ),
-          const SizedBox(height: 24)
-        ],
-      ),
+        ),
+        const SizedBox(height: 24)
+      ],
     );
   }
 }
