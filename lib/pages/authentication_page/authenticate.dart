@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flilipino_food_app/pages/authentication_page/login_page.dart';
 import 'package:flilipino_food_app/pages/authentication_page/registered_or_login.dart';
-import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
-import 'package:flilipino_food_app/pages/homepage.dart';
+import 'package:flilipino_food_app/pages/home_page/home_layout.dart';
 import 'package:flutter/material.dart';
 
 class Authenticate extends StatelessWidget {
@@ -15,7 +13,7 @@ class Authenticate extends StatelessWidget {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return const UserInput();
+              return const HomeLayout();
             } else {
               return const RegisteredOrLogin();
             }

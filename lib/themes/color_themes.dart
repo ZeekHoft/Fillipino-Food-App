@@ -5,5 +5,5 @@ class AppColors {
   static const Color blueTheme = Color.fromRGBO(0, 50, 60, 1);
   static const Color whiteTheme = Color.fromRGBO(255, 255, 255, 1);
   static const Color yellowTheme = Color.fromRGBO(254, 209, 65, 1);
-  static const Color balckTheme = Colors.black26;
+  static const Color blackTheme = Colors.black26;
 }
