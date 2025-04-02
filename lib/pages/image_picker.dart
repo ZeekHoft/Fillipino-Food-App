@@ -2,7 +2,6 @@ import 'package:flilipino_food_app/util/services.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
-import 'package:flilipino_food_app/util/services.dart';
 
 class Image_Picker extends StatefulWidget {
   const Image_Picker({super.key});
@@ -17,7 +16,7 @@ class _Image_PickerState extends State<Image_Picker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Image Upload & Description")),
+      appBar: AppBar(title: const Text("Image Upload & Description")),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +51,7 @@ class _Image_PickerState extends State<Image_Picker> {
                 child: Text(
                   imageDescription!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
               ),
           ],

@@ -1,8 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credentials.dart';
-import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/register_login_button_text.dart';
-import 'package:flilipino_food_app/themse/color_themes.dart';
-import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/sign_in_log_in_button.dart';
+import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
+import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -15,7 +13,7 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignupPageState extends State<SignupPage> {
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
@@ -35,7 +33,7 @@ class _SignupPageState extends State<SignupPage> {
     try {
       if (passwordController.text == confirmPasswordController.text) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: usernameController.text,
+          email: emailController.text,
           password: passwordController.text,
         );
       } else {
@@ -73,95 +71,90 @@ class _SignupPageState extends State<SignupPage> {
         child: Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 50,
-            ),
-            const Icon(
-              Icons.food_bank,
-              size: 100,
-            ),
-            Credentials(
-              controller: usernameController,
-              hintText: "Email",
-              obscureText: false,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Credentials(
-              controller: passwordController,
-              hintText: "Password",
-              obscureText: true,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Credentials(
-              controller: confirmPasswordController,
-              hintText: "Confirm Password",
-              obscureText: true,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 10),
-            //   child: Row(
-            //     mainAxisAlignment: MainAxisAlignment.end,
-            //     children: [
-            //       ForgotPassword(
-            //         onTap: forgotPassword,
-            //       )
-            //     ],
-            //   ),
-            // ),
-            const SizedBox(
-              height: 50,
-            ),
-            SignInLogInButton(
-              buttonName: "Register",
-              onTap: registerUser,
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                children: [
-                  Expanded(
-                      child: Divider(
-                    thickness: 5,
-                    color: AppColors.balckTheme,
-                  )),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Or sign in another way."),
-                  ),
-                  Expanded(
-                      child: Divider(
-                    thickness: 5,
-                    color: AppColors.balckTheme,
-                  )),
-                ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 48,
               ),
-            ),
-            const SizedBox(
-              height: 50,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text("Already a member?"),
-                RegisterLoginButtonText(
-                  onTap: widget.onTap,
-                  someText: ' Login Here',
-                )
-              ],
-            )
-          ],
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Create an account",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Let's help you set up your account, it won't take long.",
+                  style: Theme.of(context).textTheme.labelLarge,
+                ),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              const SizedBox(height: 10),
+              CredentialField(
+                controller: emailController,
+                hintText: "Email",
+                obscureText: false,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CredentialField(
+                controller: passwordController,
+                hintText: "Password",
+                obscureText: true,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CredentialField(
+                controller: confirmPasswordController,
+                hintText: "Confirm Password",
+                obscureText: true,
+              ),
+              const SizedBox(
+                height: 48,
+              ),
+              ElevatedButton(
+                onPressed: registerUser,
+                child: const Text("Register"),
+              ),
+              const SizedBox(
+                height: 24,
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text("Or sign in another way."),
+                    ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 48,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Already a member? "),
+                  LinkTextButton(
+                    onTap: widget.onTap,
+                    text: 'Login Here',
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     ));
