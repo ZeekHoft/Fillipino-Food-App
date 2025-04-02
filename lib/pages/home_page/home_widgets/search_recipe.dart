@@ -1,8 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter/material.dart';
 
 class SearchRecipe extends StatefulWidget {
@@ -98,42 +95,46 @@ class _SearchRecipeState extends State<SearchRecipe> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColors.blueTheme,
-        foregroundColor: Colors.white70,
-        title: CupertinoSearchTextField(
-          itemColor: Colors.white70,
-          style: const TextStyle(color: Colors.white70),
+        toolbarHeight: kToolbarHeight * 1.3,
+        backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+        title: TextField(
           controller: _searchController,
-          placeholder: "Enter ingredients...",
+          autofocus: true,
+          decoration: const InputDecoration(
+            hintText: "Search a recipe...",
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10))),
+          ),
         ),
       ),
       body: ListView.separated(
-          // itemCount: _allResult.length, show all the results being retrieved
-          separatorBuilder: (context, index) => const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24),
-                child: Divider(),
-              ),
-          itemCount: _resutlList.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => DisplayRecipe(
-                      recipeName: _resutlList[index]['name'],
-                      recipeIngredients: _resutlList[index]['ingredients'],
-                      recipeProcess: _resutlList[index]['process'],
-                      recipeImage: _resutlList[index]['image'],
-                    ),
+        // itemCount: _allResult.length, show all the results being retrieved
+        separatorBuilder: (context, index) => const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: Divider(),
+        ),
+        itemCount: _resutlList.length,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => DisplayRecipe(
+                    recipeName: _resutlList[index]['name'],
+                    recipeIngredients: _resutlList[index]['ingredients'],
+                    recipeProcess: _resutlList[index]['process'],
+                    recipeImage: _resutlList[index]['image'],
                   ),
-                );
-              },
-              child: ListTile(
-                title: Text(_resutlList[index]['name']),
-                subtitle: Text(_resutlList[index]['ingredients']),
-              ),
-            );
-          }),
+                ),
+              );
+            },
+            child: ListTile(
+              title: Text(_resutlList[index]['name']),
+              subtitle: Text(_resutlList[index]['ingredients']),
+            ),
+          );
+        },
+      ),
     );
   }
 }
