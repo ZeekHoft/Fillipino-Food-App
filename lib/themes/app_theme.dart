@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData dark = ThemeData(
@@ -13,7 +14,9 @@ class AppTheme {
         elevation: 2,
       ),
     ),
-    textTheme: TextTheme(
+    textTheme:
+        GoogleFonts.poppinsTextTheme(ThemeData.dark().textTheme).copyWith(
+      displayLarge: GoogleFonts.itim(fontSize: 48, fontWeight: FontWeight.bold),
       headlineLarge: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.normal,

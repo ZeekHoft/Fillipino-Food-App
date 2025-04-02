@@ -69,8 +69,7 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             children: [
               const SizedBox(height: 12),
-              const Text("DAPPLI",
-                  style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold)),
+              Text("DAPPLI", style: Theme.of(context).textTheme.displayLarge),
               const Icon(
                 Icons.food_bank,
                 size: 100,
