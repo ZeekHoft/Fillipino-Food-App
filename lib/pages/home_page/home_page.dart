@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/pages/home_page/home_widgets/profile_section.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed.dart';
 import 'package:flutter/material.dart';
 
@@ -10,17 +11,7 @@ class HomePage extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
       shrinkWrap: true,
       children: [
-        const Align(
-          alignment: Alignment.centerLeft,
-          child: CircleAvatar(
-            radius: 28,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          "Hello, USERNAME",
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
+        const ProfileSection(),
         const SizedBox(height: 24),
         Text(
           "Recipes",
