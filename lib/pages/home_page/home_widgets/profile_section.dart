@@ -13,21 +13,21 @@ class _ProfileSectionState extends State<ProfileSection> {
   final storage = const FlutterSecureStorage();
   String? username;
 
-  Future<void> _getUsername() async {
-    username = await storage.read(key: "username") ?? "";
-    if (username == null || username!.isEmpty) {
-      if (!mounted) return;
-      username = await showDialog(
-          context: context, builder: (context) => const UsernameDialog());
-    }
-    setState(() {});
-  }
+  // Future<void> _getUsername() async {
+  //   username = await storage.read(key: "username") ?? "";
+  //   if (username == null || username!.isEmpty) {
+  //     if (!mounted) return;
+  //     username = await showDialog(
+  //         context: context, builder: (context) => const UsernameDialog());
+  //   }
+  //   setState(() {});
+  // } asks the users in app nickname
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getUsername();
+      // _getUsername();
     });
   }
 

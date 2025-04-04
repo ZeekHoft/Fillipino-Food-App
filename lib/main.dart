@@ -1,5 +1,5 @@
 import 'package:flilipino_food_app/pages/authentication_page/authenticate.dart';
-import 'package:flilipino_food_app/themes/apptheme.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';

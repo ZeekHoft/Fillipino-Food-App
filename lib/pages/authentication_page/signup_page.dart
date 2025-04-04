@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
@@ -16,6 +17,7 @@ class _SignupPageState extends State<SignupPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final userNameController = TextEditingController();
 
   void registerUser() async {
     // Show loading dialog
@@ -31,11 +33,14 @@ class _SignupPageState extends State<SignupPage> {
     );
 
     try {
-      if (passwordController.text == confirmPasswordController.text) {
+      if (passwordController.text.trim() ==
+          confirmPasswordController.text.trim()) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text,
+          email: emailController.text.trim(),
+          password: passwordController.text.trim(),
         );
+        addUserDetails(
+            emailController.text.trim(), userNameController.text.trim());
       } else {
         Navigator.pop(context);
 
@@ -59,6 +64,12 @@ class _SignupPageState extends State<SignupPage> {
         ));
       },
     );
+  }
+
+  Future addUserDetails(String email, String username) async {
+    await FirebaseFirestore.instance
+        .collection("users_data")
+        .add({"email": email, "username": username});
   }
 
   void forgotPassword() {
@@ -96,6 +107,8 @@ class _SignupPageState extends State<SignupPage> {
                 height: 24,
               ),
               const SizedBox(height: 10),
+              // Email
+
               CredentialField(
                 controller: emailController,
                 hintText: "Email",
@@ -104,6 +117,8 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(
                 height: 10,
               ),
+              // Pass
+
               CredentialField(
                 controller: passwordController,
                 hintText: "Password",
@@ -112,10 +127,21 @@ class _SignupPageState extends State<SignupPage> {
               const SizedBox(
                 height: 10,
               ),
+              //Confirm Pass
               CredentialField(
                 controller: confirmPasswordController,
                 hintText: "Confirm Password",
                 obscureText: true,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              // Username
+
+              CredentialField(
+                controller: userNameController,
+                hintText: "Username",
+                obscureText: false,
               ),
               const SizedBox(
                 height: 48,
