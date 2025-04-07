@@ -39,7 +39,8 @@ class _SignupPageState extends State<SignupPage> {
 
     try {
       if (passwordController.text.trim() ==
-          confirmPasswordController.text.trim()) {
+              confirmPasswordController.text.trim() &&
+          userCaloricController.text.trim().isNotEmpty) {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
@@ -48,6 +49,11 @@ class _SignupPageState extends State<SignupPage> {
             emailController.text.trim(),
             userNameController.text.trim(),
             int.parse(userCaloricController.text.trim()));
+      } else if (userCaloricController.text.trim().isEmpty) {
+        Navigator.pop(context);
+
+        errorMessage("Empty Value");
+        return;
       } else {
         Navigator.pop(context);
 
