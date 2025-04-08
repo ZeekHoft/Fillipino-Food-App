@@ -7,20 +7,22 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      shrinkWrap: true,
-      children: [
-        const ProfileSection(),
-        const SizedBox(height: 24),
-        Text(
-          "Recipes",
-          style: Theme.of(context).textTheme.displaySmall,
-        ),
-        const SizedBox(height: 16),
-        const RecipeFeed(),
-        const SizedBox(height: 24),
-      ],
+    return SingleChildScrollView(
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        shrinkWrap: true,
+        children: [
+          // const ProfileSection(),
+          const SizedBox(height: 24),
+          Text(
+            "Recipes",
+            style: Theme.of(context).textTheme.displaySmall,
+          ),
+          const SizedBox(height: 16),
+          const RecipeFeed(),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/profile_section.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -57,12 +58,14 @@ class _HomeLayoutState extends State<HomeLayout> {
         }),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: "Home"),
-          NavigationDestination(icon: Icon(Icons.bookmarks), label: "Saved")
+          NavigationDestination(icon: Icon(Icons.bookmarks), label: "Saved"),
+          NavigationDestination(icon: Icon(Icons.person), label: "Profile")
         ],
       ),
       body: [
         const HomePage(),
         const Center(child: Text("TODO")),
+        const ProfileSection(),
       ][_currentPageIndex],
     );
   }
