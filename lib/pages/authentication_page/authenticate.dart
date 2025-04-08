@@ -17,8 +17,8 @@ class Authenticate extends StatelessWidget {
             if (snapshot.hasData) {
               return const HomeLayout();
             } else {
-              // return const RegisteredOrLogin();
-              return const SignupPage();
+              return const RegisteredOrLogin();
+              // return const SignupPage();
               // return const UserInput();
             }
           }),

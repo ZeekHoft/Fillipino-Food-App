@@ -20,7 +20,7 @@ class _UserInputState extends State<UserInput> {
 
   // Store filters in a set
   final Set<DietaryRestrictionsFilter> _dietaryRestrictionsFilters =
-      <DietaryRestrictionsFilter>{DietaryRestrictionsFilter.none};
+      <DietaryRestrictionsFilter>{DietaryRestrictionsFilter.vegan};
 
   // final Set<BasicIngredientsFilter> _basicIngredientsFilters =
   //     <BasicIngredientsFilter>{};
@@ -39,11 +39,21 @@ class _UserInputState extends State<UserInput> {
             return FilterChip(
               label: Text(restriction.$2),
               selected: _dietaryRestrictionsFilters.contains(restriction.$1),
-              onSelected: (selected) {
+              onSelected: (bool selected) {
                 setState(() {
                   // Needs logic to make 'none' option exclusive from other options
                   if (selected) {
                     _dietaryRestrictionsFilters.add(restriction.$1);
+                    print(_dietaryRestrictionsFilters.toString());
+
+                    for (var item in _dietaryRestrictionsFilters.toList()) {
+                      if (item == DietaryRestrictionsFilter.none) {
+                        _dietaryRestrictionsFilters.clear();
+                        _dietaryRestrictionsFilters
+                            .add(DietaryRestrictionsFilter.none);
+                        print(_dietaryRestrictionsFilters.toString());
+                      }
+                    }
                   } else {
                     _dietaryRestrictionsFilters.remove(restriction.$1);
                   }
@@ -54,6 +64,7 @@ class _UserInputState extends State<UserInput> {
             );
           }).toList(),
         ),
+
         // const SizedBox(height: 48),
         // TextButton(
         //     onPressed: () {

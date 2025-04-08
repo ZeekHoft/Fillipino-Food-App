@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CredentialField extends StatelessWidget {
   final TextEditingController controller;
@@ -54,6 +55,7 @@ class CredentialFieldNumbers extends StatelessWidget {
       controller: controller,
       obscureText: obscureText,
       keyboardType: TextInputType.number,
+      inputFormatters: [LengthLimitingTextInputFormatter(4)],
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide.none,

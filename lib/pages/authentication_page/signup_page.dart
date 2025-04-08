@@ -49,10 +49,11 @@ class _SignupPageState extends State<SignupPage> {
             emailController.text.trim(),
             userNameController.text.trim(),
             int.parse(userCaloricController.text.trim()));
-      } else if (userCaloricController.text.trim().isEmpty) {
+      } else if (userCaloricController.text.trim().isEmpty ||
+          userNameController.text.trim().isEmpty) {
         Navigator.pop(context);
 
-        errorMessage("Empty Value");
+        errorMessage("Empty Inputs");
         return;
       } else {
         Navigator.pop(context);
