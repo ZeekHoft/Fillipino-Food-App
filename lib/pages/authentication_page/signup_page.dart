@@ -231,11 +231,11 @@ class _SignupPageState extends State<SignupPage> {
         const SizedBox(height: 48),
         Row(
           children: [
-            TextButton(
-              onPressed: () => setState(() {
+            LinkTextButton(
+              onTap: () => setState(() {
                 _currentRegisterIndex = 0;
               }),
-              child: const Text("Back"),
+              text: "Back",
             ),
             const Spacer(),
             ElevatedButton(
