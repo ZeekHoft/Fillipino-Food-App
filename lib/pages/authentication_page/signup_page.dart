@@ -24,6 +24,8 @@ class _SignupPageState extends State<SignupPage> {
   //temp data storing for list of allergy
   Set<DietaryRestrictionsFilter> selectedDietaryRestrictions = {};
 
+  int _currentRegisterIndex = 0;
+
   void registerUser() async {
     // Show loading dialog
     showDialog(
@@ -97,114 +99,120 @@ class _SignupPageState extends State<SignupPage> {
         scrollDirection: Axis.vertical,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(
-                height: 48,
-              ),
-              Text(
-                "Create an account",
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              Text(
-                "Let's help you set up your account, it won't take long.",
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
-              const SizedBox(height: 24),
-
-              // Email
-              CredentialField(
-                controller: emailController,
-                hintText: "Email",
-                obscureText: false,
-              ),
-              const SizedBox(height: 10),
-
-              // Username
-              CredentialField(
-                controller: userNameController,
-                hintText: "Username",
-                obscureText: false,
-              ),
-              const SizedBox(height: 10),
-
-              // Pass
-              CredentialField(
-                controller: passwordController,
-                hintText: "Password",
-                obscureText: true,
-              ),
-              const SizedBox(height: 10),
-              // Confirm Pass
-              CredentialField(
-                controller: confirmPasswordController,
-                hintText: "Confirm Password",
-                obscureText: true,
-              ),
-
-              const SizedBox(height: 48),
-
-              //Dietary Restriction
-              showRestrictions(context),
-
-              const SizedBox(height: 48),
-
-              Center(
-                child: ElevatedButton(
-                  onPressed: registerUser,
-                  child: const Text("Register"),
-                ),
-              ),
-              const SizedBox(height: 24),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Row(
-                  children: [
-                    Expanded(child: Divider()),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("Or sign in another way."),
-                    ),
-                    Expanded(child: Divider()),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 48),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text("Already a member? "),
-                  LinkTextButton(
-                    onTap: widget.onTap,
-                    text: 'Login Here',
-                  )
-                ],
-              ),
-              const SizedBox(height: 48)
-            ],
-          ),
+          child: [
+            // Returns specific page of register process
+            _showCredentialForm(context),
+            _showRestrictions(context)
+          ][_currentRegisterIndex],
         ),
       ),
     ));
   }
 
-  Widget showRestrictions(BuildContext context) {
+  // First step: account credentials
+  Widget _showCredentialForm(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Dietary Restrictions & Allergies",
-            style: Theme.of(context).textTheme.headlineMedium,
+        const SizedBox(height: 48),
+        Text(
+          "Create an account",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        Text(
+          "Let's help you set up your account, it won't take long.",
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        const SizedBox(height: 24),
+
+        // Email
+        CredentialField(
+          controller: emailController,
+          hintText: "Email",
+          obscureText: false,
+        ),
+        const SizedBox(height: 10),
+
+        // Username
+        CredentialField(
+          controller: userNameController,
+          hintText: "Username",
+          obscureText: false,
+        ),
+        const SizedBox(height: 10),
+
+        // Pass
+        CredentialField(
+          controller: passwordController,
+          hintText: "Password",
+          obscureText: true,
+        ),
+        const SizedBox(height: 10),
+        // Confirm Pass
+        CredentialField(
+          controller: confirmPasswordController,
+          hintText: "Confirm Password",
+          obscureText: true,
+        ),
+        const SizedBox(height: 24),
+
+        // Next Button
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Center(
+              child: ElevatedButton(
+                onPressed: () => setState(() {
+                  _currentRegisterIndex = 1;
+                }),
+                child: const Text("Next"),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 48),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Row(
+            children: [
+              Expanded(child: Divider()),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                child: Text("Or sign in another way."),
+              ),
+              Expanded(child: Divider()),
+            ],
           ),
         ),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Text(
-            "Input your calorie limit and Allergies",
-            style: Theme.of(context).textTheme.labelLarge,
-          ),
+        const SizedBox(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text("Already a member? "),
+            LinkTextButton(
+              onTap: widget.onTap,
+              text: 'Login Here',
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
+  // Second step: user details
+  Widget _showRestrictions(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 48),
+        Text(
+          "Dietary Restrictions & Allergies",
+          style: Theme.of(context).textTheme.headlineMedium,
+        ),
+        Text(
+          "Input your calorie limit and Allergies",
+          style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 24),
         CredentialFieldNumbers(
@@ -213,15 +221,28 @@ class _SignupPageState extends State<SignupPage> {
           obscureText: false,
         ),
         const SizedBox(height: 24),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: UserInput(
-            onFilterChanged: (filters) {
-              setState(() {
-                selectedDietaryRestrictions = filters;
-              });
-            },
-          ),
+        UserInput(
+          onFilterChanged: (filters) {
+            setState(() {
+              selectedDietaryRestrictions = filters;
+            });
+          },
+        ),
+        const SizedBox(height: 48),
+        Row(
+          children: [
+            TextButton(
+              onPressed: () => setState(() {
+                _currentRegisterIndex = 0;
+              }),
+              child: const Text("Back"),
+            ),
+            const Spacer(),
+            ElevatedButton(
+              onPressed: registerUser,
+              child: const Text("Register"),
+            ),
+          ],
         ),
       ],
     );
