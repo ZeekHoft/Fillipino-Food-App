@@ -98,118 +98,65 @@ class _SignupPageState extends State<SignupPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(
                 height: 48,
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Create an account",
-                  style: Theme.of(context).textTheme.headlineMedium,
-                ),
+              Text(
+                "Create an account",
+                style: Theme.of(context).textTheme.headlineMedium,
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Let's help you set up your account, it won't take long.",
-                  style: Theme.of(context).textTheme.labelLarge,
-                ),
+              Text(
+                "Let's help you set up your account, it won't take long.",
+                style: Theme.of(context).textTheme.labelLarge,
               ),
-              const SizedBox(
-                height: 24,
-              ),
-              const SizedBox(height: 10),
-              // Email
+              const SizedBox(height: 24),
 
+              // Email
               CredentialField(
                 controller: emailController,
                 hintText: "Email",
                 obscureText: false,
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              // Pass
+              const SizedBox(height: 10),
 
-              CredentialField(
-                controller: passwordController,
-                hintText: "Password",
-                obscureText: true,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              //Confirm Pass
-              CredentialField(
-                controller: confirmPasswordController,
-                hintText: "Confirm Password",
-                obscureText: true,
-              ),
-              const SizedBox(
-                height: 10,
-              ),
               // Username
-
               CredentialField(
                 controller: userNameController,
                 hintText: "Username",
                 obscureText: false,
               ),
-              const SizedBox(
-                height: 48,
+              const SizedBox(height: 10),
+
+              // Pass
+              CredentialField(
+                controller: passwordController,
+                hintText: "Password",
+                obscureText: true,
               ),
+              const SizedBox(height: 10),
+              // Confirm Pass
+              CredentialField(
+                controller: confirmPasswordController,
+                hintText: "Confirm Password",
+                obscureText: true,
+              ),
+
+              const SizedBox(height: 48),
 
               //Dietary Restriction
-              Column(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Dietary Restrictions & Allergies",
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Input your calorie limit and Allergies",
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  CredentialFieldNumbers(
-                    controller: userCaloricController,
-                    hintText: "Caloric limit",
-                    obscureText: false,
-                  ),
-                  //getting the list from the temporary stored code above
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 20.0),
-                    child: UserInput(
-                      onFilterChanged: (filters) {
-                        setState(() {
-                          selectedDietaryRestrictions = filters;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
+              showRestrictions(context),
 
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 48),
 
-              ElevatedButton(
-                onPressed: registerUser,
-                child: const Text("Register"),
+              Center(
+                child: ElevatedButton(
+                  onPressed: registerUser,
+                  child: const Text("Register"),
+                ),
               ),
-              const SizedBox(
-                height: 24,
-              ),
+              const SizedBox(height: 24),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -223,9 +170,7 @@ class _SignupPageState extends State<SignupPage> {
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 48,
-              ),
+              const SizedBox(height: 48),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -235,11 +180,50 @@ class _SignupPageState extends State<SignupPage> {
                     text: 'Login Here',
                   )
                 ],
-              )
+              ),
+              const SizedBox(height: 48)
             ],
           ),
         ),
       ),
     ));
+  }
+
+  Widget showRestrictions(BuildContext context) {
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Dietary Restrictions & Allergies",
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Input your calorie limit and Allergies",
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+        ),
+        const SizedBox(height: 24),
+        CredentialFieldNumbers(
+          controller: userCaloricController,
+          hintText: "Caloric limit",
+          obscureText: false,
+        ),
+        const SizedBox(height: 24),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: UserInput(
+            onFilterChanged: (filters) {
+              setState(() {
+                selectedDietaryRestrictions = filters;
+              });
+            },
+          ),
+        ),
+      ],
+    );
   }
 }
