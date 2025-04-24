@@ -215,10 +215,11 @@ class _SignupPageState extends State<SignupPage> {
           style: Theme.of(context).textTheme.labelLarge,
         ),
         const SizedBox(height: 24),
-        CredentialFieldNumbers(
+        CredentialField(
           controller: userCaloricController,
           hintText: "Caloric limit",
           obscureText: false,
+          isNumber: true,
         ),
         const SizedBox(height: 24),
         UserInput(
