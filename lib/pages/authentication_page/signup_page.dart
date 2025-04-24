@@ -4,6 +4,7 @@ import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/allergy_and_dietary/filter_chips_enums.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
 import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
+import 'package:flilipino_food_app/util/validators.dart';
 import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
@@ -21,6 +22,8 @@ class _SignupPageState extends State<SignupPage> {
   final confirmPasswordController = TextEditingController();
   final userNameController = TextEditingController();
   final userCaloricController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
   //temp data storing for list of allergy
   Set<DietaryRestrictionsFilter> selectedDietaryRestrictions = {};
 
@@ -40,6 +43,7 @@ class _SignupPageState extends State<SignupPage> {
     );
 
     try {
+      // if values not empty
       if (passwordController.text.trim() ==
               confirmPasswordController.text.trim() &&
           userCaloricController.text.trim().isNotEmpty) {
@@ -111,92 +115,101 @@ class _SignupPageState extends State<SignupPage> {
 
   // First step: account credentials
   Widget _showCredentialForm(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 48),
-        Text(
-          "Create an account",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
-        Text(
-          "Let's help you set up your account, it won't take long.",
-          style: Theme.of(context).textTheme.labelLarge,
-        ),
-        const SizedBox(height: 24),
+    return Form(
+      key: _formKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SizedBox(height: 48),
+          Text(
+            "Create an account",
+            style: Theme.of(context).textTheme.headlineMedium,
+          ),
+          Text(
+            "Let's help you set up your account, it won't take long.",
+            style: Theme.of(context).textTheme.labelLarge,
+          ),
+          const SizedBox(height: 24),
 
-        // Email
-        CredentialField(
-          controller: emailController,
-          hintText: "Email",
-          obscureText: false,
-        ),
-        const SizedBox(height: 10),
+          // Email
+          CredentialField(
+            controller: emailController,
+            hintText: "Email",
+            obscureText: false,
+            validator: (value) => Validator.validateEmail(value),
+          ),
+          const SizedBox(height: 10),
 
-        // Username
-        CredentialField(
-          controller: userNameController,
-          hintText: "Username",
-          obscureText: false,
-        ),
-        const SizedBox(height: 10),
+          // Username
+          CredentialField(
+            controller: userNameController,
+            hintText: "Username",
+            obscureText: false,
+            validator: (value) => Validator.validateEmpty(value),
+          ),
+          const SizedBox(height: 10),
 
-        // Pass
-        CredentialField(
-          controller: passwordController,
-          hintText: "Password",
-          obscureText: true,
-        ),
-        const SizedBox(height: 10),
-        // Confirm Pass
-        CredentialField(
-          controller: confirmPasswordController,
-          hintText: "Confirm Password",
-          obscureText: true,
-        ),
-        const SizedBox(height: 24),
+          // Pass
+          CredentialField(
+            controller: passwordController,
+            hintText: "Password",
+            obscureText: true,
+            validator: (value) => Validator.validateEmpty(value),
+          ),
+          const SizedBox(height: 10),
+          // Confirm Pass
+          CredentialField(
+              controller: confirmPasswordController,
+              hintText: "Confirm Password",
+              obscureText: true,
+              validator: (value) =>
+                  Validator.confirmPassword(value, passwordController.text)),
+          const SizedBox(height: 24),
 
-        // Next Button
-        Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Center(
-              child: ElevatedButton(
-                onPressed: () => setState(() {
-                  _currentRegisterIndex = 1;
-                }),
-                child: const Text("Next"),
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 48),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Row(
+          // Next Button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Expanded(child: Divider()),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Text("Or sign in another way."),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () => setState(() {
+                    if (_formKey.currentState!.validate()) {
+                      _currentRegisterIndex = 1;
+                    }
+                  }),
+                  child: const Text("Next"),
+                ),
               ),
-              Expanded(child: Divider()),
             ],
           ),
-        ),
-        const SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text("Already a member? "),
-            LinkTextButton(
-              onTap: widget.onTap,
-              text: 'Login Here',
-            )
-          ],
-        ),
-      ],
+
+          const SizedBox(height: 48),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                Expanded(child: Divider()),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text("Or sign in another way."),
+                ),
+                Expanded(child: Divider()),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Already a member? "),
+              LinkTextButton(
+                onTap: widget.onTap,
+                text: 'Login Here',
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 
