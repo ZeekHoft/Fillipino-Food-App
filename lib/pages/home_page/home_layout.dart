@@ -3,7 +3,6 @@ import 'package:flilipino_food_app/pages/home_page/home_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/profile_section.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class HomeLayout extends StatefulWidget {
   const HomeLayout({super.key});
@@ -15,16 +14,6 @@ class HomeLayout extends StatefulWidget {
 class _HomeLayoutState extends State<HomeLayout> {
   final user = FirebaseAuth.instance.currentUser!;
   int _currentPageIndex = 0;
-  final storage = const FlutterSecureStorage();
-
-  void signOutButton() {
-    clearUsername();
-    FirebaseAuth.instance.signOut();
-  }
-
-  void clearUsername() async {
-    await storage.delete(key: "username");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,12 +30,6 @@ class _HomeLayoutState extends State<HomeLayout> {
                   builder: (context) => const SearchRecipe()));
             },
             icon: const Icon(Icons.search),
-          ),
-          IconButton(
-            onPressed: signOutButton,
-            icon: const Icon(
-              Icons.exit_to_app,
-            ),
           ),
         ],
       ),
