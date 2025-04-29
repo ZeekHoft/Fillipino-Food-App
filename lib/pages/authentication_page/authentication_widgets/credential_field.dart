@@ -5,57 +5,30 @@ class CredentialField extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final bool obscureText;
+  final bool isNumber;
   final Function(String)? onChangeFunc;
+  final FormFieldValidator? validator;
 
-  const CredentialField(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      required this.obscureText,
-      this.onChangeFunc});
+  const CredentialField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    required this.obscureText,
+    this.onChangeFunc,
+    this.validator,
+    this.isNumber = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      autovalidateMode: AutovalidateMode.onUnfocus,
       onChanged: onChangeFunc,
       controller: controller,
+      validator: validator,
       obscureText: obscureText,
-      decoration: InputDecoration(
-        enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(8)),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Theme.of(context).colorScheme.primary),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        filled: true,
-        hintText: hintText,
-      ),
-    );
-  }
-}
-
-class CredentialFieldNumbers extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final bool obscureText;
-  final Function(String)? onChangeFunc;
-
-  const CredentialFieldNumbers(
-      {super.key,
-      required this.controller,
-      required this.hintText,
-      required this.obscureText,
-      this.onChangeFunc});
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      onChanged: onChangeFunc,
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: TextInputType.number,
-      inputFormatters: [LengthLimitingTextInputFormatter(4)],
+      keyboardType: isNumber ? TextInputType.number : null,
+      inputFormatters: isNumber ? [LengthLimitingTextInputFormatter(4)] : null,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
             borderSide: BorderSide.none,
