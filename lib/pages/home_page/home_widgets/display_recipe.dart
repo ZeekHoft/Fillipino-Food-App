@@ -1,4 +1,7 @@
+import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
+import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class DisplayRecipe extends StatelessWidget {
   final String recipeName, recipeIngredients, recipeProcess, recipeImage;
@@ -12,6 +15,8 @@ class DisplayRecipe extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<FavoriteProvider>(context);
+
     return Scaffold(
       appBar: AppBar(),
       body: ListView(
@@ -22,6 +27,21 @@ class DisplayRecipe extends StatelessWidget {
                 recipeImage,
                 fit: BoxFit.fitWidth,
               )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    provider.toggleFavorite(recipeName);
+                  },
+                  icon: provider.isExist(recipeName)
+                      ? const Icon(
+                          Icons.bookmark,
+                          color: AppColors.yellowTheme,
+                        )
+                      : const Icon(Icons.bookmark_add_outlined)),
+            ],
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Column(

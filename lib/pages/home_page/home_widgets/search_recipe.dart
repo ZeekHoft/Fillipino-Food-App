@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
 
 class SearchRecipe extends StatefulWidget {

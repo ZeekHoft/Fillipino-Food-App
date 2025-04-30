@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flilipino_food_app/pages/favorite/favorite_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/profile_section.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';
@@ -47,7 +48,7 @@ class _HomeLayoutState extends State<HomeLayout> {
       ),
       body: [
         const HomePage(),
-        const Center(child: Text("TODO")),
+        const FavoritePage(),
         const ProfileSection(),
       ][_currentPageIndex],
     );
