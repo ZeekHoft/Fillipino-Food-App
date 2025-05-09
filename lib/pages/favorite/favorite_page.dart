@@ -1,4 +1,5 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,21 +38,27 @@ class _FavoritePageState extends State<FavoritePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: recipeName
-                      .map((recName) => Text(
-                            recName,
-                            style: const TextStyle(fontSize: 24),
-                          ))
-                      .toList(),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: recipeImage
-                      .map((recImg) => Image.network(recImg))
-                      .toList(),
+                  children: [
+                    const SizedBox(height: 16),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: recipeName
+                          .map((recName) => Text(
+                                recName,
+                                style: const TextStyle(fontSize: 24),
+                              ))
+                          .toList(),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: recipeImage
+                          .map((recImg) => Image.network(recImg))
+                          .toList(),
+                    ),
+
+                    //add here gesture detection to go to the display page
+                  ],
                 ),
               ],
             ),
