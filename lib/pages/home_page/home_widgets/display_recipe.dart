@@ -5,13 +5,15 @@ import 'package:provider/provider.dart';
 
 class DisplayRecipe extends StatefulWidget {
   final String recipeName, recipeIngredients, recipeProcess, recipeImage;
+  final int recipeCalories;
 
   const DisplayRecipe(
       {super.key,
       required this.recipeName,
       required this.recipeIngredients,
       required this.recipeProcess,
-      required this.recipeImage});
+      required this.recipeImage,
+      required this.recipeCalories});
 
   @override
   State<DisplayRecipe> createState() => _DisplayRecipeState();
@@ -64,6 +66,8 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                 const SizedBox(height: 16),
                 const Text("Process", style: TextStyle(fontSize: 24)),
                 Text(widget.recipeProcess),
+                const Text("calories", style: TextStyle(fontSize: 24)),
+                Text(widget.recipeCalories.toString()),
               ],
             ),
           ),

@@ -31,41 +31,45 @@ class _FavoritePageState extends State<FavoritePage> {
       appBar: AppBar(
         title: const Text("favorite area"),
       ),
-      body: ListView.builder(
-        itemCount: recipeName.length,
-        itemBuilder: (context, index) {
-          final name =
-              recipeName[index]; //itterate through the list to get their index
-          final image = recipeImage[index];
+      body: recipeName.isEmpty
+          ? Center(child: Text("waiting for favorites..."))
+          : ListView.builder(
+              itemCount: recipeName.length,
+              itemBuilder: (context, index) {
+                final name = recipeName[
+                    index]; //itterate through the list to get their index
+                final image = recipeImage[index];
 
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DisplayRecipe(
-                      recipeName: name,
-                      recipeIngredients: "recipeIngredients",
-                      recipeProcess: "recipeProcess",
-                      recipeImage: image)));
-            },
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DisplayRecipe(
+                              recipeName: name,
+                              recipeIngredients: "recipeIngredients",
+                              recipeProcess: "recipeProcess",
+                              recipeImage: image,
+                              recipeCalories: 21112312,
+                            )));
+                  },
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(children: [
-                          const SizedBox(height: 16),
-                          Text(name),
-                          Image.network(image)
-                        ])
-                      ]),
-                )
-              ],
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Column(children: [
+                                const SizedBox(height: 16),
+                                Text(name),
+                                Image.network(image)
+                              ])
+                            ]),
+                      )
+                    ],
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

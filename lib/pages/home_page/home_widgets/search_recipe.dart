@@ -124,6 +124,7 @@ class _SearchRecipeState extends State<SearchRecipe> {
                     recipeIngredients: _resutlList[index]['ingredients'],
                     recipeProcess: _resutlList[index]['process'],
                     recipeImage: _resutlList[index]['image'],
+                    recipeCalories: _resutlList[index]['calories'],
                   ),
                 ),
               );

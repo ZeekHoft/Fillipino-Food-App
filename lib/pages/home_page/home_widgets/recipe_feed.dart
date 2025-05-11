@@ -33,10 +33,12 @@ class _RecipeFeedState extends State<RecipeFeed> {
 
           for (var recipes in recipe!) {
             final recipeWidget = RecipeFeedItem(
-                name: recipes['name'].toString(),
-                imageUrl: recipes['image'].toString(),
-                ingredients: recipes['ingredients'].toString(),
-                process: recipes['process'].toString());
+              name: recipes['name'].toString(),
+              imageUrl: recipes['image'].toString(),
+              ingredients: recipes['ingredients'].toString(),
+              process: recipes['process'].toString(),
+              calories: recipes['calories'],
+            );
             recipeWidgets.add(recipeWidget);
           }
         }
