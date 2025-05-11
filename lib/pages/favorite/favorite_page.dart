@@ -31,39 +31,40 @@ class _FavoritePageState extends State<FavoritePage> {
       appBar: AppBar(
         title: const Text("favorite area"),
       ),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Column(
-                  children: [
-                    const SizedBox(height: 16),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: recipeName
-                          .map((recName) => Text(
-                                recName,
-                                style: const TextStyle(fontSize: 24),
-                              ))
-                          .toList(),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: recipeImage
-                          .map((recImg) => Image.network(recImg))
-                          .toList(),
-                    ),
+      body: ListView.builder(
+        itemCount: recipeName.length,
+        itemBuilder: (context, index) {
+          final name =
+              recipeName[index]; //itterate through the list to get their index
+          final image = recipeImage[index];
 
-                    //add here gesture detection to go to the display page
-                  ],
-                ),
+          return GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DisplayRecipe(
+                      recipeName: name,
+                      recipeIngredients: "recipeIngredients",
+                      recipeProcess: "recipeProcess",
+                      recipeImage: image)));
+            },
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(children: [
+                          const SizedBox(height: 16),
+                          Text(name),
+                          Image.network(image)
+                        ])
+                      ]),
+                )
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
