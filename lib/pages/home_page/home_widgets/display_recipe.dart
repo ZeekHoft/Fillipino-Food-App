@@ -40,9 +40,14 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
               IconButton(
                   onPressed: () {
                     provider.toggleFavorite(
-                        widget.recipeName, widget.recipeImage);
+                      widget.recipeName,
+                      widget.recipeImage,
+                    );
                   },
-                  icon: provider.isExist(widget.recipeName, widget.recipeImage)
+                  icon: provider.isExist(
+                    widget.recipeName,
+                    widget.recipeImage,
+                  )
                       ? const Icon(
                           Icons.bookmark,
                           color: AppColors.yellowTheme,

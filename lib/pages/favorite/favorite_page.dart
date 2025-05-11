@@ -27,12 +27,13 @@ class _FavoritePageState extends State<FavoritePage> {
     final provider = Provider.of<FavoriteProvider>(context);
     final recipeName = provider.recipeName;
     final recipeImage = provider.recipeImage;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("favorite area"),
       ),
       body: recipeName.isEmpty
-          ? Center(child: Text("waiting for favorites..."))
+          ? Center(child: const Text("waiting for favorites..."))
           : ListView.builder(
               itemCount: recipeName.length,
               itemBuilder: (context, index) {
@@ -48,7 +49,7 @@ class _FavoritePageState extends State<FavoritePage> {
                               recipeIngredients: "recipeIngredients",
                               recipeProcess: "recipeProcess",
                               recipeImage: image,
-                              recipeCalories: 21112312,
+                              recipeCalories: 12312312,
                             )));
                   },
                   child: Column(
