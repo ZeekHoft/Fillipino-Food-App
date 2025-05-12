@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
@@ -27,29 +29,35 @@ class _FavoritePageState extends State<FavoritePage> {
     final provider = Provider.of<FavoriteProvider>(context);
     final recipeName = provider.recipeName;
     final recipeImage = provider.recipeImage;
+    final recipeCalories = provider.recipeCalories;
+    final recipeIngredients = provider.recipeIngredients;
+    final recipeProcess = provider.recipeProcess;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text("favorite area"),
       ),
       body: recipeName.isEmpty
-          ? Center(child: const Text("waiting for favorites..."))
+          ? const Center(child: Text("waiting for favorites..."))
           : ListView.builder(
               itemCount: recipeName.length,
               itemBuilder: (context, index) {
                 final name = recipeName[
                     index]; //itterate through the list to get their index
                 final image = recipeImage[index];
+                final calories = recipeCalories[index];
+                final ingredient = recipeIngredients[index];
+                final Process = recipeProcess[index];
 
                 return GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => DisplayRecipe(
                               recipeName: name,
-                              recipeIngredients: "recipeIngredients",
-                              recipeProcess: "recipeProcess",
+                              recipeIngredients: ingredient,
+                              recipeProcess: Process,
                               recipeImage: image,
-                              recipeCalories: 12312312,
+                              recipeCalories: calories,
                             )));
                   },
                   child: Column(
