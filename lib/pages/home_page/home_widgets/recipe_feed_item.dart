@@ -1,4 +1,4 @@
-import 'package:flilipino_food_app/widget_designs/display_recipe.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
 
 class RecipeFeedItem extends StatelessWidget {
@@ -7,12 +7,14 @@ class RecipeFeedItem extends StatelessWidget {
       required this.name,
       required this.imageUrl,
       required this.ingredients,
-      required this.process});
+      required this.process,
+      required this.calories});
 
   final String name;
   final String imageUrl;
   final String ingredients;
   final String process;
+  final int calories;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class RecipeFeedItem extends StatelessWidget {
               recipeIngredients: ingredients,
               recipeProcess: process,
               recipeImage: imageUrl,
+              recipeCalories: calories,
             ),
           ),
         );

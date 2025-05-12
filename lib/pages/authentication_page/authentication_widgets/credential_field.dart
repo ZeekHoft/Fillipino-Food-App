@@ -22,7 +22,9 @@ class CredentialField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      autovalidateMode: AutovalidateMode.onUnfocus,
+      // autovalidateMode: AutovalidateMode.onUnfocus,
+      autovalidateMode: AutovalidateMode.always,
+
       onChanged: onChangeFunc,
       controller: controller,
       validator: validator,

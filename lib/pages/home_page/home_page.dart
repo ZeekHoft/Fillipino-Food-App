@@ -12,7 +12,6 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
         shrinkWrap: true,
         children: [
-          // const ProfileSection(),
           const SizedBox(height: 24),
           Text(
             "Recipes",
