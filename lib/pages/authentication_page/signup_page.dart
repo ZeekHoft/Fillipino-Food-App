@@ -102,7 +102,7 @@ class _SignupPageState extends State<SignupPage> {
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: [
             // Returns specific page of register process
             _showCredentialForm(context),

@@ -63,7 +63,6 @@ class _ProfileSectionState extends State<ProfileSection> {
 
           //display data
           return ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
