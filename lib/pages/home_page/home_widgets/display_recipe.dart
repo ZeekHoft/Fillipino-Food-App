@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 class DisplayRecipe extends StatefulWidget {
   final String recipeName, recipeIngredients, recipeProcess, recipeImage;
   final int recipeCalories;
+  final String documentId; // Add documentId here
 
   const DisplayRecipe(
       {super.key,
@@ -13,7 +14,9 @@ class DisplayRecipe extends StatefulWidget {
       required this.recipeIngredients,
       required this.recipeProcess,
       required this.recipeImage,
-      required this.recipeCalories});
+      required this.recipeCalories,
+      required this.documentId // Require documentId
+      });
 
   @override
   State<DisplayRecipe> createState() => _DisplayRecipeState();
@@ -40,13 +43,15 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
               IconButton(
                   onPressed: () {
                     provider.toggleFavorite(
+                        widget.documentId, // Pass the document ID
                         widget.recipeName,
                         widget.recipeImage,
                         widget.recipeCalories,
                         widget.recipeIngredients,
                         widget.recipeProcess);
                   },
-                  icon: provider.isExist(widget.recipeName)
+                  icon: provider.isExist(
+                          widget.documentId) // Check existence with document ID
                       ? const Icon(
                           Icons.bookmark,
                           color: AppColors.yellowTheme,

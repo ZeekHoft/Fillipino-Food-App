@@ -11,14 +11,15 @@ class RecipeFeedItem extends StatelessWidget {
       required this.ingredients,
       required this.process,
       required this.calories,
-      required this.documentId});
+      required this.documentId // Make documentId required
+      });
 
   final String name;
   final String imageUrl;
   final String ingredients;
   final String process;
   final int calories;
-  final String documentId;
+  final String documentId; // Add documentId as a final property
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class RecipeFeedItem extends StatelessWidget {
               recipeProcess: process,
               recipeImage: imageUrl,
               recipeCalories: calories,
-              documentId: documentId,
+              documentId: documentId, // Pass the documentId
             ),
           ),
         );
@@ -68,7 +69,12 @@ class RecipeFeedItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(name),
+                    Text(
+                      name,
+                      style: const TextStyle(
+                          color: Colors
+                              .white), // Ensure text is visible on dark gradient
+                    ),
                   ],
                 ),
               ),
@@ -82,10 +88,17 @@ class RecipeFeedItem extends StatelessWidget {
                     Theme.of(context).colorScheme.surfaceContainerHighest,
                 child: IconButton(
                   onPressed: () {
-                    // passing documentId as the first argument to toggleFavorite
-                    provider.toggleFavorite(documentId, name, imageUrl,
-                        calories, ingredients, process);
+                    // Pass documentId as the first argument to toggleFavorite
+                    provider.toggleFavorite(
+                      documentId, // This is the change
+                      name,
+                      imageUrl,
+                      calories,
+                      ingredients,
+                      process,
+                    );
                   },
+                  // Check existence using documentId
                   icon: provider.isExist(documentId)
                       ? Icon(
                           Icons.bookmark,

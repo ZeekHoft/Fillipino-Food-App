@@ -61,7 +61,6 @@ class _SearchRecipeState extends State<SearchRecipe> {
     setState(() {
       _resutlList = showResults;
     });
-    searchResultList();
   }
 
   //getting values base on the fields
@@ -84,12 +83,15 @@ class _SearchRecipeState extends State<SearchRecipe> {
     super.dispose();
   }
 
-  @override
-  void didChangeDependencies() {
-    getRecipesStream();
+  // didChangeDependencies is not ideal for fetching data every time dependencies change.
+  // initState is generally preferred for initial data loading.
+  // If you need to re-fetch on certain conditions, consider a specific method call
+  // @override
+  // void didChangeDependencies() {
+  //   getRecipesStream();
 
-    super.didChangeDependencies();
-  }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +114,8 @@ class _SearchRecipeState extends State<SearchRecipe> {
         separatorBuilder: (context, index) => const Divider(),
         itemCount: _resutlList.length,
         itemBuilder: (context, index) {
+          // give access to the document ID
+          String documentId = _resutlList[index].id;
           return GestureDetector(
             onTap: () {
               Navigator.of(context).push(
@@ -122,6 +126,7 @@ class _SearchRecipeState extends State<SearchRecipe> {
                     recipeProcess: _resutlList[index]['process'],
                     recipeImage: _resutlList[index]['image'],
                     recipeCalories: _resutlList[index]['calories'],
+                    documentId: documentId,
                   ),
                 ),
               );

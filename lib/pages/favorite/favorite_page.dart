@@ -14,22 +14,23 @@ class _FavoritePageState extends State<FavoritePage> {
   @override
   void initState() {
     super.initState();
-    // Need to add delay it slightly to ensure context is ready
-
-    Provider.of<FavoriteProvider>(context, listen: false)
-        .loadFavorites(); // this calls out the function from fav_prov file,
+    // This will trigger the loading of favorite IDs and then fetching their details from Firestore
+    Provider.of<FavoriteProvider>(context, listen: false).loadFavorites();
   }
 
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<FavoriteProvider>(context);
-    final recipeName = provider.recipeName;
-    final recipeImage = provider.recipeImage;
+
+    // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
+    final recipeNames = provider.recipeName;
+    final recipeImages = provider.recipeImage;
     final recipeCalories = provider.recipeCalories;
     final recipeIngredients = provider.recipeIngredients;
-    final recipeProcess = provider.recipeProcess;
+    final recipeProcesses = provider.recipeProcess;
+    final favoriteRecipeIds = provider.favoriteRecipeIds; // Get the list of IDs
 
-    if (recipeName.isEmpty) {
+    if (recipeNames.isEmpty) {
       return const Center(child: Text("No favorites yet"));
     } else {
       return CustomScrollView(
@@ -44,14 +45,17 @@ class _FavoritePageState extends State<FavoritePage> {
           ]),
           SliverList.separated(
             separatorBuilder: (context, index) => const Divider(),
-            itemCount: recipeName.length,
+            itemCount: recipeNames
+                .length, // Use recipeNames.length as they are aligned
             itemBuilder: (context, index) {
               return FavoriteItem(
-                favName: recipeName[index],
+                favName: recipeNames[index],
                 favIngredient: recipeIngredients[index],
-                favProcess: recipeProcess[index],
-                favImage: recipeImage[index],
+                favProcess: recipeProcesses[index],
+                favImage: recipeImages[index],
                 favCalories: recipeCalories[index],
+                documentId: favoriteRecipeIds[
+                    index], // Pass the document ID to FavoriteItem
               );
             },
           )

@@ -29,15 +29,17 @@ class _RecipeFeedState extends State<RecipeFeed> {
             color: AppColors.yellowTheme,
           ));
         } else if (snapshot.hasData || snapshot.data != null) {
-          final recipe = snapshot.data?.docs.reversed.toList();
+          final recipeDocs = snapshot.data?.docs.reversed.toList();
 
-          for (var recipes in recipe!) {
+          for (var recipeDoc in recipeDocs!) {
+            final String documentId = recipeDoc.id;
             final recipeWidget = RecipeFeedItem(
-              name: recipes['name'].toString(),
-              imageUrl: recipes['image'].toString(),
-              ingredients: recipes['ingredients'].toString(),
-              process: recipes['process'].toString(),
-              calories: recipes['calories'],
+              name: recipeDoc['name'].toString(),
+              imageUrl: recipeDoc['image'].toString(),
+              ingredients: recipeDoc['ingredients'].toString(),
+              process: recipeDoc['process'].toString(),
+              calories: recipeDoc['calories'],
+              documentId: documentId,
             );
             recipeWidgets.add(recipeWidget);
           }
