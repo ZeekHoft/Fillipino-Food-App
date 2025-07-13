@@ -1,5 +1,7 @@
+import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecipeFeedItem extends StatelessWidget {
   const RecipeFeedItem(
@@ -18,6 +20,8 @@ class RecipeFeedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<FavoriteProvider>(context);
+
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -66,6 +70,33 @@ class RecipeFeedItem extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned.directional(
+              textDirection: TextDirection.ltr,
+              end: 8.0,
+              top: 8.0,
+              child: CircleAvatar(
+                backgroundColor:
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
+                child: IconButton(
+                  onPressed: () {
+                    provider.toggleFavorite(
+                      name,
+                      imageUrl,
+                      calories,
+                      ingredients,
+                      process,
+                    );
+                  },
+                  icon: provider.isExist(name)
+                      ? Icon(
+                          Icons.bookmark,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      : const Icon(Icons.bookmark_add_outlined),
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            )
           ],
         ),
       ),

@@ -21,7 +21,7 @@ class _HomeLayoutState extends State<HomeLayout> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "DAAPLI",
+          "DAPPLI",
           style: Theme.of(context).textTheme.headlineMedium,
         ),
         actions: [

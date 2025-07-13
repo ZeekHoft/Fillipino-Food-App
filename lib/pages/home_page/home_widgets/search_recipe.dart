@@ -109,10 +109,7 @@ class _SearchRecipeState extends State<SearchRecipe> {
       ),
       body: ListView.separated(
         // itemCount: _allResult.length, show all the results being retrieved
-        separatorBuilder: (context, index) => const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24),
-          child: Divider(),
-        ),
+        separatorBuilder: (context, index) => const Divider(),
         itemCount: _resutlList.length,
         itemBuilder: (context, index) {
           return GestureDetector(

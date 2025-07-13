@@ -1,14 +1,10 @@
-import 'dart:io';
-
+import 'package:flilipino_food_app/pages/favorite/favorite_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
-import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoritePage extends StatefulWidget {
-  const FavoritePage({
-    super.key,
-  });
+  const FavoritePage({super.key});
 
   @override
   State<FavoritePage> createState() => _FavoritePageState();
@@ -33,52 +29,34 @@ class _FavoritePageState extends State<FavoritePage> {
     final recipeIngredients = provider.recipeIngredients;
     final recipeProcess = provider.recipeProcess;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("favorite area"),
-      ),
-      body: recipeName.isEmpty
-          ? const Center(child: Text("waiting for favorites..."))
-          : ListView.builder(
-              itemCount: recipeName.length,
-              itemBuilder: (context, index) {
-                final name = recipeName[
-                    index]; //itterate through the list to get their index
-                final image = recipeImage[index];
-                final calories = recipeCalories[index];
-                final ingredient = recipeIngredients[index];
-                final Process = recipeProcess[index];
-
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => DisplayRecipe(
-                              recipeName: name,
-                              recipeIngredients: ingredient,
-                              recipeProcess: Process,
-                              recipeImage: image,
-                              recipeCalories: calories,
-                            )));
-                  },
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(children: [
-                                const SizedBox(height: 16),
-                                Text(name),
-                                Image.network(image)
-                              ])
-                            ]),
-                      )
-                    ],
-                  ),
-                );
-              },
+    if (recipeName.isEmpty) {
+      return const Center(child: Text("No favorites yet"));
+    } else {
+      return CustomScrollView(
+        slivers: [
+          SliverList.list(children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text("Saved Recipes",
+                  style: Theme.of(context).textTheme.displaySmall),
             ),
-    );
+            const SizedBox(height: 24)
+          ]),
+          SliverList.separated(
+            separatorBuilder: (context, index) => const Divider(),
+            itemCount: recipeName.length,
+            itemBuilder: (context, index) {
+              return FavoriteItem(
+                favName: recipeName[index],
+                favIngredient: recipeIngredients[index],
+                favProcess: recipeProcess[index],
+                favImage: recipeImage[index],
+                favCalories: recipeCalories[index],
+              );
+            },
+          )
+        ],
+      );
+    }
   }
 }
