@@ -46,7 +46,7 @@ class FavoriteItem extends StatelessWidget {
               favImage,
               fit: BoxFit.cover,
             )),
-        title: Text(favName),
+        title: Text("$favName"),
         subtitle: Opacity(opacity: 0.8, child: Text("Calories: $favCalories")),
       ),
     );

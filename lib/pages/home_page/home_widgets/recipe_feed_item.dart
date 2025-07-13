@@ -69,6 +69,9 @@ class RecipeFeedItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(name),
+                    Text("${calories.toString()}"),
+                    if (displayWarning(calories) != null)
+                      displayWarning(calories)!
                   ],
                 ),
               ),
@@ -101,4 +104,14 @@ class RecipeFeedItem extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget? displayWarning(int calories) {
+  if (calories > 10) {
+    return Icon(
+      Icons.warning_amber,
+      color: Colors.pink,
+    );
+  }
+  return null;
 }
