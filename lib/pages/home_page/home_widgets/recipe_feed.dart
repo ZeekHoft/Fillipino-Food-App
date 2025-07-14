@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RecipeFeed extends StatefulWidget {
-  const RecipeFeed({super.key});
+  final dynamic userData;
+
+  const RecipeFeed({super.key, this.userData});
 
   @override
   State<RecipeFeed> createState() => _RecipeFeedState();
@@ -40,6 +42,7 @@ class _RecipeFeedState extends State<RecipeFeed> {
               process: recipeDoc['process'].toString(),
               calories: recipeDoc['calories'],
               documentId: documentId,
+              userData: widget.userData.toString(),
             );
             recipeWidgets.add(recipeWidget);
           }

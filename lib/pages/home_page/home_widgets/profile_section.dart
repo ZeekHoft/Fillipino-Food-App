@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flilipino_food_app/pages/home_page/home_page.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed.dart';
+import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed_item.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -57,10 +60,17 @@ class _ProfileSectionState extends State<ProfileSection> {
               .data()!; //all data being retreive and specify them below user the term userData
           final username = userData["username"] ?? "N/A";
           final email = userData["email"] ?? "N/A";
-          final calories = userData["calories"]?.toString() ?? "N/A";
+          final dynamic calories = userData["calories"]?.toString() ?? "N/A";
+          final int caloriesValue = userData["calories"] ?? 0;
           final allergies =
               (userData["allergies"] as List<dynamic>? ?? []).join(", ");
 
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => RecipeFeed(
+                        userData: caloriesValue,
+                      )));
           //display data
           return ListView(
             children: [
@@ -133,3 +143,5 @@ class _ProfileSectionState extends State<ProfileSection> {
         });
   }
 }
+
+void passValues(String caloriesValue) {}

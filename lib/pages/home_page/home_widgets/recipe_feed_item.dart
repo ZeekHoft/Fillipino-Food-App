@@ -4,14 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecipeFeedItem extends StatelessWidget {
-  const RecipeFeedItem(
+  RecipeFeedItem(
       {super.key,
       required this.name,
       required this.imageUrl,
       required this.ingredients,
       required this.process,
       required this.calories,
-      required this.documentId});
+      required this.documentId,
+      this.userData});
 
   final String name;
   final String imageUrl;
@@ -19,6 +20,8 @@ class RecipeFeedItem extends StatelessWidget {
   final String process;
   final int calories;
   final String documentId;
+
+  final String? userData;
 
   @override
   Widget build(BuildContext context) {
@@ -70,6 +73,7 @@ class RecipeFeedItem extends StatelessWidget {
                   children: [
                     Text(name),
                     Text("${calories.toString()}"),
+                    Text("here data ${userData ?? 'N/A'}"),
                     if (displayWarning(calories) != null)
                       displayWarning(calories)!
                   ],
@@ -107,8 +111,8 @@ class RecipeFeedItem extends StatelessWidget {
 }
 
 Widget? displayWarning(int calories) {
-  if (calories > 10) {
-    return Icon(
+  if (calories > 0) {
+    return const Icon(
       Icons.warning_amber,
       color: Colors.pink,
     );
