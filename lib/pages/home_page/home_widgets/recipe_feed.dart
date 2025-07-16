@@ -1,7 +1,6 @@
 import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed_item.dart';
 import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
-import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -42,7 +41,6 @@ class _RecipeFeedState extends State<RecipeFeed> {
               process: recipeDoc['process'].toString(),
               calories: recipeDoc['calories'],
               documentId: documentId,
-              userData: widget.userData.toString(),
             );
             recipeWidgets.add(recipeWidget);
           }

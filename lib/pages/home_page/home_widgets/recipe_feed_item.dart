@@ -1,18 +1,19 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
+import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecipeFeedItem extends StatelessWidget {
-  RecipeFeedItem(
-      {super.key,
-      required this.name,
-      required this.imageUrl,
-      required this.ingredients,
-      required this.process,
-      required this.calories,
-      required this.documentId,
-      this.userData});
+  RecipeFeedItem({
+    super.key,
+    required this.name,
+    required this.imageUrl,
+    required this.ingredients,
+    required this.process,
+    required this.calories,
+    required this.documentId,
+  });
 
   final String name;
   final String imageUrl;
@@ -21,11 +22,13 @@ class RecipeFeedItem extends StatelessWidget {
   final int calories;
   final String documentId;
 
-  final String? userData;
-
   @override
   Widget build(BuildContext context) {
+    final profileDataStoring = context.watch<ProfileDataStoring>();
     final provider = Provider.of<FavoriteProvider>(context);
+
+    final userCalorieLimit = profileDataStoring.caloriesLimit;
+    final userAllergies = profileDataStoring.allergies;
 
     return GestureDetector(
       onTap: () {
@@ -72,10 +75,10 @@ class RecipeFeedItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(name),
-                    Text("${calories.toString()}"),
-                    Text("here data ${userData ?? 'N/A'}"),
-                    if (displayWarning(calories) != null)
-                      displayWarning(calories)!
+                    Text(calories.toString()),
+                    if (displayCalorieWarning(calories, userCalorieLimit) !=
+                        null)
+                      displayCalorieWarning(calories, userCalorieLimit)!
                   ],
                 ),
               ),
@@ -110,12 +113,24 @@ class RecipeFeedItem extends StatelessWidget {
   }
 }
 
-Widget? displayWarning(int calories) {
-  if (calories > 0) {
+// display warning for calorie limit
+Widget? displayCalorieWarning(int calories, int userCalorieLimit) {
+  if (calories > userCalorieLimit) {
     return const Icon(
-      Icons.warning_amber,
+      Icons.fastfood_outlined,
       color: Colors.pink,
     );
   }
   return null;
 }
+
+
+// Widget? displayAllergyWarning() {
+//   if () {
+//     return const Icon(
+//       Icons.fastfood_outlined,
+//       color: Colors.pink,
+//     );
+//   }
+//   return null;
+// }
