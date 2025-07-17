@@ -23,6 +23,7 @@ class FavoriteProvider extends ChangeNotifier {
 
   //saving favorites in firebase
 
+  //check if the user logged in has an email
   Future<void> _storeFavoriteInFireBase(String docId, bool isAdding) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null || currentUser.email == null) {
@@ -33,6 +34,7 @@ class FavoriteProvider extends ChangeNotifier {
       return;
     }
 
+    //attempt to try and find the email
     try {
       // add a try and except, exception for security
       final userDocQuery = await FirebaseFirestore.instance
@@ -41,6 +43,7 @@ class FavoriteProvider extends ChangeNotifier {
           .limit(1)
           .get();
 
+      //check if user found
       if (userDocQuery.docs.isEmpty) {
         if (kDebugMode) {
           print("User data document not found for email: ${currentUser.email}");
@@ -48,9 +51,11 @@ class FavoriteProvider extends ChangeNotifier {
         // You might want to create a user data document if it doesn't exist
         return;
       }
-      final userDocRef = userDocQuery.docs.first.reference;
+      final userDocRef =
+          userDocQuery.docs.first.reference; //user has been found
 
       if (isAdding) {
+        //adding
         // Add the recipe ID to the 'favorites' array field
         await userDocRef.update({
           'favorites': FieldValue.arrayUnion([docId]),
@@ -59,6 +64,7 @@ class FavoriteProvider extends ChangeNotifier {
           print("Added $docId to Firestore favorites for ${currentUser.email}");
         }
       } else {
+        // removing
         // Remove the recipe ID from the 'favorites' array field
         await userDocRef.update({
           'favorites': FieldValue.arrayRemove([docId]),
