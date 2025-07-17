@@ -70,15 +70,18 @@ class _SearchRecipeState extends State<SearchRecipe> {
         .orderBy('ingredients')
         .get();
 
-    setState(() {
-      _allResult = data.docs;
-    });
+    if (mounted) {
+      //mounted to help you manage state and avoid potential errors that can occur when interacting with a widget that is no longer part of the widget tree
+      setState(() {
+        _allResult = data.docs;
+      });
+    }
   }
 
   //making a button to claer all
   @override
   void dispose() {
-    _searchController.removeListener(_onSearchChanged());
+    _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }

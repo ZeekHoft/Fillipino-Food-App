@@ -41,7 +41,8 @@ android {
         applicationId = "com.example.flilipino_food_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdk = flutter.minSdkVersion
+        // minSdk = flutter.minSdkVersion ////this is the original line
+        minSdk = 23 // this is the new added line for the debug
         targetSdk = flutter.targetSdkVersion
         versionCode = flutterVersionCode.toInteger()
         versionName = flutterVersionName
