@@ -28,7 +28,8 @@ class RecipeFeedItem extends StatelessWidget {
     final provider = Provider.of<FavoriteProvider>(context);
 
     final userCalorieLimit = profileDataStoring.caloriesLimit;
-    final userAllergies = profileDataStoring.allergies;
+    // final userAllergies = profileDataStoring.allergies;
+    // final userEmail = profileDataStoring.email;
 
     return GestureDetector(
       onTap: () {

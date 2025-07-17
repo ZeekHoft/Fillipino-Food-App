@@ -30,8 +30,18 @@ class _FavoritePageState extends State<FavoritePage> {
     final recipeProcesses = provider.recipeProcess;
     final favoriteRecipeIds = provider.favoriteRecipeIds; // Get the list of IDs
 
-    if (recipeNames.isEmpty) {
-      return const Center(child: Text("No favorites yet"));
+    if (favoriteRecipeIds.isEmpty) {
+      return const Center(
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CircularProgressIndicator(),
+          SizedBox(
+            height: 20,
+          ),
+          Text("Waiting for favorites")
+        ],
+      ));
     } else {
       return CustomScrollView(
         slivers: [
@@ -45,7 +55,7 @@ class _FavoritePageState extends State<FavoritePage> {
           ]),
           SliverList.separated(
             separatorBuilder: (context, index) => const Divider(),
-            itemCount: recipeNames
+            itemCount: favoriteRecipeIds
                 .length, // Use recipeNames.length as they are aligned
             itemBuilder: (context, index) {
               return FavoriteItem(

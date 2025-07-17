@@ -2,6 +2,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class ProfileDataStoring extends ChangeNotifier {
@@ -51,7 +52,9 @@ class ProfileDataStoring extends ChangeNotifier {
         _allergies = (userData["allergies"] as List<dynamic>? ?? []).join(", ");
       }
     } catch (e) {
-      print("Fetching Error in user data: ${e}");
+      if (kDebugMode) {
+        print("Fetching Error in user data: ${e}");
+      }
     } finally {
       _isLoading = false;
       notifyListeners();
