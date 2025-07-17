@@ -20,10 +20,9 @@ class _HomeLayoutState extends State<HomeLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "DAPPLI",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: const Text("DAPPLI"),
         actions: [
           IconButton(
             onPressed: () {

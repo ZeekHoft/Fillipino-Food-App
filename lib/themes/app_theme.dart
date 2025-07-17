@@ -3,33 +3,39 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   static ThemeData light = ThemeData(
-    useMaterial3: true,
-    colorScheme: lightColorScheme,
-    textTheme: GoogleFonts.interTextTheme(ThemeData.light().textTheme).copyWith(
-      displayLarge: GoogleFonts.itim(fontSize: 48, fontWeight: FontWeight.bold),
-      headlineLarge: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.normal,
-        color: lightColorScheme.primary,
+      useMaterial3: true,
+      colorScheme: lightColorScheme,
+      textTheme:
+          GoogleFonts.interTextTheme(ThemeData.light().textTheme).copyWith(
+        displayLarge:
+            GoogleFonts.itim(fontSize: 48, fontWeight: FontWeight.bold),
+        headlineLarge: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.normal,
+          color: lightColorScheme.primary,
+        ),
+        headlineMedium: const TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+        ),
+        labelLarge: TextStyle(color: lightColorScheme.primary),
       ),
-      headlineMedium: const TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          foregroundColor: lightColorScheme.onPrimary,
+          textStyle: const TextStyle(fontWeight: FontWeight.bold),
+          backgroundColor: lightColorScheme.primary,
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 48),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 2,
+        ),
       ),
-      labelLarge: TextStyle(color: lightColorScheme.primary),
-    ),
-    elevatedButtonTheme: ElevatedButtonThemeData(
-      style: ElevatedButton.styleFrom(
-        foregroundColor: lightColorScheme.onPrimary,
-        textStyle: const TextStyle(fontWeight: FontWeight.bold),
-        backgroundColor: lightColorScheme.primary,
-        padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 48),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        elevation: 2,
-      ),
-    ),
-    scaffoldBackgroundColor: const Color(0xFFFCFFF9),
-  );
+      scaffoldBackgroundColor: const Color(0xFFFCFFF9),
+      navigationBarTheme: NavigationBarThemeData(
+          indicatorColor: lightColorScheme.primaryContainer,
+          iconTheme: WidgetStateProperty.all(
+              IconThemeData(color: lightColorScheme.primary))));
 
   static ThemeData dark = ThemeData(
     colorScheme: darkColorScheme,
