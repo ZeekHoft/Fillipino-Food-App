@@ -118,9 +118,15 @@ class _SignupPageState extends State<SignupPage> {
     return Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 48),
+          const SizedBox(height: 12),
+          SizedBox(
+              height: 180,
+              child: Image.asset(
+                "dappli_logo.png",
+              )),
+          const SizedBox(height: 8.0),
           Text(
             "Create an account",
             style: Theme.of(context).textTheme.headlineMedium,
@@ -131,28 +137,31 @@ class _SignupPageState extends State<SignupPage> {
           ),
           const SizedBox(height: 24),
 
-          // Email
-          CredentialField(
-            controller: emailController,
-            hintText: "Email",
-            obscureText: false,
-            validator: (value) => Validator.validateEmail(value),
-          ),
-          const SizedBox(height: 10),
-
           // Username
           CredentialField(
             controller: userNameController,
-            hintText: "Username",
+            labelText: "Name",
+            hintText: "Enter your name",
             obscureText: false,
             validator: (value) => Validator.validateEmpty(value),
+          ),
+          const SizedBox(height: 10),
+
+          // Email
+          CredentialField(
+            controller: emailController,
+            labelText: "Email",
+            hintText: "Enter your email",
+            obscureText: false,
+            validator: (value) => Validator.validateEmail(value),
           ),
           const SizedBox(height: 10),
 
           // Pass
           CredentialField(
             controller: passwordController,
-            hintText: "Password",
+            labelText: "Password",
+            hintText: "Enter your password",
             obscureText: true,
             validator: (value) => Validator.validateEmpty(value),
           ),
@@ -160,27 +169,21 @@ class _SignupPageState extends State<SignupPage> {
           // Confirm Pass
           CredentialField(
               controller: confirmPasswordController,
-              hintText: "Confirm Password",
+              labelText: "Confirm Password",
+              hintText: "Confirm your password",
               obscureText: true,
               validator: (value) =>
                   Validator.confirmPassword(value, passwordController.text)),
           const SizedBox(height: 24),
 
           // Next Button
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Center(
-                child: ElevatedButton(
-                  onPressed: () => setState(() {
-                    if (_formKey.currentState!.validate()) {
-                      _currentRegisterIndex = 1;
-                    }
-                  }),
-                  child: const Text("Next"),
-                ),
-              ),
-            ],
+          ElevatedButton(
+            onPressed: () => setState(() {
+              if (_formKey.currentState!.validate()) {
+                _currentRegisterIndex = 1;
+              }
+            }),
+            child: const Text("Sign Up"),
           ),
 
           const SizedBox(height: 48),
