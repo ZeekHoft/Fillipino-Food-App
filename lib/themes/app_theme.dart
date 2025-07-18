@@ -23,7 +23,6 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           foregroundColor: lightColorScheme.onPrimary,
-          textStyle: const TextStyle(fontWeight: FontWeight.bold),
           backgroundColor: lightColorScheme.primary,
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 48),
           shape:
