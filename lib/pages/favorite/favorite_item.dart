@@ -9,6 +9,7 @@ class FavoriteItem extends StatelessWidget {
     required this.favProcess,
     required this.favImage,
     required this.favCalories,
+    required this.documentId, // Add documentId
   });
 
   final String favName;
@@ -16,6 +17,7 @@ class FavoriteItem extends StatelessWidget {
   final String favProcess;
   final String favImage;
   final int favCalories;
+  final String documentId; // Store documentId
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class FavoriteItem extends StatelessWidget {
               recipeProcess: favProcess,
               recipeImage: favImage,
               recipeCalories: favCalories,
+              documentId: documentId, // Pass documentId
             ),
           ),
         );
@@ -43,7 +46,7 @@ class FavoriteItem extends StatelessWidget {
               favImage,
               fit: BoxFit.cover,
             )),
-        title: Text(favName),
+        title: Text("$favName"),
         subtitle: Opacity(opacity: 0.8, child: Text("Calories: $favCalories")),
       ),
     );

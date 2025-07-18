@@ -1,26 +1,35 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
+import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecipeFeedItem extends StatelessWidget {
-  const RecipeFeedItem(
-      {super.key,
-      required this.name,
-      required this.imageUrl,
-      required this.ingredients,
-      required this.process,
-      required this.calories});
+  RecipeFeedItem({
+    super.key,
+    required this.name,
+    required this.imageUrl,
+    required this.ingredients,
+    required this.process,
+    required this.calories,
+    required this.documentId,
+  });
 
   final String name;
   final String imageUrl;
   final String ingredients;
   final String process;
   final int calories;
+  final String documentId;
 
   @override
   Widget build(BuildContext context) {
+    final profileDataStoring = context.watch<ProfileDataStoring>();
     final provider = Provider.of<FavoriteProvider>(context);
+
+    final userCalorieLimit = profileDataStoring.caloriesLimit;
+    // final userAllergies = profileDataStoring.allergies;
+    // final userEmail = profileDataStoring.email;
 
     return GestureDetector(
       onTap: () {
@@ -32,6 +41,7 @@ class RecipeFeedItem extends StatelessWidget {
               recipeProcess: process,
               recipeImage: imageUrl,
               recipeCalories: calories,
+              documentId: documentId,
             ),
           ),
         );
@@ -66,6 +76,10 @@ class RecipeFeedItem extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(name),
+                    Text(calories.toString()),
+                    if (displayCalorieWarning(calories, userCalorieLimit) !=
+                        null)
+                      displayCalorieWarning(calories, userCalorieLimit)!
                   ],
                 ),
               ),
@@ -79,15 +93,11 @@ class RecipeFeedItem extends StatelessWidget {
                     Theme.of(context).colorScheme.surfaceContainerHighest,
                 child: IconButton(
                   onPressed: () {
-                    provider.toggleFavorite(
-                      name,
-                      imageUrl,
-                      calories,
-                      ingredients,
-                      process,
-                    );
+                    // passing documentId as the first argument to toggleFavorite
+                    provider.toggleFavorite(documentId, name, imageUrl,
+                        calories, ingredients, process);
                   },
-                  icon: provider.isExist(name)
+                  icon: provider.isExist(documentId)
                       ? Icon(
                           Icons.bookmark,
                           color: Theme.of(context).colorScheme.primary,
@@ -103,3 +113,25 @@ class RecipeFeedItem extends StatelessWidget {
     );
   }
 }
+
+// display warning for calorie limit
+Widget? displayCalorieWarning(int calories, int userCalorieLimit) {
+  if (calories > userCalorieLimit) {
+    return const Icon(
+      Icons.fastfood_outlined,
+      color: Colors.pink,
+    );
+  }
+  return null;
+}
+
+
+// Widget? displayAllergyWarning() {
+//   if () {
+//     return const Icon(
+//       Icons.fastfood_outlined,
+//       color: Colors.pink,
+//     );
+//   }
+//   return null;
+// }

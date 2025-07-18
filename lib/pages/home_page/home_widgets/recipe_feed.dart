@@ -1,12 +1,13 @@
 import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed_item.dart';
 import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
-import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RecipeFeed extends StatefulWidget {
-  const RecipeFeed({super.key});
+  final dynamic userData;
+
+  const RecipeFeed({super.key, this.userData});
 
   @override
   State<RecipeFeed> createState() => _RecipeFeedState();
@@ -29,15 +30,17 @@ class _RecipeFeedState extends State<RecipeFeed> {
             color: AppColors.yellowTheme,
           ));
         } else if (snapshot.hasData || snapshot.data != null) {
-          final recipe = snapshot.data?.docs.reversed.toList();
+          final recipeDocs = snapshot.data?.docs.reversed.toList();
 
-          for (var recipes in recipe!) {
+          for (var recipeDoc in recipeDocs!) {
+            final String documentId = recipeDoc.id;
             final recipeWidget = RecipeFeedItem(
-              name: recipes['name'].toString(),
-              imageUrl: recipes['image'].toString(),
-              ingredients: recipes['ingredients'].toString(),
-              process: recipes['process'].toString(),
-              calories: recipes['calories'],
+              name: recipeDoc['name'].toString(),
+              imageUrl: recipeDoc['image'].toString(),
+              ingredients: recipeDoc['ingredients'].toString(),
+              process: recipeDoc['process'].toString(),
+              calories: recipeDoc['calories'],
+              documentId: documentId,
             );
             recipeWidgets.add(recipeWidget);
           }
