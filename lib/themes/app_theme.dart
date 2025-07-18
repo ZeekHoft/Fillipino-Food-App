@@ -15,8 +15,8 @@ class AppTheme {
           color: lightColorScheme.primary,
         ),
         headlineMedium: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
+          fontSize: 20,
+          fontStyle: FontStyle.italic,
         ),
         labelLarge: TextStyle(color: lightColorScheme.primary),
       ),
