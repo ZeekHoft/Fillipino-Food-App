@@ -1,4 +1,6 @@
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/colored_inputs.dart';
+import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
+import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
 import 'package:flutter/material.dart';
 
 class UserDetails extends StatelessWidget {
@@ -72,5 +74,38 @@ class UserGoals extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class UserAllergies extends StatelessWidget {
+  const UserAllergies({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final _userCaloricController = TextEditingController();
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      Text(
+        "Dietary Restrictions & Allergies",
+        style: Theme.of(context).textTheme.headlineLarge,
+      ),
+      Text(
+        "We'll tailor an experience based on your allergies, creating a personalized food experience",
+        style: Theme.of(context).textTheme.labelLarge,
+      ),
+      const SizedBox(height: 12),
+      const Text("Caloric limit"),
+      ColoredInputNumber(
+        controller: _userCaloricController,
+        hintText: "Enter your calorie limit",
+      ),
+      const SizedBox(height: 24),
+      UserInput(
+        onFilterChanged: (filters) {
+          // setState(() {
+          //   selectedDietaryRestrictions = filters;
+          // });
+        },
+      ),
+    ]);
   }
 }

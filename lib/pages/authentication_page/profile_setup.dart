@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 
 const setupPages = <Widget>[
   UserDetails(),
-  Center(child: Text("This is page 2")),
-  Center(child: Text("This is page 3")),
+  UserGoals(),
+  UserAllergies(),
+  Center(child: Text("This is page 4")),
 ];
 
 class ProfileSetup extends StatefulWidget {
