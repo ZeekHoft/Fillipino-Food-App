@@ -56,3 +56,42 @@ class ColoredPlaceholder extends StatelessWidget {
     );
   }
 }
+
+class ColoredCheckbox extends StatefulWidget {
+  const ColoredCheckbox({super.key, required this.title, this.icon});
+
+  final String title;
+  final Icon? icon;
+
+  @override
+  State<ColoredCheckbox> createState() => _ColoredCheckboxState();
+}
+
+class _ColoredCheckboxState extends State<ColoredCheckbox> {
+  bool _value = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      value: _value,
+      secondary: widget.icon,
+      title: Text(widget.title),
+      onChanged: (value) {
+        setState(() {
+          _value = value!;
+        });
+      },
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 16,
+        vertical: 8,
+      ),
+      checkboxShape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(4),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(16),
+      ),
+      tileColor: Theme.of(context).colorScheme.secondaryContainer,
+    );
+  }
+}
