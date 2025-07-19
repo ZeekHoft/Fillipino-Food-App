@@ -39,3 +39,38 @@ class UserDetails extends StatelessWidget {
     );
   }
 }
+
+class UserGoals extends StatelessWidget {
+  const UserGoals({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 12,
+      children: [
+        Text(
+          "Select your Goals",
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        const Text("Select multiple goals"),
+        const ColoredCheckbox(
+          title: "Gain Muscles",
+          icon: Icon(Icons.fitness_center),
+        ),
+        const ColoredCheckbox(
+          title: "Healthy Habits",
+          icon: Icon(Icons.self_improvement),
+        ),
+        const ColoredCheckbox(
+          title: "Weight Loss",
+          icon: Icon(Icons.monitor_weight),
+        ),
+        const ColoredCheckbox(
+          title: "Gain Weight",
+          icon: Icon(Icons.rice_bowl),
+        ),
+      ],
+    );
+  }
+}
