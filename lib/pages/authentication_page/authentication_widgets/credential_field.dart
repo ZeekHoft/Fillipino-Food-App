@@ -14,11 +14,11 @@ class CredentialField extends StatelessWidget {
     super.key,
     required this.hintText,
     required this.controller,
-    required this.obscureText,
     this.validator,
     this.labelText,
     this.onChangeFunc,
     this.isNumber = false,
+    this.obscureText = false,
   });
 
   @override
