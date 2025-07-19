@@ -1,10 +1,11 @@
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
+import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/profile_setup_pages.dart';
 import 'package:flutter/material.dart';
 
-const signupPages = [
-  Center(child: Text("This is page 1")),
+const setupPages = <Widget>[
+  UserDetails(),
   Center(child: Text("This is page 2")),
-  Center(child: Text("This is page 3"))
+  Center(child: Text("This is page 3")),
 ];
 
 class ProfileSetup extends StatefulWidget {
@@ -46,7 +47,7 @@ class _ProfileSetupState extends State<ProfileSetup>
                 vertical: 32,
               ),
               child: PageIndicator(
-                  totalPages: signupPages.length,
+                  totalPages: setupPages.length,
                   currentPageIndex: _currentPageIndex,
                   onUpdateCurrentPage: (index) {}),
             ),
@@ -55,7 +56,7 @@ class _ProfileSetupState extends State<ProfileSetup>
                   controller: _pageViewController,
                   onPageChanged: _handlePageChanged,
                   // physics: NeverScrollableScrollPhysics(),
-                  children: signupPages),
+                  children: setupPages),
             ),
             ElevatedButton(onPressed: _goNextPage, child: const Text("Next")),
             const SizedBox(height: 16),
