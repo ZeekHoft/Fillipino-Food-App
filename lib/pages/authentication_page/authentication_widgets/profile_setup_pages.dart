@@ -1,5 +1,4 @@
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/colored_inputs.dart';
-import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
 import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
 import 'package:flutter/material.dart';
 
@@ -82,7 +81,7 @@ class UserAllergies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _userCaloricController = TextEditingController();
+    final userCaloricController = TextEditingController();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         "Dietary Restrictions & Allergies",
@@ -95,7 +94,7 @@ class UserAllergies extends StatelessWidget {
       const SizedBox(height: 12),
       const Text("Caloric limit"),
       ColoredInputNumber(
-        controller: _userCaloricController,
+        controller: userCaloricController,
         hintText: "Enter your calorie limit",
       ),
       const SizedBox(height: 24),
@@ -107,5 +106,75 @@ class UserAllergies extends StatelessWidget {
         },
       ),
     ]);
+  }
+}
+
+enum SurveyOption {
+  youtube,
+  twitter,
+  instagram,
+  facebook,
+  google,
+  tiktok,
+  friends,
+  others,
+}
+
+const surveyOptions = <SurveyOption, String>{
+  SurveyOption.youtube: "Youtube",
+  SurveyOption.twitter: "Twitter",
+  SurveyOption.instagram: "Instagram",
+  SurveyOption.facebook: "Facebook",
+  SurveyOption.google: "Google",
+  SurveyOption.tiktok: "Tiktok",
+  SurveyOption.friends: "Friends or Colleagues",
+  SurveyOption.others: "Others",
+};
+
+class UserSurvey extends StatefulWidget {
+  const UserSurvey({super.key});
+
+  @override
+  State<UserSurvey> createState() => _UserSurveyState();
+}
+
+class _UserSurveyState extends State<UserSurvey> {
+  SurveyOption? _selectedOption = SurveyOption.youtube;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "How did you hear about us?",
+          style: Theme.of(context).textTheme.headlineLarge,
+        ),
+        Text(
+          "Select one",
+          style: Theme.of(context).textTheme.labelLarge,
+        ),
+        Expanded(
+          child: ListView.builder(
+            itemCount: surveyOptions.length,
+            itemBuilder: (context, index) {
+              SurveyOption key = surveyOptions.keys.elementAt(index);
+              return RadioListTile(
+                contentPadding: EdgeInsets.zero,
+                value: key,
+                title: Text(surveyOptions[key]!),
+                groupValue: _selectedOption,
+                onChanged: (value) {
+                  setState(() {
+                    _selectedOption = value;
+                  });
+                },
+                controlAffinity: ListTileControlAffinity.trailing,
+              );
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

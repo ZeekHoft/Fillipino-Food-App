@@ -6,7 +6,7 @@ const setupPages = <Widget>[
   UserDetails(),
   UserGoals(),
   UserAllergies(),
-  Center(child: Text("This is page 4")),
+  UserSurvey(),
 ];
 
 class ProfileSetup extends StatefulWidget {
