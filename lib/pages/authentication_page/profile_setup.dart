@@ -20,6 +20,7 @@ class _ProfileSetupState extends State<ProfileSetup>
     with TickerProviderStateMixin {
   late PageController _pageViewController;
   int _currentPageIndex = 0;
+  bool _isLastPage = false;
 
   @override
   void initState() {
@@ -59,9 +60,16 @@ class _ProfileSetupState extends State<ProfileSetup>
                   // physics: NeverScrollableScrollPhysics(),
                   children: setupPages),
             ),
-            ElevatedButton(onPressed: _goNextPage, child: const Text("Next")),
+            ElevatedButton(
+              onPressed: _isLastPage ? _closeProfileSetup : _goNextPage,
+              child: _isLastPage ? const Text("Done") : const Text("Next"),
+            ),
             const SizedBox(height: 16),
-            Center(child: LinkTextButton(text: "Skip")),
+            Center(
+                child: LinkTextButton(
+              text: "Skip",
+              onTap: _closeProfileSetup,
+            )),
             const SizedBox(height: 24),
           ],
         ),
@@ -72,6 +80,12 @@ class _ProfileSetupState extends State<ProfileSetup>
   void _handlePageChanged(int currentPageIndex) {
     setState(() {
       _currentPageIndex = currentPageIndex;
+      // Determine if currently on last page
+      if (_currentPageIndex == setupPages.length - 1) {
+        _isLastPage = true;
+      } else {
+        _isLastPage = false;
+      }
     });
   }
 
@@ -79,6 +93,10 @@ class _ProfileSetupState extends State<ProfileSetup>
     _currentPageIndex += 1;
     _pageViewController.animateToPage(_currentPageIndex,
         duration: Durations.medium3, curve: Easing.standard);
+  }
+
+  void _closeProfileSetup() {
+    Navigator.pop(context);
   }
 }
 
