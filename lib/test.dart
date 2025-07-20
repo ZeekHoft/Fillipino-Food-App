@@ -1,203 +1,415 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/foundation.dart'; // For kDebugMode
+// import 'dart:io';
+// import 'dart:convert';
 // import 'package:flutter/material.dart';
+// import 'package:image_picker/image_picker.dart';
+// import 'package:http/http.dart' as http;
 
-// class FavoriteProvider extends ChangeNotifier {
-//   final List<String> _recipeName = [];
-//   final List<int> _recipeCalories = [];
-//   final List<String> _recipeImage = [];
-//   final List<String> _recipeIngredients = [];
-//   final List<String> _recipeProcess = [];
-//   final List<String> _favoriteRecipeIds = [];
+// // Main entry point of the Flutter application
+// void main() {
+//   runApp(const MyApp());
+// }
 
-//   List<String> get recipeName => _recipeName;
-//   List<String> get recipeImage => _recipeImage;
-//   List<int> get recipeCalories => _recipeCalories;
-//   List<String> get recipeIngredients => _recipeIngredients;
-//   List<String> get recipeProcess => _recipeProcess;
-//   List<String> get favoriteRecipeIds => _favoriteRecipeIds;
+// // MyApp is the root widget of the application
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-//   // Private method to handle adding/removing favorite IDs in Firestore
-//   // FIX: Ensured the logic for Firestore interaction is correctly placed
-//   // FIX: Added a comprehensive try-catch block
-//   Future<void> _updateFavoritesInFireBase(String docId, bool isAdding) async {
-//     final currentUser = FirebaseAuth.instance.currentUser;
-
-//     // FIX: Early exit if no valid user, preventing subsequent code from running incorrectly
-//     if (currentUser == null || currentUser.email == null) {
-//       if (kDebugMode) {
-//         print(
-//             "User not logged in or email not available. Cannot update favorites in Firebase.");
-//       }
-//       return;
-//     }
-
-//     try {
-//       // FIX: Changed collection name to 'users_data' for consistency with SignupPage
-//       final userDocQuery = await FirebaseFirestore.instance
-//           .collection('users_data') // Corrected collection name
-//           .where('email', isEqualTo: currentUser.email)
-//           .limit(1)
-//           .get();
-
-//       if (userDocQuery.docs.isEmpty) {
-//         if (kDebugMode) {
-//           print(
-//               "User data document not found for email: ${currentUser.email}. Cannot update favorites.");
-//         }
-//         // You might consider creating the user data document here if it's expected
-//         // to exist by this point based on your app's flow (e.g., if signup guarantees it).
-//         return;
-//       }
-
-//       final userDocRef = userDocQuery.docs.first.reference;
-
-//       if (isAdding) {
-//         // Add the recipe ID to the 'favorites' array field
-//         await userDocRef.update({
-//           'favorites': FieldValue.arrayUnion([docId]),
-//         });
-//         if (kDebugMode) {
-//           print("Added $docId to Firestore favorites for ${currentUser.email}");
-//         }
-//       } else {
-//         // Remove the recipe ID from the 'favorites' array field
-//         await userDocRef.update({
-//           'favorites': FieldValue.arrayRemove([docId]),
-//         });
-//         if (kDebugMode) {
-//           print(
-//               "Removed $docId from Firestore favorites for ${currentUser.email}");
-//         }
-//       }
-//     } catch (e) {
-//       // FIX: Proper catch block for errors during Firestore operations
-//       if (kDebugMode) {
-//         print("Error updating favorites in Firebase: $e");
-//       }
-//       // You might want to handle this error more gracefully in a real app (e.g., show a snackbar)
-//     }
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'AI Recipe Generator',
+//       theme: ThemeData(
+//         primarySwatch: Colors.blue,
+//         visualDensity: VisualDensity.adaptivePlatformDensity,
+//         fontFamily: 'Inter', // Using Inter font as per instructions
+//       ),
+//       home: const RecipeGeneratorScreen(),
+//     );
 //   }
+// }
 
-//   // Modified loadFavorites to fetch from Firestore
-//   // FIX: Ensured consistency in collection name and improved error prints
-//   void loadFavorites() async {
-//     // Clear previous data, as we will re-fetch it based on IDs
-//     _favoriteRecipeIds.clear();
-//     _recipeName.clear();
-//     _recipeImage.clear();
-//     _recipeIngredients.clear();
-//     _recipeCalories.clear();
-//     _recipeProcess.clear();
+// // RecipeGeneratorScreen is the main screen of the application
+// class RecipeGeneratorScreen extends StatefulWidget {
+//   const RecipeGeneratorScreen({super.key});
 
-//     final currentUser = FirebaseAuth.instance.currentUser;
-//     if (currentUser == null || currentUser.email == null) {
-//       if (kDebugMode) {
-//         print("User not logged in. Cannot load favorites from Firebase.");
-//       }
-//       notifyListeners(); // Notify listeners even if no user, to clear state
-//       return;
-//     }
+//   @override
+//   State<RecipeGeneratorScreen> createState() => _RecipeGeneratorScreenState();
+// }
+
+// class _RecipeGeneratorScreenState extends State<RecipeGeneratorScreen> {
+//   // State variables to hold recipe data and UI state
+//   String? _recipeName;
+//   List<String>? _ingredientsList;
+//   List<String>? _instructions;
+//   String?
+//       _recipeImageBase64; // This will remain null as ChatGPT cannot generate images.
+//   bool _isLoading = false;
+//   String? _errorMessage;
+
+//   // Initialize ImagePicker instance
+//   final ImagePicker _picker = ImagePicker();
+
+//   // API key for ChatGPT - IMPORTANT: Replace with your actual API key.
+//   // For production, use environment variables or a secure configuration.
+//   final String _chatGptApiKey =
+//       ""; // Your ChatGPT API Key (e.g., sk-...)
+
+//   // Function to pick an image from the camera
+//   Future<void> _pickImage() async {
+//     setState(() {
+//       _isLoading = true;
+//       _errorMessage = null;
+//       _recipeName = null;
+//       _ingredientsList = null;
+//       _instructions = null;
+//       _recipeImageBase64 = null; // Reset image
+//     });
 
 //     try {
-//       // FIX: Changed collection name to 'users_data' for consistency
-//       final userDocQuery = await FirebaseFirestore.instance
-//           .collection('users_data') // Corrected collection name
-//           .where('email', isEqualTo: currentUser.email)
-//           .limit(1)
-//           .get();
+//       final XFile? image = await _picker.pickImage(source: ImageSource.camera);
 
-//       if (userDocQuery.docs.isNotEmpty) {
-//         final userData = userDocQuery.docs.first.data();
-//         // Assuming 'favorites' is a List<dynamic> in Firestore
-//         final List<dynamic> firestoreFavorites = userData['favorites'] ?? [];
+//       if (image != null) {
+//         // Read image bytes and encode to Base64
+//         List<int> imageBytes = await image.readAsBytes();
+//         String base64Image = base64Encode(imageBytes);
 
-//         // Add favorites from Firestore to the in-memory list
-//         _favoriteRecipeIds
-//             .addAll(firestoreFavorites.map((e) => e.toString()).toList());
+//         // Step 1: Get ingredients from image using ChatGPT Vision API (e.g., GPT-4o)
+//         final String? identifiedIngredients =
+//             await _getIngredientsFromImage(base64Image);
 
-//         // Now, fetch the full recipe details for each favorited ID
-//         if (_favoriteRecipeIds.isNotEmpty) {
-//           final recipeCollection =
-//               FirebaseFirestore.instance.collection('recipes');
-//           for (String docId in _favoriteRecipeIds) {
-//             try {
-//               DocumentSnapshot doc = await recipeCollection.doc(docId).get();
-//               if (doc.exists) {
-//                 Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-//                 _recipeName.add(data['name'] as String);
-//                 _recipeImage.add(data['image'] as String);
-//                 _recipeCalories.add(data['calories'] as int);
-//                 _recipeIngredients.add(data['ingredients'] as String);
-//                 _recipeProcess.add(data['process'] as String);
-//               } else {
-//                 if (kDebugMode) {
-//                   print(
-//                       'Recipe document with ID ${docId} not found in Firebase. It might have been deleted.');
-//                 }
-//                 // Optional: You might want to remove this invalid docId from the user's favorites in Firestore here
-//                 // if it no longer corresponds to an existing recipe.
-//               }
-//             } catch (e) {
-//               if (kDebugMode) {
-//                 print('Error fetching recipe document $docId: $e');
-//               }
-//             }
+//         if (identifiedIngredients != null) {
+//           // Step 2: Generate recipe text using ChatGPT Text API
+//           final Map<String, dynamic>? recipeData =
+//               await _generateRecipeText(identifiedIngredients);
+
+//           if (recipeData != null) {
+//             setState(() {
+//               _recipeName = recipeData['recipeName'];
+//               _ingredientsList =
+//                   List<String>.from(recipeData['ingredientsList']);
+//               _instructions = List<String>.from(recipeData['instructions']);
+//             });
+
+//             // Note: ChatGPT does not generate images. _recipeImageBase64 will remain null.
+//             // If you need image generation, you would need to integrate a separate image generation API.
 //           }
 //         }
-//       } else {
-//         if (kDebugMode) {
-//           print(
-//               "User data document not found for email: ${currentUser.email}. No favorites to load.");
-//         }
 //       }
 //     } catch (e) {
-//       if (kDebugMode) {
-//         print("Error loading favorites from Firebase: $e");
-//       }
+//       setState(() {
+//         _errorMessage = 'Error: ${e.toString()}';
+//       });
+//       print('Error during recipe generation: $e');
 //     } finally {
-//       notifyListeners();
+//       setState(() {
+//         _isLoading = false;
+//       });
 //     }
 //   }
 
-//   void toggleFavorite(String docId, String name, String image, int calories,
-//       String ingredient, String process) {
-//     final bool isCurrentlyFavorite = _favoriteRecipeIds.contains(docId);
+//   // Function to call ChatGPT Vision API for ingredient recognition
+//   // Uses GPT-4o model for multimodal capabilities.
+//   Future<String?> _getIngredientsFromImage(String base64Image) async {
+//     final url = Uri.parse("https://api.openai.com/v1/chat/completions");
+//     try {
+//       final response = await http.post(
+//         url,
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': 'Bearer $_chatGptApiKey',
+//         },
+//         body: jsonEncode({
+//           "model": "gpt-4o", // Use a model capable of vision, e.g., gpt-4o
+//           "messages": [
+//             {
+//               "role": "user",
+//               "content": [
+//                 {
+//                   "type": "text",
+//                   "text":
+//                       "What ingredients do you see in this image? List them concisely, separated by commas."
+//                 },
+//                 {
+//                   "type": "image_url",
+//                   "image_url": {"url": "data:image/jpeg;base64,$base64Image"}
+//                 }
+//               ]
+//             }
+//           ],
+//           "max_tokens": 300, // Limit response length for ingredients
+//         }),
+//       );
 
-//     if (isCurrentlyFavorite) {
-//       // Logic for REMOVING a favorite from in-memory lists
-//       _favoriteRecipeIds.remove(docId);
-
-//       // Your existing logic for index-based removal
-//       final index = _recipeName.indexOf(name);
-//       if (index != -1) {
-//         _recipeName.removeAt(index);
-//         _recipeImage.removeAt(index);
-//         _recipeCalories.removeAt(index);
-//         _recipeIngredients.removeAt(index);
-//         _recipeProcess.removeAt(index);
+//       if (response.statusCode == 200) {
+//         final jsonResponse = jsonDecode(response.body);
+//         // Extract and return ingredients text
+//         return jsonResponse['choices'][0]['message']['content'];
+//       } else {
+//         throw Exception(
+//             'Failed to get ingredients from ChatGPT: ${response.statusCode} - ${response.body}');
 //       }
-//       // FIX: Call the Firestore update method for removal
-//       _updateFavoritesInFireBase(docId, false);
-//     } else {
-//       // Logic for ADDING a favorite to in-memory lists
-//       _favoriteRecipeIds.add(docId);
-//       _recipeName.add(name);
-//       _recipeImage.add(image);
-//       _recipeCalories.add(calories);
-//       _recipeIngredients.add(ingredient);
-//       // FIX: Corrected typo - store 'process' not 'ingredient' again
-//       _recipeProcess.add(process);
-
-//       // FIX: Call the Firestore update method for addition
-//       _updateFavoritesInFireBase(docId, true);
+//     } catch (e) {
+//       print('Error getting ingredients from image using ChatGPT: $e');
+//       rethrow;
 //     }
-
-//     notifyListeners();
 //   }
 
-//   bool isExist(String docId) {
-//     return _favoriteRecipeIds.contains(docId);
+//   // Function to call ChatGPT Text API for recipe generation
+//   Future<Map<String, dynamic>?> _generateRecipeText(String ingredients) async {
+//     final url = Uri.parse("https://api.openai.com/v1/chat/completions");
+//     try {
+//       final response = await http.post(
+//         url,
+//         headers: {
+//           'Content-Type': 'application/json',
+//           'Authorization': 'Bearer $_chatGptApiKey',
+//         },
+//         body: jsonEncode({
+//           "model":
+//               "gpt-4o", // You can use gpt-3.5-turbo or gpt-4 for text generation
+//           "messages": [
+//             {
+//               "role": "system",
+//               "content":
+//                   "You are a helpful assistant that generates recipes. Your output must be a JSON object."
+//             },
+//             {
+//               "role": "user",
+//               "content":
+//                   "Based on these ingredients: $ingredients, generate a recipe. Provide the recipe name, a list of ingredients with quantities, and step-by-step instructions. Format the response as a JSON object with keys: 'recipeName' (string), 'ingredientsList' (array of strings), 'instructions' (array of strings)."
+//             }
+//           ],
+//           "response_format": {"type": "json_object"}, // Request JSON output
+//           "max_tokens": 1000, // Adjust as needed for recipe length
+//         }),
+//       );
+
+//       if (response.statusCode == 200) {
+//         final jsonResponse = jsonDecode(response.body);
+//         final String jsonString =
+//             jsonResponse['choices'][0]['message']['content'];
+//         // The response content is already a JSON string, parse it directly
+//         return jsonDecode(jsonString);
+//       } else {
+//         throw Exception(
+//             'Failed to generate recipe text from ChatGPT: ${response.statusCode} - ${response.body}');
+//       }
+//     } catch (e) {
+//       print('Error generating recipe text using ChatGPT: $e');
+//       rethrow;
+//     }
+//   }
+
+//   // This function is no longer used as ChatGPT does not generate images.
+//   // Kept for reference.
+//   // Future<String?> _generateRecipeImage(String recipeName) async {
+//   //   // ChatGPT does not provide image generation.
+//   //   // You would need a separate image generation API (like DALL-E or Imagen).
+//   //   return null;
+//   // }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('AI Recipe Generator'),
+//         centerTitle: true,
+//         backgroundColor: Colors.blueAccent,
+//       ),
+//       body: SingleChildScrollView(
+//         padding: const EdgeInsets.all(16.0),
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: <Widget>[
+//             // Button to pick image
+//             ElevatedButton.icon(
+//               onPressed: _isLoading ? null : _pickImage,
+//               icon: const Icon(Icons.camera_alt),
+//               label: const Text('Take Picture of Ingredients'),
+//               style: ElevatedButton.styleFrom(
+//                 padding: const EdgeInsets.symmetric(vertical: 15),
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(10),
+//                 ),
+//                 backgroundColor: Colors.blueAccent,
+//                 foregroundColor: Colors.white,
+//                 textStyle: const TextStyle(fontSize: 18),
+//               ),
+//             ),
+//             const SizedBox(height: 20),
+
+//             // Loading indicator
+//             if (_isLoading)
+//               const Center(
+//                 child: Column(
+//                   children: [
+//                     CircularProgressIndicator(),
+//                     SizedBox(height: 10),
+//                     Text('Generating recipe...',
+//                         style: TextStyle(fontSize: 16)),
+//                   ],
+//                 ),
+//               ),
+
+//             // Error message display
+//             if (_errorMessage != null)
+//               Container(
+//                 padding: const EdgeInsets.all(12),
+//                 margin: const EdgeInsets.only(bottom: 20),
+//                 decoration: BoxDecoration(
+//                   color: Colors.red.shade100,
+//                   borderRadius: BorderRadius.circular(8),
+//                   border: Border.all(color: Colors.red.shade400),
+//                 ),
+//                 child: Text(
+//                   _errorMessage!,
+//                   style: TextStyle(
+//                       color: Colors.red.shade800, fontWeight: FontWeight.bold),
+//                   textAlign: TextAlign.center,
+//                 ),
+//               ),
+
+//             // Display generated recipe image (will be empty if using only ChatGPT)
+//             if (_recipeImageBase64 != null)
+//               Container(
+//                 decoration: BoxDecoration(
+//                   borderRadius: BorderRadius.circular(12),
+//                   boxShadow: [
+//                     BoxShadow(
+//                       color: Colors.grey.withOpacity(0.5),
+//                       spreadRadius: 2,
+//                       blurRadius: 7,
+//                       offset: const Offset(0, 3), // changes position of shadow
+//                     ),
+//                   ],
+//                 ),
+//                 child: ClipRRect(
+//                   borderRadius: BorderRadius.circular(12),
+//                   child: Image.memory(
+//                     base64Decode(_recipeImageBase64!),
+//                     fit: BoxFit.cover,
+//                     width: double.infinity,
+//                     height: 250, // Fixed height for recipe image
+//                     errorBuilder: (context, error, stackTrace) => Container(
+//                       height: 250,
+//                       color: Colors.grey[300],
+//                       child: const Center(
+//                         child: Text('Could not load image',
+//                             style: TextStyle(color: Colors.black54)),
+//                       ),
+//                     ),
+//                   ),
+//                 ),
+//               ),
+//             // Message if no image is generated
+//             if (!_isLoading &&
+//                 _recipeName != null &&
+//                 _recipeImageBase64 == null)
+//               Padding(
+//                 padding: const EdgeInsets.symmetric(vertical: 10.0),
+//                 child: Text(
+//                   'Note: Image generation is not available with ChatGPT. You can integrate a separate image generation API (e.g., DALL-E) if needed.',
+//                   style: TextStyle(
+//                       fontSize: 14,
+//                       fontStyle: FontStyle.italic,
+//                       color: Colors.grey[600]),
+//                   textAlign: TextAlign.center,
+//                 ),
+//               ),
+//             const SizedBox(height: 20),
+
+//             // Display recipe name
+//             if (_recipeName != null)
+//               Text(
+//                 _recipeName!,
+//                 style: const TextStyle(
+//                     fontSize: 28,
+//                     fontWeight: FontWeight.bold,
+//                     color: Colors.deepPurple),
+//                 textAlign: TextAlign.center,
+//               ),
+//             const SizedBox(height: 20),
+
+//             // Display ingredients list
+//             if (_ingredientsList != null && _ingredientsList!.isNotEmpty)
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Text(
+//                     'Ingredients:',
+//                     style: TextStyle(
+//                         fontSize: 22,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.blueGrey),
+//                   ),
+//                   const SizedBox(height: 10),
+//                   Container(
+//                     padding: const EdgeInsets.all(12),
+//                     decoration: BoxDecoration(
+//                       color: Colors.grey.shade100,
+//                       borderRadius: BorderRadius.circular(8),
+//                       border: Border.all(color: Colors.grey.shade300),
+//                     ),
+//                     child: ListView.builder(
+//                       shrinkWrap: true,
+//                       physics:
+//                           const NeverScrollableScrollPhysics(), // Disable scrolling for nested ListView
+//                       itemCount: _ingredientsList!.length,
+//                       itemBuilder: (context, index) {
+//                         return Padding(
+//                           padding: const EdgeInsets.symmetric(vertical: 4.0),
+//                           child: Text(
+//                             '• ${_ingredientsList![index]}',
+//                             style: const TextStyle(fontSize: 16),
+//                           ),
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             const SizedBox(height: 20),
+
+//             // Display instructions
+//             if (_instructions != null && _instructions!.isNotEmpty)
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   const Text(
+//                     'Instructions:',
+//                     style: TextStyle(
+//                         fontSize: 22,
+//                         fontWeight: FontWeight.bold,
+//                         color: Colors.blueGrey),
+//                   ),
+//                   const SizedBox(height: 10),
+//                   Container(
+//                     padding: const EdgeInsets.all(12),
+//                     decoration: BoxDecoration(
+//                       color: Colors.grey.shade100,
+//                       borderRadius: BorderRadius.circular(8),
+//                       border: Border.all(color: Colors.grey.shade300),
+//                     ),
+//                     child: ListView.builder(
+//                       shrinkWrap: true,
+//                       physics:
+//                           const NeverScrollableScrollPhysics(), // Disable scrolling for nested ListView
+//                       itemCount: _instructions!.length,
+//                       itemBuilder: (context, index) {
+//                         return Padding(
+//                           padding: const EdgeInsets.symmetric(vertical: 8.0),
+//                           child: Text(
+//                             '${index + 1}. ${_instructions![index]}',
+//                             style: const TextStyle(fontSize: 16),
+//                           ),
+//                         );
+//                       },
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//           ],
+//         ),
+//       ),
+//     );
 //   }
 // }
