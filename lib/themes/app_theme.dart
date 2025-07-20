@@ -9,16 +9,15 @@ class AppTheme {
           GoogleFonts.interTextTheme(ThemeData.light().textTheme).copyWith(
         displayLarge:
             GoogleFonts.itim(fontSize: 48, fontWeight: FontWeight.bold),
-        headlineLarge: TextStyle(
+        headlineLarge: const TextStyle(
           fontSize: 24,
-          fontWeight: FontWeight.normal,
-          color: lightColorScheme.primary,
+          fontWeight: FontWeight.bold,
         ),
         headlineMedium: const TextStyle(
           fontSize: 20,
           fontStyle: FontStyle.italic,
         ),
-        labelLarge: TextStyle(color: lightColorScheme.primary),
+        labelLarge: TextStyle(color: lightColorScheme.outline),
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
