@@ -1,4 +1,5 @@
 import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed.dart';
+import 'package:flilipino_food_app/pages/home_page/user_profile.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatelessWidget {
@@ -11,6 +12,7 @@ class HomePage extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         shrinkWrap: true,
         children: [
+          const UserProfile(),
           Text(
             "Recipes",
             style: Theme.of(context).textTheme.displaySmall,
