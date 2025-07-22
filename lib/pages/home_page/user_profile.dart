@@ -25,42 +25,84 @@ class UserProfile extends StatelessWidget {
     final allergies = profileDataStoring.allergies;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Profile", style: textTheme.displaySmall),
-        const SizedBox(height: 16),
-        Row(
+        Stack(
+          alignment: AlignmentDirectional.bottomCenter,
           children: [
-            CircleAvatar(
-              radius: 35,
-              child: Icon(
-                Icons.person_outline_rounded,
-                size: 35,
-                color: Theme.of(context).colorScheme.onPrimary,
+            Container(
+              height: 168,
+              color: Theme.of(context).colorScheme.primary,
+            ),
+            Container(
+              height: 80,
+              decoration: BoxDecoration(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.elliptical(320, 100),
+                ),
               ),
             ),
-            const SizedBox(width: 24),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(username, style: textTheme.headlineLarge),
-                Opacity(
-                    opacity: 0.8,
-                    child: Text(email, style: textTheme.bodyLarge))
-              ],
-            )
+            Positioned(
+              bottom: 24,
+              child: CircleAvatar(
+                radius: 64,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                child: Icon(
+                  Icons.person_outline_rounded,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+            ),
           ],
         ),
-        ListTile(
-          leading: const Icon(Icons.fastfood_outlined),
-          subtitle: Text("Calorie Limit: $calories"),
+        Text(username, style: textTheme.headlineLarge),
+        const SizedBox(height: 16),
+        Text(
+          "Allergies",
+          style: Theme.of(context).textTheme.titleMedium,
         ),
-        ListTile(
-          leading: const Icon(Icons.emergency_outlined),
-          title: const Text("Dietary Restrictions"),
-          subtitle: Text(allergies),
-        ),
+        const SizedBox(height: 8),
+        _convertAllergies(profileDataStoring.allergies),
+        const SizedBox(width: 24),
       ],
+    );
+  }
+
+  _convertAllergies(String allergies) {
+    List<String> allergyList = allergies.split(',');
+    List<Widget> allergyChips = [];
+    for (var allergy in allergyList) {
+      allergyChips.add(AllergyChip(allergy: allergy));
+    }
+    return Wrap(
+      children: allergyChips,
+    );
+  }
+}
+
+class AllergyChip extends StatelessWidget {
+  const AllergyChip({
+    super.key,
+    required this.allergy,
+  });
+
+  final String allergy;
+
+  @override
+  Widget build(BuildContext context) {
+    return Chip(
+      label: Text(
+        allergy,
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadiusGeometry.circular(16),
+      ),
+      side: BorderSide.none,
     );
   }
 }
