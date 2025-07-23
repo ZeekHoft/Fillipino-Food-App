@@ -62,9 +62,19 @@ class UserProfile extends StatelessWidget {
           "Allergies",
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        const SizedBox(height: 8),
         _convertAllergies(profileDataStoring.allergies),
-        const SizedBox(width: 24),
+        const IntrinsicHeight(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ProfileStat(count: 10, name: "posts"),
+              VerticalDivider(indent: 8, endIndent: 8),
+              ProfileStat(count: 69, name: "followers"),
+              VerticalDivider(indent: 8, endIndent: 8),
+              ProfileStat(count: 58, name: "following")
+            ],
+          ),
+        )
       ],
     );
   }
@@ -75,8 +85,11 @@ class UserProfile extends StatelessWidget {
     for (var allergy in allergyList) {
       allergyChips.add(AllergyChip(allergy: allergy));
     }
-    return Wrap(
-      children: allergyChips,
+    return Padding(
+      padding: const EdgeInsets.only(top: 8, bottom: 24),
+      child: Wrap(
+        children: allergyChips,
+      ),
     );
   }
 }
@@ -103,6 +116,29 @@ class AllergyChip extends StatelessWidget {
         borderRadius: BorderRadiusGeometry.circular(16),
       ),
       side: BorderSide.none,
+    );
+  }
+}
+
+class ProfileStat extends StatelessWidget {
+  const ProfileStat({super.key, required this.count, required this.name});
+
+  final int count;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(count.toString()),
+          Text(
+            name.toUpperCase(),
+            style: Theme.of(context).textTheme.labelMedium,
+          ),
+        ],
+      ),
     );
   }
 }
