@@ -46,73 +46,139 @@ class RecipeFeedItem extends StatelessWidget {
           ),
         );
       },
-      child: AspectRatio(
-        aspectRatio: 4 / 3,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Container(
-                decoration:
-                    BoxDecoration(borderRadius: BorderRadius.circular(8)),
-                clipBehavior: Clip.antiAlias,
-                child: Image.network(
-                  imageUrl,
-                  fit: BoxFit.cover,
+      child: Card.filled(
+        color: Theme.of(context).colorScheme.primary,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.network(
+                    imageUrl,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            Positioned.fill(
-              child: Container(
-                padding: const EdgeInsets.all(8.0),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
-                    gradient: LinearGradient(
-                        colors: [Colors.transparent, Colors.black],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: [0.4, 1])),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(name),
-                    Text(calories.toString()),
-                    if (displayCalorieWarning(calories, userCalorieLimit) !=
-                        null)
-                      displayCalorieWarning(calories, userCalorieLimit)!
-                  ],
-                ),
+              const SizedBox(height: 4),
+              Text(
+                name,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                textAlign: TextAlign.center,
               ),
-            ),
-            Positioned.directional(
-              textDirection: TextDirection.ltr,
-              end: 8.0,
-              top: 8.0,
-              child: CircleAvatar(
-                backgroundColor:
-                    Theme.of(context).colorScheme.surfaceContainerHighest,
-                child: IconButton(
-                  onPressed: () {
-                    // passing documentId as the first argument to toggleFavorite
-                    provider.toggleFavorite(documentId, name, imageUrl,
-                        calories, ingredients, process);
-                  },
-                  icon: provider.isExist(documentId)
-                      ? Icon(
-                          Icons.bookmark,
-                          color: Theme.of(context).colorScheme.primary,
-                        )
-                      : const Icon(Icons.bookmark_add_outlined),
-                  color: Theme.of(context).colorScheme.onSurface,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  5,
+                  (index) => const Icon(
+                    Icons.star,
+                    color: Colors.yellow,
+                    size: 16,
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
+      ),
+      // OldRecipeItem(imageUrl: imageUrl, name: name, calories: calories, userCalorieLimit: userCalorieLimit, provider: provider, documentId: documentId, ingredients: ingredients, process: process),
+    );
+  }
+}
+
+/* OLD CODE
+class OldRecipeItem extends StatelessWidget {
+  const OldRecipeItem({
+    super.key,
+    required this.imageUrl,
+    required this.name,
+    required this.calories,
+    required this.userCalorieLimit,
+    required this.provider,
+    required this.documentId,
+    required this.ingredients,
+    required this.process,
+  });
+
+  final String imageUrl;
+  final String name;
+  final int calories;
+  final int userCalorieLimit;
+  final FavoriteProvider provider;
+  final String documentId;
+  final String ingredients;
+  final String process;
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 4 / 3,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+              clipBehavior: Clip.antiAlias,
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                  gradient: LinearGradient(
+                      colors: [Colors.transparent, Colors.black],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      stops: [0.4, 1])),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(name),
+                  Text(calories.toString()),
+                  if (displayCalorieWarning(calories, userCalorieLimit) != null)
+                    displayCalorieWarning(calories, userCalorieLimit)!
+                ],
+              ),
+            ),
+          ),
+          Positioned.directional(
+            textDirection: TextDirection.ltr,
+            end: 8.0,
+            top: 8.0,
+            child: CircleAvatar(
+              backgroundColor:
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
+              child: IconButton(
+                onPressed: () {
+                  // passing documentId as the first argument to toggleFavorite
+                  provider.toggleFavorite(documentId, name, imageUrl, calories,
+                      ingredients, process);
+                },
+                icon: provider.isExist(documentId)
+                    ? Icon(
+                        Icons.bookmark,
+                        color: Theme.of(context).colorScheme.primary,
+                      )
+                    : const Icon(Icons.bookmark_add_outlined),
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
 }
+*/
 
 // display warning for calorie limit
 Widget? displayCalorieWarning(int calories, int userCalorieLimit) {

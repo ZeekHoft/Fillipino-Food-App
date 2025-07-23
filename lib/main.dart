@@ -28,8 +28,9 @@ void main() async {
       child: RecipeStreamBuilder(
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          themeMode: ThemeMode.dark,
-          darkTheme: AppTheme.dark,
+          themeMode: ThemeMode.light,
+          theme: AppTheme.light,
+          // darkTheme: AppTheme.dark,
           home: Authenticate(),
         ),
       ),

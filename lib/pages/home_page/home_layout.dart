@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
-import 'package:flilipino_food_app/pages/home_page/home_widgets/profile_section.dart';
+import 'package:flilipino_food_app/pages/settings/settings_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';
 import 'package:flutter/material.dart';
 
@@ -20,10 +20,9 @@ class _HomeLayoutState extends State<HomeLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "DAPPLI",
-          style: Theme.of(context).textTheme.headlineMedium,
-        ),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        title: const Text("DAPPLI"),
         actions: [
           IconButton(
             onPressed: () {
@@ -34,6 +33,24 @@ class _HomeLayoutState extends State<HomeLayout> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: CircleBorder(
+          side: BorderSide(
+            width: 3,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        tooltip: "Capture Ingredients",
+        child: Icon(
+          Icons.center_focus_weak_outlined,
+          size: 36,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _currentPageIndex,
@@ -42,14 +59,18 @@ class _HomeLayoutState extends State<HomeLayout> {
         }),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: "Home"),
+          NavigationDestination(icon: Icon(Icons.people), label: "Social"),
           NavigationDestination(icon: Icon(Icons.bookmarks), label: "Saved"),
-          NavigationDestination(icon: Icon(Icons.person), label: "Profile")
+          NavigationDestination(icon: Icon(Icons.settings), label: "Settings")
         ],
       ),
       body: [
         const HomePage(),
+        const Center(
+          child: Text("Nothing to see here..."),
+        ),
         const FavoritePage(),
-        const ProfileSection(),
+        const SettingsPage(),
       ][_currentPageIndex],
     );
   }

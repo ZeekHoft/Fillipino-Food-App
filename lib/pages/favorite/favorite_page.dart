@@ -46,10 +46,11 @@ class _FavoritePageState extends State<FavoritePage> {
       return CustomScrollView(
         slivers: [
           SliverList.list(children: [
+            const SizedBox(height: 24),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text("Saved Recipes",
-                  style: Theme.of(context).textTheme.displaySmall),
+                  style: Theme.of(context).textTheme.titleLarge),
             ),
             const SizedBox(height: 24)
           ]),

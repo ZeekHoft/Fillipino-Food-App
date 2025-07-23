@@ -31,18 +31,33 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
     final userEmail = context.watch<ProfileDataStoring>();
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        forceMaterialTransparency: false,
+      ),
       body: ListView(
         children: [
-          SizedBox(
-              height: 300,
-              child: Image.network(
-                widget.recipeImage,
-                fit: BoxFit.fitWidth,
-              )),
+          Center(
+            child: Container(
+              padding: const EdgeInsets.all(24.0),
+              height: 360,
+              width: 360,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Image.network(
+                  widget.recipeImage,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                widget.recipeName,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(width: 8),
               IconButton(
                   onPressed: () {
                     provider.toggleFavorite(
@@ -63,28 +78,123 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                       : const Icon(Icons.bookmark_add_outlined)),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 16),
-                Text(
-                  widget.recipeName,
-                  style: const TextStyle(fontSize: 48, height: 0.8),
+          const SizedBox(height: 16),
+          // Display allergen warning according to user
+          // TODO: add logic
+          Center(
+            child: Card(
+              color: Theme.of(context).colorScheme.error,
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.warning,
+                      color: Theme.of(context).colorScheme.onError,
+                    ),
+                    Text(
+                      "Allergen Warning",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onError),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 16),
-                const Text("Ingredients", style: TextStyle(fontSize: 24)),
-                Text(widget.recipeIngredients),
-                const SizedBox(height: 16),
-                const Text("Process", style: TextStyle(fontSize: 24)),
-                Text(widget.recipeProcess),
-                const Text("calories", style: TextStyle(fontSize: 24)),
-                Text(widget.recipeCalories.toString()),
-              ],
+              ),
             ),
           ),
+          const SizedBox(height: 16),
+          Center(
+            child: SizedBox(
+              width: 400,
+              child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    showDragHandle: true,
+                    enableDrag: true,
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => RecipeDetails(widget: widget),
+                  );
+                },
+                child: const Text("Recipe"),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: SizedBox(
+              width: 400,
+              child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    showDragHandle: true,
+                    enableDrag: true,
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => NutritionalDetails(widget: widget),
+                  );
+                },
+                child: const Text("Nutritional Facts"),
+              ),
+            ),
+          ),
+          const SizedBox(height: 16),
         ],
+      ),
+    );
+  }
+}
+
+class RecipeDetails extends StatelessWidget {
+  const RecipeDetails({
+    super.key,
+    required this.widget,
+  });
+
+  final DisplayRecipe widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("Ingredients", style: Theme.of(context).textTheme.titleMedium),
+            Text(widget.recipeIngredients),
+            const SizedBox(height: 16),
+            Text(
+              "Process",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            Text(widget.recipeProcess),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class NutritionalDetails extends StatelessWidget {
+  const NutritionalDetails({super.key, required this.widget});
+
+  final DisplayRecipe widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(24),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text("Calories", style: Theme.of(context).textTheme.titleMedium),
+            Text(widget.recipeCalories.toString()),
+          ],
+        ),
       ),
     );
   }
