@@ -132,7 +132,10 @@ class ProfileStat extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(count.toString()),
+          Text(
+            count.toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
           Text(
             name.toUpperCase(),
             style: Theme.of(context).textTheme.labelMedium,
