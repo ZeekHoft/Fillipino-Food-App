@@ -13,16 +13,17 @@ class HomePage extends StatelessWidget {
         shrinkWrap: true,
         children: [
           const UserProfile(),
+          const SizedBox(height: 24),
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               "Recipes",
-              style: Theme.of(context).textTheme.displaySmall,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           const SizedBox(height: 16),
           const Padding(
-            padding: EdgeInsets.all(16.0),
+            padding: EdgeInsets.symmetric(horizontal: 16),
             child: RecipeFeed(),
           ),
           const SizedBox(height: 24),
