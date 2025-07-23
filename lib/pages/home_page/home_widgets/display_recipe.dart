@@ -79,6 +79,8 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
             ],
           ),
           const SizedBox(height: 16),
+          // Display allergen warning according to user
+          // TODO: add logic
           Center(
             child: Card(
               color: Theme.of(context).colorScheme.error,

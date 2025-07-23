@@ -76,6 +76,7 @@ class _SignupPageState extends State<SignupPage> {
       }
 
       if (mounted) {
+        // Open profile setup process upon completing registration
         Navigator.pop(context);
         Navigator.push(
           context,

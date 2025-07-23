@@ -2,6 +2,7 @@ import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/profile_setup_pages.dart';
 import 'package:flutter/material.dart';
 
+// Individual pages for each step of setting up the profile
 const setupPages = <Widget>[
   UserDetails(),
   UserGoals(),
@@ -61,6 +62,7 @@ class _ProfileSetupState extends State<ProfileSetup>
                   children: setupPages),
             ),
             ElevatedButton(
+              // Exit when on the last page of process
               onPressed: _isLastPage ? _closeProfileSetup : _goNextPage,
               child: _isLastPage ? const Text("Done") : const Text("Next"),
             ),
@@ -100,6 +102,7 @@ class _ProfileSetupState extends State<ProfileSetup>
   }
 }
 
+// Page indicator displayed on top of page
 class PageIndicator extends StatelessWidget {
   const PageIndicator({
     super.key,

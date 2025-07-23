@@ -2,6 +2,7 @@ import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+// Shows profile of user on top of home screen
 class UserProfile extends StatelessWidget {
   const UserProfile({super.key});
 
