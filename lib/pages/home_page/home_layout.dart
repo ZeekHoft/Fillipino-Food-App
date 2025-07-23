@@ -33,6 +33,24 @@ class _HomeLayoutState extends State<HomeLayout> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        elevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        shape: CircleBorder(
+          side: BorderSide(
+            width: 3,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+        ),
+        tooltip: "Capture Ingredients",
+        child: Icon(
+          Icons.center_focus_weak_outlined,
+          size: 36,
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _currentPageIndex,
@@ -41,12 +59,16 @@ class _HomeLayoutState extends State<HomeLayout> {
         }),
         destinations: const [
           NavigationDestination(icon: Icon(Icons.home), label: "Home"),
+          NavigationDestination(icon: Icon(Icons.people), label: "Social"),
           NavigationDestination(icon: Icon(Icons.bookmarks), label: "Saved"),
           NavigationDestination(icon: Icon(Icons.settings), label: "Settings")
         ],
       ),
       body: [
         const HomePage(),
+        const Center(
+          child: Text("Nothing to see here..."),
+        ),
         const FavoritePage(),
         const SettingsPage(),
       ][_currentPageIndex],
