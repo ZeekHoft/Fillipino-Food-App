@@ -122,21 +122,23 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
           ),
           const SizedBox(height: 16),
           Center(
-              child: SizedBox(
-            width: 400,
-            child: ElevatedButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  showDragHandle: true,
-                  enableDrag: true,
-                  context: context,
-                  isScrollControlled: true,
-                  builder: (context) => NutritionalDetails(widget: widget),
-                );
-              },
-              child: const Text("Nutritional Facts"),
+            child: SizedBox(
+              width: 400,
+              child: ElevatedButton(
+                onPressed: () {
+                  showModalBottomSheet(
+                    showDragHandle: true,
+                    enableDrag: true,
+                    context: context,
+                    isScrollControlled: true,
+                    builder: (context) => NutritionalDetails(widget: widget),
+                  );
+                },
+                child: const Text("Nutritional Facts"),
+              ),
             ),
-          )),
+          ),
+          const SizedBox(height: 16),
         ],
       ),
     );

@@ -17,6 +17,13 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return ListView(
       children: [
+        const SizedBox(height: 24),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child:
+              Text("Settings", style: Theme.of(context).textTheme.titleLarge),
+        ),
+        const SizedBox(height: 24),
         const ListTile(
             leading: Icon(Icons.edit_outlined), title: Text("Edit Profile")),
         const ListTile(
