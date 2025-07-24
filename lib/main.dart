@@ -1,4 +1,5 @@
 import 'package:flilipino_food_app/pages/authentication_page/authenticate.dart';
+import 'package:flilipino_food_app/pages/authentication_page/profile_setup.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
@@ -32,6 +33,7 @@ void main() async {
           theme: AppTheme.light,
           // darkTheme: AppTheme.dark,
           home: Authenticate(),
+          // home: ProfileSetup(),
         ),
       ),
     ),

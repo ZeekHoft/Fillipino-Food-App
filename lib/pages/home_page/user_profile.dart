@@ -21,9 +21,9 @@ class UserProfile extends StatelessWidget {
     }
 
     final username = profileDataStoring.username;
-    final email = profileDataStoring.email;
-    final calories = profileDataStoring.caloriesLimit.toString();
-    final allergies = profileDataStoring.allergies;
+    // final email = profileDataStoring.email;
+    // final calories = profileDataStoring.caloriesLimit.toString();
+    // final allergies = profileDataStoring.allergies;
 
     return Column(
       children: [

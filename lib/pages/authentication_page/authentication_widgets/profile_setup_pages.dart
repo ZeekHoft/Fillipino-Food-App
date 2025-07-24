@@ -1,9 +1,95 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/colored_inputs.dart';
 import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-class UserDetails extends StatelessWidget {
+class UserProfileData {
+  final double height;
+  final double weight;
+  final String gender;
+  final DateTime birthday;
+  UserProfileData(
+      {required this.height,
+      required this.weight,
+      required this.gender,
+      required this.birthday});
+}
+
+class UserDetails extends StatefulWidget {
   const UserDetails({super.key});
+
+  @override
+  State<UserDetails> createState() => _UserDetailsState();
+}
+
+class _UserDetailsState extends State<UserDetails> {
+  final _heightController = TextEditingController();
+  final _weightController = TextEditingController();
+  final _genderController = TextEditingController();
+  final _birthdayController = TextEditingController();
+  bool _isFinished = false;
+
+  // UserProfileData getUserData() {
+  //   return
+  // }
+
+  // Each controller being tracked by the function
+  @override
+  void initState() {
+    super.initState();
+    _heightController.addListener(checkIfAllGood);
+    _weightController.addListener(checkIfAllGood);
+    _genderController.addListener(checkIfAllGood);
+    _birthdayController.addListener(checkIfAllGood);
+  }
+
+  // Dispose data after finish and remove tracking
+  @override
+  void dispose() {
+    _heightController.removeListener(checkIfAllGood);
+    _weightController.removeListener(checkIfAllGood);
+    _genderController.removeListener(checkIfAllGood);
+    _birthdayController.removeListener(checkIfAllGood);
+
+    _heightController.dispose();
+    _weightController.dispose();
+    _genderController.dispose();
+    _birthdayController.dispose();
+
+    super.dispose();
+  }
+
+  void checkIfAllGood() {
+    if (_heightController.text.trim().isNotEmpty &&
+        _weightController.text.trim().isNotEmpty &&
+        _genderController.text.trim().isNotEmpty &&
+        _birthdayController.text.trim().isNotEmpty &&
+        !_isFinished) {
+      _isFinished = true;
+
+      final userData = UserProfileData(
+        height: double.tryParse(_heightController.text.trim()) ??
+            0.0, // Safely parse double
+        weight: double.tryParse(_weightController.text.trim()) ?? 0.0,
+        gender: _genderController.text.trim(),
+        birthday:
+            DateFormat('yyyy-MM-dd').parse(_birthdayController.text.trim()),
+      );
+
+      // Using a Future.microtask to prevent a "setState during build" error
+      // as the listener might trigger during widget rebuilds.
+
+      Future.microtask(() async {
+        await FirebaseFirestore.instance.collection("users_data").add({
+          "height": userData.height,
+          "weight": userData.weight,
+          "gender": userData.gender,
+          "birthday": userData.birthday
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,24 +103,48 @@ class UserDetails extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         const Text("Your height"),
-        const ColoredInputNumber(
+        ColoredInputNumber(
+          controller: _heightController,
           hintText: "Enter your height",
           suffixText: "cm",
         ),
         const SizedBox(height: 8),
         const Text("Your weight"),
-        const ColoredInputNumber(
+        ColoredInputNumber(
+          controller: _weightController,
           hintText: "Enter your weight",
           suffixText: "kg",
         ),
         const Text("Your gender"),
-        const ColoredPlaceholder(
-          hintText: "Select your gender",
+        TextFormField(
+          controller: _genderController,
+          decoration: const InputDecoration(
+            hintText: "Select your gender",
+          ),
         ),
         const SizedBox(height: 8),
         const Text("Your birthday"),
-        const ColoredPlaceholder(
-          hintText: "dd / mm / yyyy",
+        TextFormField(
+          controller: _birthdayController,
+          readOnly: true,
+          decoration: const InputDecoration(
+            hintText: "yyyy/mm/dd",
+          ),
+          onTap: () async {
+            DateTime? pickeddate = await showDatePicker(
+              context: context,
+              initialDate: DateTime.now(),
+              firstDate: DateTime(1950),
+              lastDate: DateTime.now(),
+            );
+
+            if (pickeddate != null) {
+              setState(() {
+                _birthdayController.text =
+                    DateFormat('yyyy-MM-dd').format(pickeddate);
+              });
+            }
+          },
         ),
       ],
     );

@@ -4,7 +4,6 @@ import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/allergy_and_dietary/filter_chips_enums.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
 import 'package:flilipino_food_app/pages/authentication_page/profile_setup.dart';
-import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
 import 'package:flilipino_food_app/util/validators.dart';
 import 'package:flutter/material.dart';
 

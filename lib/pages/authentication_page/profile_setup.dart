@@ -98,6 +98,7 @@ class _ProfileSetupState extends State<ProfileSetup>
   }
 
   void _closeProfileSetup() {
+    print("SEND DATA HERE");
     Navigator.pop(context);
   }
 }
