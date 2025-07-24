@@ -1,23 +1,25 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/colored_inputs.dart';
 import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
+import 'package:flilipino_food_app/util/profile_set_up_util.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class UserProfileData {
-  final double height;
-  final double weight;
-  final String gender;
-  final DateTime birthday;
-  UserProfileData(
-      {required this.height,
-      required this.weight,
-      required this.gender,
-      required this.birthday});
-}
+// instead of re itterating this function call back just use typedef to simplify it
+// honestly its hard to understand for me to explain any further
+typedef UserDetailsCallback = void Function({
+  required double? height,
+  required double? weight,
+  required String? gender,
+  required DateTime? birthday,
+});
+
+typedef UserGoalsCallback = void Function(List<String> goals);
 
 class UserDetails extends StatefulWidget {
-  const UserDetails({super.key});
+  final UserDetailsCallback onDataChanged;
+  //initialData displays pre-existing data instead of blank
+  final ProfileSetUpUtil? initialData;
+  const UserDetails({super.key, required this.onDataChanged, this.initialData});
 
   @override
   State<UserDetails> createState() => _UserDetailsState();
@@ -30,65 +32,51 @@ class _UserDetailsState extends State<UserDetails> {
   final _birthdayController = TextEditingController();
   bool _isFinished = false;
 
-  // UserProfileData getUserData() {
-  //   return
-  // }
-
-  // Each controller being tracked by the function
+  // Pre-fill data using initialData
   @override
   void initState() {
     super.initState();
-    _heightController.addListener(checkIfAllGood);
-    _weightController.addListener(checkIfAllGood);
-    _genderController.addListener(checkIfAllGood);
-    _birthdayController.addListener(checkIfAllGood);
+    if (widget.initialData != null) {
+      _heightController.text = widget.initialData!.height?.toString() ?? '';
+      _weightController.text = widget.initialData!.weight?.toString() ?? '';
+      _genderController.text = widget.initialData!.gender ?? '';
+      if (widget.initialData!.birthday != null) {
+        _birthdayController.text =
+            DateFormat('yyyy-MM-dd').format(widget.initialData!.birthday!);
+      }
+    }
+    // Adds listener to check for any changes
+    _heightController.addListener(_notifyParentForChange);
+    _weightController.addListener(_notifyParentForChange);
+    _genderController.addListener(_notifyParentForChange);
+    _birthdayController.addListener(_notifyParentForChange);
   }
 
   // Dispose data after finish and remove tracking
   @override
   void dispose() {
-    _heightController.removeListener(checkIfAllGood);
-    _weightController.removeListener(checkIfAllGood);
-    _genderController.removeListener(checkIfAllGood);
-    _birthdayController.removeListener(checkIfAllGood);
-
+    _heightController.removeListener(_notifyParentForChange);
+    _weightController.removeListener(_notifyParentForChange);
+    _genderController.removeListener(_notifyParentForChange);
+    _birthdayController.removeListener(_notifyParentForChange);
     _heightController.dispose();
     _weightController.dispose();
     _genderController.dispose();
     _birthdayController.dispose();
-
     super.dispose();
   }
 
-  void checkIfAllGood() {
-    if (_heightController.text.trim().isNotEmpty &&
-        _weightController.text.trim().isNotEmpty &&
-        _genderController.text.trim().isNotEmpty &&
-        _birthdayController.text.trim().isNotEmpty &&
-        !_isFinished) {
-      _isFinished = true;
-
-      final userData = UserProfileData(
-        height: double.tryParse(_heightController.text.trim()) ??
-            0.0, // Safely parse double
-        weight: double.tryParse(_weightController.text.trim()) ?? 0.0,
-        gender: _genderController.text.trim(),
-        birthday:
-            DateFormat('yyyy-MM-dd').parse(_birthdayController.text.trim()),
-      );
-
-      // Using a Future.microtask to prevent a "setState during build" error
-      // as the listener might trigger during widget rebuilds.
-
-      Future.microtask(() async {
-        await FirebaseFirestore.instance.collection("users_data").add({
-          "height": userData.height,
-          "weight": userData.weight,
-          "gender": userData.gender,
-          "birthday": userData.birthday
-        });
-      });
-    }
+  void _notifyParentForChange() {
+    widget.onDataChanged(
+      height: double.tryParse(_heightController.text.trim()),
+      weight: double.tryParse(_weightController.text.trim()),
+      gender: _genderController.text.trim().isNotEmpty
+          ? _genderController.text.trim()
+          : null,
+      birthday: _birthdayController.text.trim().isNotEmpty
+          ? DateFormat('yyyy-MM-dd').parse(_birthdayController.text.trim())
+          : null,
+    );
   }
 
   @override
@@ -142,6 +130,7 @@ class _UserDetailsState extends State<UserDetails> {
               setState(() {
                 _birthdayController.text =
                     DateFormat('yyyy-MM-dd').format(pickeddate);
+                _notifyParentForChange(); // Notify parent when date is picked, this is the trigger
               });
             }
           },
@@ -151,38 +140,77 @@ class _UserDetailsState extends State<UserDetails> {
   }
 }
 
-class UserGoals extends StatelessWidget {
-  const UserGoals({super.key});
+class UserGoals extends StatefulWidget {
+  final UserGoalsCallback onDataChanged;
+  final List<String>? initialGoals;
+  const UserGoals({super.key, required this.onDataChanged, this.initialGoals});
+
+  @override
+  State<UserGoals> createState() => _UserGoalsState();
+}
+
+class _UserGoalsState extends State<UserGoals> {
+  final List<String> _selectedGoals = [];
+  final List<String> _availableGoals = [
+    "Gain Muscle",
+    "Healthy Habits",
+    "Weight Loss",
+    "Gain Weight"
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialGoals != null) {
+      _selectedGoals.addAll(widget.initialGoals!);
+    }
+  }
+
+  void _onCheckBoxChanged(String goal, bool? isChecked) {
+    setState(() {
+      if (isChecked == true) {
+        if (!_selectedGoals.contains(goal)) {
+          _selectedGoals.add(goal);
+        }
+      } else {
+        _selectedGoals.remove(goal);
+      }
+    });
+    widget.onDataChanged(_selectedGoals); //notifyin the parent
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      spacing: 12,
       children: [
-        Text(
-          "Select your Goals",
-          style: Theme.of(context).textTheme.headlineLarge,
-        ),
+        Text("Select your goals"),
         const Text("Select multiple goals"),
-        const ColoredCheckbox(
-          title: "Gain Muscles",
-          icon: Icon(Icons.fitness_center),
-        ),
-        const ColoredCheckbox(
-          title: "Healthy Habits",
-          icon: Icon(Icons.self_improvement),
-        ),
-        const ColoredCheckbox(
-          title: "Weight Loss",
-          icon: Icon(Icons.monitor_weight),
-        ),
-        const ColoredCheckbox(
-          title: "Gain Weight",
-          icon: Icon(Icons.rice_bowl),
-        ),
+        ..._availableGoals.map((goal) {
+          return ColoredCheckbox(
+            title: goal,
+            icon: _goalIcons(goal),
+            value: _selectedGoals.contains(goal),
+            onChanged: (isChecked) => _onCheckBoxChanged(goal, isChecked),
+          );
+        }).toList()
       ],
     );
+  }
+
+  Icon _goalIcons(String goal) {
+    switch (goal) {
+      case "Gain Muscle":
+        return const Icon(Icons.fitness_center_outlined);
+      case "Healthy Habits":
+        return const Icon(Icons.health_and_safety_outlined);
+      case "Weight Loss":
+        return const Icon(Icons.monitor_weight_outlined);
+      case "Gain Weight":
+        return const Icon(Icons.fastfood_outlined);
+      default:
+        return const Icon(Icons.help_center_outlined);
+    }
   }
 }
 
@@ -285,6 +313,31 @@ class _UserSurveyState extends State<UserSurvey> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class ColoredCheckbox extends StatelessWidget {
+  final String title;
+  final Icon icon;
+  final bool value; // Renamed from initialValue to just 'value'
+  final ValueChanged<bool?> onChanged; // Using bool? for onChanged
+
+  const ColoredCheckbox({
+    super.key,
+    required this.title,
+    required this.icon,
+    required this.value, // It's now the *current* value, not just initial
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return CheckboxListTile(
+      title: Text(title),
+      secondary: icon,
+      value: value, // The value directly controls the checkbox
+      onChanged: onChanged, // Pass the onChanged callback directly
     );
   }
 }
