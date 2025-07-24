@@ -39,7 +39,7 @@ class ProfileDataStoring extends ChangeNotifier {
       final snapshot = await FirebaseFirestore.instance
           .collection(
               "users_data") // getting data equal to email / find user by email
-          .where("email", isEqualTo: currentUser!.email)
+          .where("uid", isEqualTo: currentUser.uid)
           .limit(1)
           .get();
       if (snapshot.docs.isNotEmpty) {

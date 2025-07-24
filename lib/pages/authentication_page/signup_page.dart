@@ -52,15 +52,15 @@ class _SignupPageState extends State<SignupPage> {
               confirmPasswordController.text.trim()
           // && userCaloricController.text.trim().isNotEmpty
           ) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
-        addUserDetails(
-          emailController.text.trim(),
-          userNameController.text.trim(),
-          // int.parse(userCaloricController.text.trim())
-        );
+        addUserDetails(emailController.text.trim(),
+            userNameController.text.trim(), userCredential.user!.uid
+            // int.parse(userCaloricController.text.trim())
+            );
       } else if (
           // userCaloricController.text.trim().isEmpty ||
           userNameController.text.trim().isEmpty) {
@@ -103,14 +103,13 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Future addUserDetails(
-    String email,
-    String username,
-    // int calorie
-  ) async {
+  Future addUserDetails(String email, String username, String uid
+      // int calorie
+      ) async {
     await FirebaseFirestore.instance.collection("users_data").add({
       "email": email,
       "username": username,
+      "uid": uid,
       // "calories": calorie,
       // "allergies": selectedDietaryRestrictions.map((e) => e.name).toList()
     });

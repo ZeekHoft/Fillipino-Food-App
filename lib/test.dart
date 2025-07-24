@@ -62,6 +62,7 @@
 //       _ingredientsList = null;
 //       _instructions = null;
 //       _recipeImageBase64 = null; // Reset image
+
 //     });
 
 //     try {
