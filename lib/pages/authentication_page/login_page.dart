@@ -67,34 +67,35 @@ class _LoginPageState extends State<LoginPage> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 12),
-              Text("DAPPLI", style: Theme.of(context).textTheme.displayLarge),
-              const Icon(
-                Icons.food_bank,
-                size: 100,
+              SizedBox(
+                  height: 180,
+                  child: Image.asset(
+                    "dappli_logo.png",
+                  )),
+              const SizedBox(height: 8.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: Text(
+                  "Get instant recipes and nutritional facts just on your fingertips",
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
+                ),
               ),
-              const SizedBox(height: 10),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Hello,",
-                    style: Theme.of(context).textTheme.headlineMedium),
-              ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("Welcome back!",
-                    style: Theme.of(context).textTheme.headlineLarge),
-              ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 48),
               CredentialField(
                 controller: usernameController,
-                hintText: "Email",
+                labelText: "Email",
+                hintText: "Enter your email",
                 obscureText: false,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               CredentialField(
                 controller: passwordController,
-                hintText: "Password",
+                labelText: "Password",
+                hintText: "Enter your password",
                 obscureText: true,
               ),
               const SizedBox(height: 8),
@@ -103,14 +104,14 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   LinkTextButton(
                     onTap: forgotPassword,
-                    text: "Forgot Password",
+                    text: "forgot password?",
                   )
                 ],
               ),
-              const SizedBox(height: 48),
+              const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: signInUser,
-                child: const Text("Log In"),
+                child: const Text("Sign in"),
               ),
               const SizedBox(height: 24),
               const Padding(
@@ -120,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                     Expanded(child: Divider()),
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("Or sign in another way."),
+                      child: Text("or sign in with"),
                     ),
                     Expanded(child: Divider()),
                   ],
@@ -133,7 +134,7 @@ class _LoginPageState extends State<LoginPage> {
                   const Text("Don't have an account? "),
                   LinkTextButton(
                     onTap: widget.onTap,
-                    text: 'Register Here',
+                    text: 'Sign up',
                   ),
                 ],
               )
