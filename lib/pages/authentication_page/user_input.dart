@@ -4,8 +4,13 @@ import 'package:flutter/material.dart';
 class UserInput extends StatefulWidget {
   //create a connection from the parent class
   final Function(Set<DietaryRestrictionsFilter>) onFilterChanged;
+  final Set<DietaryRestrictionsFilter>? initialFilters;
 
-  const UserInput({super.key, required this.onFilterChanged});
+  const UserInput({
+    super.key,
+    required this.onFilterChanged,
+    required this.initialFilters,
+  });
 
   @override
   State<UserInput> createState() => _UserInputState();
@@ -19,11 +24,36 @@ class _UserInputState extends State<UserInput> {
   //     List.generate(BasicIngredientsFilter.values.length, (_) => false);
 
   // Store filters in a set
-  final Set<DietaryRestrictionsFilter> _dietaryRestrictionsFilters =
-      <DietaryRestrictionsFilter>{DietaryRestrictionsFilter.vegan};
+  late Set<DietaryRestrictionsFilter> _dietaryRestrictionsFilters;
 
   // final Set<BasicIngredientsFilter> _basicIngredientsFilters =
   //     <BasicIngredientsFilter>{};
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize _dietaryRestrictionsFilters with the initialFilters from the widget,
+    // or an empty set if initialFilters is null.
+    _dietaryRestrictionsFilters = Set.from(widget.initialFilters ?? {});
+
+    // Add listener if you had any text controllers here that needed
+    // to trigger onFilterChanged, but based on your current code, it's only for the chips.
+    // So no _userCaloricController.addListener here.
+  }
+
+  @override
+  void didUpdateWidget(covariant UserInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // This is crucial if the parent widget updates initialFilters dynamically
+    // while this widget is still alive (e.g., if you had a "Reset" button).
+    // In a PageView scenario where the widget is often disposed and recreated,
+    // initState covers most cases, but didUpdateWidget is good for completeness.
+    if (widget.initialFilters != oldWidget.initialFilters) {
+      setState(() {
+        _dietaryRestrictionsFilters = Set.from(widget.initialFilters ?? {});
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

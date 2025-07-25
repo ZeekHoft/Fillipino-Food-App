@@ -68,7 +68,8 @@ class ProfileDataStoring extends ChangeNotifier {
         _username = userData["username"] ?? "N/A";
         _caloriesLimit = userData["caloric_limit"] ?? 0;
         _allergies =
-            (userData["allergies"] as List<dynamic>?)?.join(", ") ?? "None";
+            (userData["dietaryRestrictions"] as List<dynamic>?)?.join(", ") ??
+                "None";
         _goals = List<String>.from(userData["goals"] ?? []);
         _survey = userData["survey_source"] as String?;
 

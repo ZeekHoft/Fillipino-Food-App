@@ -1,6 +1,8 @@
+import 'package:flilipino_food_app/pages/authentication_page/allergy_and_dietary/filter_chips_enums.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/colored_inputs.dart';
 import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
 import 'package:flilipino_food_app/util/profile_set_up_util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -214,12 +216,73 @@ class _UserGoalsState extends State<UserGoals> {
   }
 }
 
-class UserAllergies extends StatelessWidget {
-  const UserAllergies({super.key});
+// use typedef for function reusability, instead of calling the function again and again
+// in simple terms it says from now on, when I say 'UserAllergiesCallback', I mean 'a
+// function that doesn't give
+// anything back (void), and it absolutely needs a number for caloricLimit and a list of
+// words for dietaryRestrictions.
+typedef UserAllergiesCallback = void Function({
+  required double? caloricLimit,
+  required List<String>? dietaryRestrictions,
+});
+
+// Create instances for the paramaters that we'll use inside stful class
+class UserAllergies extends StatefulWidget {
+  final UserAllergiesCallback onDataChanged;
+  final double? initialCaloricLimit;
+  final List<String>? initialDietaryRestrictions;
+
+  const UserAllergies(
+      {super.key,
+      required this.onDataChanged,
+      this.initialCaloricLimit,
+      this.initialDietaryRestrictions});
+
+  @override
+  State<UserAllergies> createState() => _UserAllergiesState();
+}
+
+class _UserAllergiesState extends State<UserAllergies> {
+  final _userCaloricController = TextEditingController();
+  List<String> _selectedDietaryRestrictions = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialCaloricLimit != null) {
+      _userCaloricController.text = widget.initialCaloricLimit.toString();
+    }
+    if (widget.initialDietaryRestrictions != null) {
+      _selectedDietaryRestrictions.addAll(widget.initialDietaryRestrictions!);
+    }
+    _userCaloricController.addListener(_notifyParentForChange);
+  }
+
+  // Remove user data after inputing them
+  @override
+  void dispose() {
+    _userCaloricController.removeListener(_notifyParentForChange);
+    _userCaloricController.dispose();
+    super.dispose();
+  }
+
+  // _notifyParentForChange, this function listens for any changes or actions that
+  // are happening inside the code, if the use typed in their calories or selected their allergies
+
+  //Simple explanation: first it listens for use input and it notifies the typedef above saying like,
+  //hey both of them got data here they are... its like a validator just letting the
+  //typedef know its all good
+  void _notifyParentForChange() {
+    widget.onDataChanged(
+      caloricLimit: double.tryParse(_userCaloricController.text.trim()),
+      dietaryRestrictions: _selectedDietaryRestrictions.isNotEmpty
+          ? _selectedDietaryRestrictions
+          : null,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final userCaloricController = TextEditingController();
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
         "Dietary Restrictions & Allergies",
@@ -232,15 +295,25 @@ class UserAllergies extends StatelessWidget {
       const SizedBox(height: 12),
       const Text("Caloric limit"),
       ColoredInputNumber(
-        controller: userCaloricController,
+        controller: _userCaloricController,
         hintText: "Enter your calorie limit",
       ),
       const SizedBox(height: 24),
       UserInput(
+        // UserInput widget needs to accept initial filters and have a callback
+        // The UserInput widget itself must be stateful to manage its selected filters.
+
+        //the selection, initialFiltersis displaying the DietaryRestrictionsFilter
+        //and onFilterChanged is the selection, and its converting them into a list
+        initialFilters: _selectedDietaryRestrictions
+            .map((e) => DietaryRestrictionsFilter.values
+                .firstWhere((element) => element.name == e))
+            .toSet(),
         onFilterChanged: (filters) {
-          // setState(() {
-          //   selectedDietaryRestrictions = filters;
-          // });
+          setState(() {
+            _selectedDietaryRestrictions = filters.map((e) => e.name).toList();
+          });
+          _notifyParentForChange();
         },
       ),
     ]);
@@ -256,6 +329,7 @@ enum SurveyOption {
   tiktok,
   friends,
   others,
+  pornhub
 }
 
 const surveyOptions = <SurveyOption, String>{
@@ -269,15 +343,46 @@ const surveyOptions = <SurveyOption, String>{
   SurveyOption.others: "Others",
 };
 
+typedef UserSurveyCallbac = void Function(String? howHeardAboutUs);
+
 class UserSurvey extends StatefulWidget {
-  const UserSurvey({super.key});
+  final UserSurveyCallbac onDataChanged;
+  final String? initialSelection;
+  const UserSurvey(
+      {super.key, required this.onDataChanged, this.initialSelection});
 
   @override
   State<UserSurvey> createState() => _UserSurveyState();
 }
 
 class _UserSurveyState extends State<UserSurvey> {
-  SurveyOption? _selectedOption = SurveyOption.youtube;
+  SurveyOption? _selectedOption;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialSelection != null) {
+      // Find the enum value corresponding to the initial string
+
+      try {
+        _selectedOption = surveyOptions.keys
+            .firstWhere((key) => surveyOptions[key] == widget.initialSelection);
+      } catch (e) {
+        _selectedOption = null;
+        if (kDebugMode) {
+          print("Error, no default selection found");
+        }
+      }
+    } else {
+      _selectedOption = SurveyOption.youtube;
+    }
+  }
+
+  void _onOptionChanged(SurveyOption? value) {
+    setState(() {
+      _selectedOption = value;
+    });
+    widget.onDataChanged(value != null ? surveyOptions[value] : null);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -302,11 +407,7 @@ class _UserSurveyState extends State<UserSurvey> {
                 value: key,
                 title: Text(surveyOptions[key]!),
                 groupValue: _selectedOption,
-                onChanged: (value) {
-                  setState(() {
-                    _selectedOption = value;
-                  });
-                },
+                onChanged: _onOptionChanged,
                 controlAffinity: ListTileControlAffinity.trailing,
               );
             },

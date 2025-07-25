@@ -21,7 +21,7 @@ class ProfileSetUpUtil {
   final List<String>? dietaryRestrictions; // Store enum names like "glutenFree"
 
   // Survey (from UserSurvey)
-  final String? howHeardAboutUs; // Store selected option string
+  final String? survey; // Store selected option string
 
   ProfileSetUpUtil({
     required this.userId,
@@ -34,7 +34,7 @@ class ProfileSetUpUtil {
     this.goals,
     this.caloricLimit,
     this.dietaryRestrictions,
-    this.howHeardAboutUs,
+    this.survey,
   });
 
   // Helper for copying with new values
@@ -48,7 +48,7 @@ class ProfileSetUpUtil {
     List<String>? goals,
     double? caloricLimit,
     List<String>? dietaryRestrictions,
-    String? howHeardAboutUs,
+    String? survey,
   }) {
     return ProfileSetUpUtil(
       userId: userId, // userId should not change
@@ -61,7 +61,7 @@ class ProfileSetUpUtil {
       goals: goals ?? this.goals,
       caloricLimit: caloricLimit ?? this.caloricLimit,
       dietaryRestrictions: dietaryRestrictions ?? this.dietaryRestrictions,
-      howHeardAboutUs: howHeardAboutUs ?? this.howHeardAboutUs,
+      survey: survey ?? this.survey,
     );
   }
 
@@ -78,7 +78,7 @@ class ProfileSetUpUtil {
       'goals': goals,
       'caloricLimit': caloricLimit,
       'dietaryRestrictions': dietaryRestrictions,
-      'howHeardAboutUs': howHeardAboutUs,
+      'survey': survey,
       'lastUpdated':
           FieldValue.serverTimestamp(), // Automatically record update time
     };
@@ -99,7 +99,7 @@ class ProfileSetUpUtil {
       dietaryRestrictions: (data['dietaryRestrictions'] as List?)
           ?.map((e) => e.toString())
           .toList(),
-      howHeardAboutUs: data['howHeardAboutUs'],
+      survey: data['survey'],
     );
   }
 }

@@ -66,19 +66,19 @@ class _ProfileSetupState extends State<ProfileSetup>
     _currentUserProfile = _currentUserProfile.copyWith(goals: goals);
   }
 
-  //  void _updateUserAllergies({
-  //   double? caloricLimit,
-  //   List<String>? dietaryRestrictions,
-  // }) {
-  //   _currentUserProfile = _currentUserProfile.copyWith(
-  //     caloricLimit: caloricLimit,
-  //     dietaryRestrictions: dietaryRestrictions,
-  //   );
-  // }
+  void _updateUserAllergies({
+    double? caloricLimit,
+    List<String>? dietaryRestrictions,
+  }) {
+    _currentUserProfile = _currentUserProfile.copyWith(
+      caloricLimit: caloricLimit,
+      dietaryRestrictions: dietaryRestrictions,
+    );
+  }
 
-  // void _updateUserSurvey(String? howHeardAboutUs) {
-  //   _currentUserProfile = _currentUserProfile.copyWith(howHeardAboutUs: howHeardAboutUs);
-  // }
+  void _updateUserSurvey(String? survey) {
+    _currentUserProfile = _currentUserProfile.copyWith(survey: survey);
+  }
 
   Future<void> _submitUserProfile() async {
     setState(() {
@@ -88,19 +88,27 @@ class _ProfileSetupState extends State<ProfileSetup>
     try {
       // Basic validation: Check if essential fields are not null
       if (_currentUserProfile.height == null ||
-              _currentUserProfile.weight == null ||
-              _currentUserProfile.gender == null ||
-              _currentUserProfile.birthday == null ||
-              _currentUserProfile.goals!.isEmpty
-          // _currentUserProfile.goals!.isEmpty ||
-          // _currentUserProfile.caloricLimit == null ||
-          // _currentUserProfile.dietaryRestrictions == null ||
-          // _currentUserProfile.howHeardAboutUs == null
-          ) {
+          _currentUserProfile.weight == null ||
+          _currentUserProfile.gender == null ||
+          _currentUserProfile.birthday == null ||
+          _currentUserProfile.goals == null ||
+          _currentUserProfile.caloricLimit == null ||
+          _currentUserProfile.dietaryRestrictions == null ||
+          _currentUserProfile.survey == null) {
+        // print(_currentUserProfile.height);
+        // print(_currentUserProfile.weight);
+        // print(_currentUserProfile.gender);
+        // print(_currentUserProfile.birthday);
+        // print(_currentUserProfile.goals);
+        // print(_currentUserProfile.caloricLimit);
+        // print(_currentUserProfile.dietaryRestrictions);
+        // print(_currentUserProfile.survey);
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
               content: Text('Please fill all required profile details.')),
         );
+
         return;
       }
 
@@ -141,7 +149,7 @@ class _ProfileSetupState extends State<ProfileSetup>
   }
 
   void _goNextPage() {
-    if (_currentPageIndex < 1) {
+    if (_currentPageIndex < 3) {
       //change this to 3 not 1, during this time the allergy and how did you hear about us is still not implemented
       // Assuming 0-indexed pages, last page is index 3
       _pageViewController.nextPage(
@@ -184,6 +192,15 @@ class _ProfileSetupState extends State<ProfileSetup>
         onDataChanged: _updateUserGoals,
         initialGoals: _currentUserProfile.goals,
       ),
+      UserAllergies(
+        onDataChanged: _updateUserAllergies,
+        initialCaloricLimit: _currentUserProfile.caloricLimit,
+        initialDietaryRestrictions: _currentUserProfile.dietaryRestrictions,
+      ),
+      UserSurvey(
+        onDataChanged: _updateUserSurvey,
+        initialSelection: _currentUserProfile.survey,
+      )
     ];
 
     final bool isLastPage = _currentPageIndex == setupPages.length - 1;
@@ -219,9 +236,13 @@ class _ProfileSetupState extends State<ProfileSetup>
                   children: setupPages),
             ),
             ElevatedButton(
+              onPressed: _isLoading ? null : _goBackPage,
+              child: const Text("Go Back"),
+            ),
+            ElevatedButton(
               // Exit when on the last page of process
               onPressed: _isLoading ? null : _goNextPage,
-              child: _isLoading ? const Text("Done") : const Text("Next"),
+              child: isLastPage ? const Text("Done") : const Text("Next"),
             ),
             const SizedBox(height: 16),
             Center(
