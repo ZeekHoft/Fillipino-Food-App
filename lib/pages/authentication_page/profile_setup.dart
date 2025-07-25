@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/profile_setup_pages.dart';
+import 'package:flilipino_food_app/pages/authentication_page/login_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_layout.dart';
 import 'package:flilipino_food_app/pages/home_page/user_profile.dart';
 import 'package:flilipino_food_app/util/profile_set_up_util.dart';
@@ -239,6 +240,7 @@ class _ProfileSetupState extends State<ProfileSetup>
               onPressed: _isLoading ? null : _goBackPage,
               child: const Text("Go Back"),
             ),
+            const SizedBox(height: 16),
             ElevatedButton(
               // Exit when on the last page of process
               onPressed: _isLoading ? null : _goNextPage,

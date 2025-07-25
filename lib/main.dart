@@ -33,7 +33,11 @@ void main() async {
           theme: AppTheme.light,
           // darkTheme: AppTheme.dark,
           home: Authenticate(),
-          // home: ProfileSetup(),
+          // home: ProfileSetup(
+          //   uid: '',
+          //   email: '',
+          //   username: '',
+          // ),
         ),
       ),
     ),
