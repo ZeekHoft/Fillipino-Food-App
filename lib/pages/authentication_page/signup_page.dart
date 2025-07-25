@@ -1,10 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
-import 'package:flilipino_food_app/pages/authentication_page/allergy_and_dietary/filter_chips_enums.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
 import 'package:flilipino_food_app/pages/authentication_page/profile_setup.dart';
-import 'package:flilipino_food_app/pages/authentication_page/user_input.dart';
 import 'package:flilipino_food_app/util/validators.dart';
 import 'package:flutter/material.dart';
 
@@ -22,11 +19,11 @@ class _SignupPageState extends State<SignupPage> {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final userNameController = TextEditingController();
-  final userCaloricController = TextEditingController();
+  // final userCaloricController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
   //temp data storing for list of allergy
-  Set<DietaryRestrictionsFilter> selectedDietaryRestrictions = {};
+  // Set<DietaryRestrictionsFilter> selectedDietaryRestrictions = {};
 
   bool isRegistered = false;
   // int _currentRegisterIndex = 0;
@@ -44,50 +41,47 @@ class _SignupPageState extends State<SignupPage> {
       },
     );
 
-    // TODO: reimplement calorie limit (Go to profile_setup.dart)
-    // userCaloricController has been removed
     try {
       // if values not empty
       if (passwordController.text.trim() ==
               confirmPasswordController.text.trim()
           // && userCaloricController.text.trim().isNotEmpty
           ) {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
-        addUserDetails(
-          emailController.text.trim(),
-          userNameController.text.trim(),
-          // int.parse(userCaloricController.text.trim())
-        );
-      } else if (
-          // userCaloricController.text.trim().isEmpty ||
-          userNameController.text.trim().isEmpty) {
-        Navigator.pop(context);
+        User? newUser = userCredential.user;
 
-        errorMessage("Empty Inputs");
-        return;
+        if (newUser != null) {
+          if (mounted) {
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfileSetup(
+                  uid: newUser.uid,
+                  email: newUser.email,
+                  username: userNameController.text.trim(),
+                ),
+              ),
+            );
+          }
+        } else {
+          Navigator.pop(context);
+          errorMessage("User creation failed. please try again");
+        }
       } else {
         Navigator.pop(context);
-
         errorMessage("Passwords don't match");
-        return;
-      }
-
-      if (mounted) {
-        // Open profile setup process upon completing registration
-        Navigator.pop(context);
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ProfileSetup(),
-          ),
-        );
       }
     } on FirebaseAuthException catch (e) {
       Navigator.pop(context);
       errorMessage(e.code);
+    } catch (e) {
+      Navigator.pop(context);
+      errorMessage("An unexpected error occurred: ${e.toString()}");
     }
   }
 
@@ -103,25 +97,20 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  Future addUserDetails(
-    String email,
-    String username,
-    // int calorie
-  ) async {
-    await FirebaseFirestore.instance.collection("users_data").add({
-      "email": email,
-      "username": username,
-      // "calories": calorie,
-      // "allergies": selectedDietaryRestrictions.map((e) => e.name).toList()
-    });
-  }
+  // Future addUserDetails(String email, String username, String uid
+  //     // int calorie
+  //     ) async {
+  //   await FirebaseFirestore.instance.collection("users_data").add({
+  //     "email": email,
+  //     "username": username,
+  //     "uid": uid,
+  //     // "calories": calorie,
+  //     // "allergies": selectedDietaryRestrictions.map((e) => e.name).toList()
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    if (isRegistered) {
-      return const ProfileSetup();
-    }
-
     return SafeArea(
         child: Scaffold(
       body: SingleChildScrollView(

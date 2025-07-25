@@ -21,9 +21,10 @@ class UserProfile extends StatelessWidget {
     }
 
     final username = profileDataStoring.username;
-    final email = profileDataStoring.email;
-    final calories = profileDataStoring.caloriesLimit.toString();
+    // final email = profileDataStoring.email;
+    // final calories = profileDataStoring.caloriesLimit.toString();
     final allergies = profileDataStoring.allergies;
+    // List<String> characters = allergies.split('');
 
     return Column(
       children: [
@@ -58,6 +59,13 @@ class UserProfile extends StatelessWidget {
           ],
         ),
         Text(username, style: textTheme.headlineLarge),
+        // ElevatedButton(
+        //     onPressed: () {
+        //       for (var element in characters) {
+        //         print(element);
+        //       }
+        //     },
+        //     child: Text("press")),
         const SizedBox(height: 16),
         Text(
           "Allergies",
