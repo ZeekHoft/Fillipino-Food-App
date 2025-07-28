@@ -285,11 +285,11 @@ class _UserAllergiesState extends State<UserAllergies> {
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
-        "Dietary Restrictions & Allergies",
+        "Dietary Restrictions & Calroie limit",
         style: Theme.of(context).textTheme.headlineLarge,
       ),
       Text(
-        "We'll tailor an experience based on your allergies, creating a personalized food experience",
+        "We'll tailor an experience based on your allergies and caloric limit, creating a personalized food experience",
         style: Theme.of(context).textTheme.labelLarge,
       ),
       const SizedBox(height: 12),
@@ -299,6 +299,47 @@ class _UserAllergiesState extends State<UserAllergies> {
         hintText: "Enter your calorie limit",
       ),
       const SizedBox(height: 24),
+      //NEW CODE NOT USING THE USER_INPUT.DART FILE BUT UNSURE IF OPTIMIZED
+      // Column(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
+      //   children: [
+      //     Wrap(
+      //       spacing: 4,
+      //       runSpacing: 8,
+      //       children: dietaryRestrictionOPtions.map((restriction) {
+      //         final DietaryRestrictionsFilter filterEnum = restriction.$1;
+
+      //         final String filterName =
+      //             filterEnum.name; // <--- NEW: Get the string name of the enum
+      //         return FilterChip(
+      //           label: Text(restriction.$2),
+      //           selected: _selectedDietaryRestrictions.contains(filterName),
+      //           onSelected: (bool selected) {
+      //             setState(() {
+      //               if (selected) {
+      //                 if (filterEnum == DietaryRestrictionsFilter.none) {
+      //                   // Correctly compare enum with enum
+      //                   _selectedDietaryRestrictions.clear();
+      //                   _selectedDietaryRestrictions
+      //                       .add(filterName); // Add the string name
+      //                 } else {
+      //                   _selectedDietaryRestrictions.remove(
+      //                       DietaryRestrictionsFilter
+      //                           .none.name); // <--- Use .name here too
+      //                   _selectedDietaryRestrictions.add(filterName);
+      //                 }
+      //               } else {
+      //                 _selectedDietaryRestrictions.remove(filterName);
+      //               }
+      //               _notifyParentForChange();
+      //             });
+      //           },
+      //         );
+      //       }).toList(), // without this it causes: The argument type 'Iterable<FilterChip>' can't be assigned to the parameter type 'List<Widget>'
+      //     )
+      //   ],
+      // )
+
       UserInput(
         // UserInput widget needs to accept initial filters and have a callback
         // The UserInput widget itself must be stateful to manage its selected filters.
