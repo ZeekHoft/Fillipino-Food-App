@@ -36,13 +36,9 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordController.text,
       );
 
-      if (mounted) {
-        Navigator.pop(context);
-      }
+      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
-      if (mounted) {
-        Navigator.pop(context);
-      }
+      Navigator.pop(context);
       errorMessage(e.code);
     }
   }
@@ -77,11 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 12),
-              SizedBox(
-                  height: 180,
-                  child: Image.asset(
-                    "dappli_logo.png",
-                  )),
+              SizedBox(height: 180, child: Image.asset('dappli_logo.png')),
               const SizedBox(height: 8.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),

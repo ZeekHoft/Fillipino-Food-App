@@ -18,7 +18,7 @@ class Authenticate extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           if (snapshot.hasData) {
-            // User is logged in, now hand off to the OnboardingGate
+            // User is logged in, now hand off to the loadfoodisplay
             return const LoadFoodDisplay();
           } else {
             // No user is logged in
