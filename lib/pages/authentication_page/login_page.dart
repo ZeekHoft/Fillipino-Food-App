@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -35,9 +36,13 @@ class _LoginPageState extends State<LoginPage> {
         password: passwordController.text,
       );
 
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
     } on FirebaseAuthException catch (e) {
-      Navigator.pop(context);
+      if (mounted) {
+        Navigator.pop(context);
+      }
       errorMessage(e.code);
     }
   }
@@ -55,7 +60,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void forgotPassword() {
-    print("forgot");
+    if (kDebugMode) {
+      print("forgot");
+    }
   }
 
   @override
