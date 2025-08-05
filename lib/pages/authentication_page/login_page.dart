@@ -73,7 +73,8 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 12),
-              SizedBox(height: 180, child: Image.asset('dappli_logo.png')),
+              SizedBox(
+                  height: 180, child: Image.asset('assets/dappli_logo.png')),
               const SizedBox(height: 8.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),

@@ -126,7 +126,7 @@ class _SignupPageState extends State<SignupPage> {
                 SizedBox(
                     height: 180,
                     child: Image.asset(
-                      "dappli_logo.png",
+                      "assets/dappli_logo.png",
                     )),
                 const SizedBox(height: 8.0),
                 Text(
@@ -233,7 +233,7 @@ class _SignupPageState extends State<SignupPage> {
           SizedBox(
               height: 180,
               child: Image.asset(
-                "dappli_logo.png",
+                "assets/dappli_logo.png",
               )),
           const SizedBox(height: 8.0),
           Text(
