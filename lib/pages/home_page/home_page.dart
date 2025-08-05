@@ -7,28 +7,29 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ListView(
-        // padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        shrinkWrap: true,
-        children: [
-          const UserProfile(),
-          const SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Text(
-              "Recipes",
-              style: Theme.of(context).textTheme.titleLarge,
+    return CustomScrollView(
+      slivers: [
+        // Top section of homepage
+        SliverList.list(
+          children: [
+            const UserProfile(),
+            const SizedBox(height: 24),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                "Recipes",
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: RecipeFeed(),
-          ),
-          const SizedBox(height: 24),
-        ],
-      ),
+          ],
+        ),
+        const SliverPadding(
+          padding: EdgeInsets.fromLTRB(12, 12, 12, 24),
+
+          // Displays a grid for all recipes
+          sliver: RecipeFeed(),
+        ),
+      ],
     );
   }
 }
