@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flilipino_food_app/pages/camera/cam_ai.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
-import 'package:flilipino_food_app/pages/home_page/user_profile.dart';
 import 'package:flilipino_food_app/pages/settings/settings_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';
 import 'package:flilipino_food_app/util/profile_set_up_util.dart';
@@ -37,7 +37,10 @@ class _HomeLayoutState extends State<HomeLayout> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => RecipeGeneratorScreen()));
+        },
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,
         shape: CircleBorder(

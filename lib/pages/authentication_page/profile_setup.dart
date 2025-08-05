@@ -177,15 +177,15 @@ class _ProfileSetupState extends State<ProfileSetup>
     }
   }
 
-  void _skipProfileSetup() {
-    // Optionally save partial data or just navigate
-    // For now, just navigate to home page without saving if skipped.
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeLayout()),
-      (route) => false,
-    );
-  }
+  // void _skipProfileSetup() {
+  //   // Optionally save partial data or just navigate
+  //   // For now, just navigate to home page without saving if skipped.
+  //   Navigator.pushAndRemoveUntil(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const HomeLayout()),
+  //     (route) => false,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -252,11 +252,11 @@ class _ProfileSetupState extends State<ProfileSetup>
               child: isLastPage ? const Text("Done") : const Text("Next"),
             ),
             const SizedBox(height: 16),
-            Center(
-                child: LinkTextButton(
-              text: "Skip",
-              onTap: _isLoading ? null : _skipProfileSetup,
-            )),
+            // Center(
+            //     child: LinkTextButton(
+            //   text: "Skip",
+            //   onTap: _isLoading ? null : _skipProfileSetup,
+            // )),
             const SizedBox(height: 24),
           ],
         ),

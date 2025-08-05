@@ -25,10 +25,7 @@ class _RecipeFeedState extends State<RecipeFeed> {
 
         if (snapshot.hasError ||
             snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-              child: CircularProgressIndicator(
-            color: AppColors.yellowTheme,
-          ));
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData || snapshot.data != null) {
           final recipeDocs = snapshot.data?.docs.reversed.toList();
 
