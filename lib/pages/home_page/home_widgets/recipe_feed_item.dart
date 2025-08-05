@@ -1,8 +1,5 @@
-import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
-import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class RecipeFeedItem extends StatelessWidget {
   RecipeFeedItem({
@@ -24,10 +21,10 @@ class RecipeFeedItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final profileDataStoring = context.watch<ProfileDataStoring>();
-    final provider = Provider.of<FavoriteProvider>(context);
+    // final profileDataStoring = context.watch<ProfileDataStoring>();
+    // final provider = Provider.of<FavoriteProvider>(context);
 
-    final userCalorieLimit = profileDataStoring.caloriesLimit;
+    // final userCalorieLimit = profileDataStoring.caloriesLimit;
     // final userAllergies = profileDataStoring.allergies;
     // final userEmail = profileDataStoring.email;
 

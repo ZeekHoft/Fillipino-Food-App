@@ -32,7 +32,7 @@ class _UserDetailsState extends State<UserDetails> {
   final _weightController = TextEditingController();
   final _genderController = TextEditingController();
   final _birthdayController = TextEditingController();
-  bool _isFinished = false;
+  // bool _isFinished = false;
 
   // Pre-fill data using initialData
   @override
@@ -186,7 +186,7 @@ class _UserGoalsState extends State<UserGoals> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Select your goals"),
+        const Text("Select your goals"),
         const Text("Select multiple goals"),
         ..._availableGoals.map((goal) {
           return ColoredCheckbox(
@@ -195,7 +195,7 @@ class _UserGoalsState extends State<UserGoals> {
             value: _selectedGoals.contains(goal),
             onChanged: (isChecked) => _onCheckBoxChanged(goal, isChecked),
           );
-        }).toList()
+        })
       ],
     );
   }

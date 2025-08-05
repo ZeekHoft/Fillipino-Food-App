@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 enum BasicIngredientsFilter {
   oil,
   rice,
@@ -57,8 +59,6 @@ const List<(DietaryRestrictionsFilter, String)> dietaryRestrictionOPtions =
   (DietaryRestrictionsFilter.fishAllergies, "fishAllergies"),
   (DietaryRestrictionsFilter.soyAllergies, "soyAllergies"),
 ];
-
-
 
 // String dietaryRestrictionReadable(DietaryRestrictionsFilter filter) {
 //   return switch (filter) {

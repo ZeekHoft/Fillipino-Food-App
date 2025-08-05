@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -55,7 +56,9 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void forgotPassword() {
-    print("forgot");
+    if (kDebugMode) {
+      print("forgot");
+    }
   }
 
   @override
@@ -70,11 +73,7 @@ class _LoginPageState extends State<LoginPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 12),
-              SizedBox(
-                  height: 180,
-                  child: Image.asset(
-                    "dappli_logo.png",
-                  )),
+              SizedBox(height: 180, child: Image.asset('dappli_logo.png')),
               const SizedBox(height: 8.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),

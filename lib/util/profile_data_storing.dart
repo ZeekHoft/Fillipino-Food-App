@@ -104,7 +104,7 @@ class ProfileDataStoring extends ChangeNotifier {
         print("Fetching Error in user data: $e");
       }
       // Set to N/A on error
-      _email = currentUser?.email ?? 'N/A';
+      _email = currentUser.email ?? 'N/A';
       _username = 'Error loading';
       _caloriesLimit = 0;
       _allergies = 'Error';

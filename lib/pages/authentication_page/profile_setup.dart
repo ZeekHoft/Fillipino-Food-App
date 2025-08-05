@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
+import 'package:flilipino_food_app/pages/authentication_page/authenticate.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/profile_setup_pages.dart';
-import 'package:flilipino_food_app/pages/authentication_page/login_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_layout.dart';
-import 'package:flilipino_food_app/pages/home_page/user_profile.dart';
+import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/profile_set_up_util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 // Individual pages for each step of setting up the profile
 
@@ -124,15 +125,19 @@ class _ProfileSetupState extends State<ProfileSetup>
       );
 
       // Navigate to your main app screen
+      Provider.of<ProfileDataStoring>(context, listen: false).fetchUserData();
+
       Navigator.pushAndRemoveUntil(
         // Use pushAndRemoveUntil to clear navigation stack
         context,
         MaterialPageRoute(
-            builder: (context) => const HomeLayout()), // Your main app page
+            builder: (context) => const Authenticate()), // Your main app page
         (route) => false, // Remove all previous routes
       );
     } catch (e) {
-      print("Error saving user profile: $e");
+      if (kDebugMode) {
+        print("Error saving user profile: $e");
+      }
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to save profile: ${e.toString()}')),
       );
@@ -277,10 +282,10 @@ class _ProfileSetupState extends State<ProfileSetup>
   //       duration: Durations.medium3, curve: Easing.standard);
   // }
 
-  void _closeProfileSetup() {
-    print("SEND DATA HERE");
-    Navigator.pop(context);
-  }
+  // void _closeProfileSetup() {
+  //   print("SEND DATA HERE");
+  //   Navigator.pop(context);
+  // }
 }
 
 // Page indicator displayed on top of page

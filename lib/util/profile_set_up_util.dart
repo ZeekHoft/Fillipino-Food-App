@@ -85,7 +85,7 @@ class ProfileSetUpUtil {
   }
 
   // Factory constructor to create from Firestore Map
-  factory ProfileSetUpUtil.fromFirestore(Map<String, dynamic> data) {
+  factory ProfileSetUpUtil.fromFirestore(Map<String, dynamic> data, param1) {
     return ProfileSetUpUtil(
       userId: data['userId'],
       email: data['email'],
