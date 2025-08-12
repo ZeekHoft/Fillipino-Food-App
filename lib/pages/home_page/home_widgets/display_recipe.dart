@@ -34,47 +34,58 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
         forceMaterialTransparency: false,
       ),
       body: ListView(
+        padding: const EdgeInsetsDirectional.all(16),
         children: [
           Center(
-            child: Container(
-              padding: const EdgeInsets.all(24.0),
-              height: 360,
-              width: 360,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(24),
-                child: Image.network(
-                  widget.recipeImage,
-                  fit: BoxFit.cover,
+            child: FractionallySizedBox(
+              widthFactor: 0.70,
+              child: AspectRatio(
+                aspectRatio: 1.0,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(24),
+                  child: Image.network(
+                    widget.recipeImage,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
           ),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            spacing: 8,
             children: [
-              Text(
-                widget.recipeName,
-                style: Theme.of(context).textTheme.titleLarge,
+              Flexible(
+                fit: FlexFit.loose,
+                child: Text(
+                  widget.recipeName,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge,
+                  // softWrap: true,
+                ),
               ),
-              const SizedBox(width: 8),
               IconButton(
-                  onPressed: () {
-                    provider.toggleFavorite(
-                      widget.documentId, // Pass the document ID
-                      widget.recipeName,
-                      widget.recipeImage,
-                      widget.recipeCalories,
-                      widget.recipeIngredients,
-                      widget.recipeProcess,
-                    );
-                  },
-                  icon: provider.isExist(
-                          widget.documentId) // Check existence with document ID
-                      ? const Icon(
-                          Icons.bookmark,
-                          color: AppColors.yellowTheme,
-                        )
-                      : const Icon(Icons.bookmark_add_outlined)),
+                onPressed: () {
+                  provider.toggleFavorite(
+                    widget.documentId, // Pass the document ID
+                    widget.recipeName,
+                    widget.recipeImage,
+                    widget.recipeCalories,
+                    widget.recipeIngredients,
+                    widget.recipeProcess,
+                  );
+                },
+                icon: provider.isExist(
+                        widget.documentId) // Check existence with document ID
+                    ? const Icon(
+                        Icons.bookmark,
+                        color: AppColors.yellowTheme,
+                      )
+                    : const Icon(
+                        Icons.bookmark_add_outlined,
+                      ),
+              ),
             ],
           ),
           const SizedBox(height: 16),
@@ -121,7 +132,7 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           Center(
             child: SizedBox(
               width: 400,
@@ -139,7 +150,6 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
         ],
       ),
     );
