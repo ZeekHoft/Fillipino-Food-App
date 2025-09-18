@@ -1,3 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
+import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
 
 class SocialPost extends StatefulWidget {
@@ -15,6 +19,46 @@ class _SocialPostState extends State<SocialPost> {
   final _shares = TextEditingController();
   final _likeCount = TextEditingController();
   // final _interactedAccounts = TextEditingController();
+
+  void _savePost() async {
+    if (_formKey.currentState!.validate()) {
+      final postDescription = _postDescription.text;
+
+      final parameterPosts = SocialDataStoring(
+          userId: '',
+          postID: '',
+          postPic: '',
+          postDescription: postDescription,
+          dateTimePost: DateTime.now());
+
+      try {
+        final postData = parameterPosts.toFirestore();
+        await FirebaseFirestore.instance
+            .collection('social_data')
+            .add(postData);
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Successfully Posted!!")));
+        Navigator.pop(context);
+        _postDescription.clear();
+        _datetime.clear();
+        _shares.clear();
+        _likeCount.clear();
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to post: $e')),
+        );
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _postDescription.dispose();
+    _datetime.dispose();
+    _shares.dispose();
+    _likeCount.dispose();
+    super.dispose();
+  }
 
 // postID, postPic, postDescription, datetime, shares/reposts, likeCount, accounts that interacted,
   @override
@@ -40,20 +84,14 @@ class _SocialPostState extends State<SocialPost> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(
-                  height: 100,
-                  width: 100,
-                  child: TextFormField(
-                    controller: _postDescription,
-                    decoration: const InputDecoration(labelText: "Description"),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a description';
-                      }
-                      return null;
-                    },
-                  ),
-                )
+                SocialPostInputs(
+                  controller: _postDescription,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  labelText: "Description",
+                  errorText: 'Please enter Description',
+                ),
+                ElevatedButton(onPressed: _savePost, child: const Text("Post!"))
               ],
             ),
           ),
