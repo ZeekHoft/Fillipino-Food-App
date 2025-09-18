@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authenticate.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/profile_setup_pages.dart';
-import 'package:flilipino_food_app/pages/home_page/home_layout.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/profile_set_up_util.dart';
 import 'package:flutter/foundation.dart';
