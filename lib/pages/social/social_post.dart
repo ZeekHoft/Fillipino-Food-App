@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
+import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/uuid.dart';
 
 class SocialPost extends StatefulWidget {
   const SocialPost({super.key});
@@ -18,38 +20,8 @@ class _SocialPostState extends State<SocialPost> {
   final _datetime = TextEditingController();
   final _shares = TextEditingController();
   final _likeCount = TextEditingController();
+  final uuid = const Uuid();
   // final _interactedAccounts = TextEditingController();
-
-  void _savePost() async {
-    if (_formKey.currentState!.validate()) {
-      final postDescription = _postDescription.text;
-
-      final parameterPosts = SocialDataStoring(
-          userId: '',
-          postID: '',
-          postPic: '',
-          postDescription: postDescription,
-          dateTimePost: DateTime.now());
-
-      try {
-        final postData = parameterPosts.toFirestore();
-        await FirebaseFirestore.instance
-            .collection('social_data')
-            .add(postData);
-        ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Successfully Posted!!")));
-        Navigator.pop(context);
-        _postDescription.clear();
-        _datetime.clear();
-        _shares.clear();
-        _likeCount.clear();
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to post: $e')),
-        );
-      }
-    }
-  }
 
   @override
   void dispose() {
@@ -96,5 +68,41 @@ class _SocialPostState extends State<SocialPost> {
             ),
           ),
         ));
+  }
+
+  void _savePost() async {
+    try {
+      if (_formKey.currentState!.validate()) {
+        final postDescription = _postDescription.text;
+        //user watch for consistent chagnges such as names, allergies, dietary restriction etc... use read to only fetch the thing that is needed when something is finished
+        final profileDataStoring = context.read<ProfileDataStoring>();
+        final parameterPosts = SocialDataStoring(
+            userId: profileDataStoring.userId!,
+            postID: uuid.v1(),
+            postPic: '',
+            postDescription: postDescription,
+            dateTimePost: DateTime.now());
+
+        try {
+          final postData = parameterPosts.toFirestore();
+          await FirebaseFirestore.instance
+              .collection('social_data')
+              .add(postData);
+          ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Successfully Posted!!")));
+          Navigator.pop(context);
+          _postDescription.clear();
+          _datetime.clear();
+          _shares.clear();
+          _likeCount.clear();
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Failed to post: $e')),
+          );
+        }
+      }
+    } catch (e) {
+      print("ERROR HERE: $e");
+    }
   }
 }
