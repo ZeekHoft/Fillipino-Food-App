@@ -20,7 +20,7 @@ class _SocialPostState extends State<SocialPost> {
   final _datetime = TextEditingController();
   final _shares = TextEditingController();
   final _likeCount = TextEditingController();
-  final uuid = const Uuid();
+  bool _isLoading = false;
   // final _interactedAccounts = TextEditingController();
 
   @override
@@ -70,15 +70,26 @@ class _SocialPostState extends State<SocialPost> {
         ));
   }
 
-  void _savePost() async {
+  Future _savePost() async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
     try {
       if (_formKey.currentState!.validate()) {
         final postDescription = _postDescription.text;
         //user watch for consistent chagnges such as names, allergies, dietary restriction etc... use read to only fetch the thing that is needed when something is finished
         final profileDataStoring = context.read<ProfileDataStoring>();
+        final postIDReference =
+            FirebaseFirestore.instance.collection('social_data').doc();
+        final postId = postIDReference.id;
         final parameterPosts = SocialDataStoring(
             userId: profileDataStoring.userId!,
-            postID: uuid.v1(),
+            postID: postId,
             postPic: '',
             postDescription: postDescription,
             dateTimePost: DateTime.now());
@@ -100,6 +111,7 @@ class _SocialPostState extends State<SocialPost> {
             SnackBar(content: Text('Failed to post: $e')),
           );
         }
+        Navigator.pop(context);
       }
     } catch (e) {
       print("ERROR HERE: $e");
