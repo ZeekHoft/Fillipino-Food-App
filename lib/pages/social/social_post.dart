@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
@@ -5,6 +7,8 @@ import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class SocialPost extends StatefulWidget {
   const SocialPost({super.key});
@@ -21,6 +25,10 @@ class _SocialPostState extends State<SocialPost> {
   final _shares = TextEditingController();
   final _likeCount = TextEditingController();
   bool _isLoading = false;
+
+  Uint8List? galleryBytes;
+  final picker = ImagePicker();
+
   // final _interactedAccounts = TextEditingController();
 
   @override
@@ -56,12 +64,31 @@ class _SocialPostState extends State<SocialPost> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      foregroundColor: Colors.white),
+                  child: const Text('Select Image from Gallery or Camera'),
+                  onPressed: () {
+                    _showPicker(context: context);
+                  },
+                ),
+                Container(
+                  child: galleryBytes == null
+                      ? const Center(child: Text("Nothing is Selected."))
+                      : Center(
+                          child: Image.memory(galleryBytes!, fit: BoxFit.cover),
+                        ),
+                ),
                 SocialPostInputs(
                   controller: _postDescription,
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   labelText: "Description",
                   errorText: 'Please enter Description',
+                ),
+                const SizedBox(
+                  height: 50,
                 ),
                 ElevatedButton(onPressed: _savePost, child: const Text("Post!"))
               ],
@@ -70,11 +97,57 @@ class _SocialPostState extends State<SocialPost> {
         ));
   }
 
+  void _showPicker({required BuildContext context}) {
+    showModalBottomSheet(
+        context: context,
+        builder: (BuildContext context) {
+          return SafeArea(
+              child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Photo Library'),
+                onTap: () {
+                  getImage(ImageSource.gallery);
+                  Navigator.of(context).pop();
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_camera),
+                title: const Text('Camera'),
+                onTap: () {
+                  getImage(ImageSource.camera);
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ));
+        });
+  }
+
+  Future getImage(
+    ImageSource img,
+  ) async {
+    // pick image from gallary
+    final pickedFile = await picker.pickImage(source: img);
+    // store it in a valid variable
+    if (pickedFile != null) {
+      // store that in global variable galleryBytes in the form of File
+      final bytes = await pickedFile.readAsBytes();
+      setState(() {
+        galleryBytes = bytes;
+      });
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(// is this context <<<
+          const SnackBar(content: Text('Nothing is selected')));
+    }
+  }
+
   Future _savePost() async {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
@@ -93,7 +166,7 @@ class _SocialPostState extends State<SocialPost> {
             postPic: '',
             postDescription: postDescription,
             dateTimePost: DateTime.now());
-
+        // print("PICTURE HERE: $galleryBytes");
         try {
           final postData = parameterPosts.toFirestore();
           await FirebaseFirestore.instance

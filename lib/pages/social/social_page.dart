@@ -24,6 +24,7 @@ class _SocialPageState extends State<SocialPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: "navigate_to_posting",
         onPressed: () {
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => const SocialPost()));
