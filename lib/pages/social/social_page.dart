@@ -1,5 +1,7 @@
 import 'package:flilipino_food_app/pages/social/social_post.dart';
+import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SocialPage extends StatefulWidget {
   const SocialPage({super.key});
@@ -11,6 +13,11 @@ class SocialPage extends StatefulWidget {
 class _SocialPageState extends State<SocialPage> {
   @override
   Widget build(BuildContext context) {
+    final socialDataStoring = context.watch<SocialDataStoring>();
+    final postContent = socialDataStoring.postDescription.toString();
+    final postLikes = socialDataStoring.likeCount.toString();
+    final postShares = socialDataStoring.shares.toString();
+
     return Scaffold(
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
@@ -18,7 +25,13 @@ class _SocialPageState extends State<SocialPage> {
           children: [
             SizedBox(
               height: 100,
-              child: Text("data"),
+              child: Column(
+                children: [
+                  Text(postContent),
+                  Text(postLikes),
+                  Text(postShares)
+                ],
+              ),
             ),
           ],
         ),

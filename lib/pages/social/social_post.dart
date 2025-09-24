@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
-import 'package:flilipino_food_app/util/social_data_storing.dart';
+import 'package:flilipino_food_app/util/social_set_up_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uuid/uuid.dart';
@@ -160,9 +160,10 @@ class _SocialPostState extends State<SocialPost> {
         final postIDReference =
             FirebaseFirestore.instance.collection('social_data').doc();
         final postId = postIDReference.id;
-        final parameterPosts = SocialDataStoring(
+        final parameterPosts = SocialSetUpUtil(
             userId: profileDataStoring.userId!,
             postID: postId,
+            // change the postpic from string ot Uint8List form social data storing
             postPic: '',
             postDescription: postDescription,
             dateTimePost: DateTime.now());
@@ -179,6 +180,7 @@ class _SocialPostState extends State<SocialPost> {
           _datetime.clear();
           _shares.clear();
           _likeCount.clear();
+          galleryBytes!.clear();
         } catch (e) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Failed to post: $e')),

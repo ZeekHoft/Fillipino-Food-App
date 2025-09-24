@@ -1,7 +1,6 @@
 //make OOP type sht to make this data accessible to other pages
 
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
