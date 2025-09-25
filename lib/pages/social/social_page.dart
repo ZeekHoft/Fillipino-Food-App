@@ -37,14 +37,14 @@ class _SocialPageState extends State<SocialPage> {
             final post = socialData.posts[index];
             return Card(
               child: ListTile(
-                leading: post["postPic"] != null
-                    ? Image.network(
-                        post["postPic"],
-                        width: 50,
-                        height: 50,
-                        fit: BoxFit.cover,
-                      )
-                    : const Icon(Icons.image_not_supported),
+                // leading: post["postPic"] != null
+                //     ? Image.network(
+                //         post["postPic"],
+                //         width: 50,
+                //         height: 50,
+                //         fit: BoxFit.cover,
+                //       )
+                //     : const Icon(Icons.image_not_supported),
                 title: Text(post["postDescription"] ?? ""),
                 subtitle: Text(post["dateTimePost"]?.toString() ?? ""),
                 trailing: Row(

@@ -165,6 +165,8 @@ class _SocialPostState extends State<SocialPost> {
             postID: postId,
             // change the postpic from string ot Uint8List form social data storing
             postPic: '',
+            likeCount: 0,
+            shares: 0,
             postDescription: postDescription,
             dateTimePost: DateTime.now());
         // print("PICTURE HERE: $galleryBytes");
@@ -180,8 +182,11 @@ class _SocialPostState extends State<SocialPost> {
           _datetime.clear();
           _shares.clear();
           _likeCount.clear();
-          galleryBytes!.clear();
+          setState(() {
+            galleryBytes = null;
+          });
         } catch (e) {
+          print("Faile Post: $e");
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Failed to post: $e')),
           );
