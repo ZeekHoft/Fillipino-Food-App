@@ -24,10 +24,11 @@ class UserProfile extends StatelessWidget {
     final username = profileDataStoring.username;
     // final email = profileDataStoring.email;
     // final calories = profileDataStoring.caloriesLimit.toString();
-    final allergies = profileDataStoring.allergies;
+    // final allergies = profileDataStoring.allergies;
     // List<String> characters = allergies.split('');
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Stack(
           alignment: AlignmentDirectional.bottomCenter,
@@ -59,18 +60,13 @@ class UserProfile extends StatelessWidget {
             ),
           ],
         ),
-        Text(username, style: textTheme.headlineLarge),
-        // ElevatedButton(
-        //     onPressed: () {
-        //       for (var element in characters) {
-        //         print(element);
-        //       }
-        //     },
-        //     child: Text("press")),
+        Center(child: Text(username, style: textTheme.headlineLarge)),
         const SizedBox(height: 16),
-        Text(
-          "Allergies",
-          style: Theme.of(context).textTheme.titleMedium,
+        Center(
+          child: Text(
+            "Allergies",
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
         ),
         _convertAllergies(allergies),
         const IntrinsicHeight(
@@ -96,8 +92,10 @@ class UserProfile extends StatelessWidget {
       allergyChips.add(AllergyChip(allergy: allergy));
     }
     return Padding(
-      padding: const EdgeInsets.only(top: 8, bottom: 24),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
       child: Wrap(
+        alignment: WrapAlignment.center,
+        spacing: 8,
         children: allergyChips,
       ),
     );

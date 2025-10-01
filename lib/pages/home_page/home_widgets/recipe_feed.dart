@@ -32,10 +32,10 @@ class _RecipeFeedState extends State<RecipeFeed> {
           );
         } else if (snapshot.hasData || snapshot.data != null) {
           return SliverGrid.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 24,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 240,
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 8,
             ),
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
