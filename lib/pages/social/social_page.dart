@@ -1,4 +1,5 @@
 import 'package:flilipino_food_app/pages/social/social_post.dart';
+import 'package:flilipino_food_app/pages/social/social_widgets/post_widget.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -32,30 +33,11 @@ class _SocialPageState extends State<SocialPage> {
         }
 
         return ListView.builder(
+          padding: const EdgeInsets.fromLTRB(16, 24, 16, 64),
           itemCount: socialData.posts.length,
           itemBuilder: (context, index) {
             final post = socialData.posts[index];
-            return Card(
-              child: ListTile(
-                // leading: post["postPic"] != null
-                //     ? Image.network(
-                //         post["postPic"],
-                //         width: 50,
-                //         height: 50,
-                //         fit: BoxFit.cover,
-                //       )
-                //     : const Icon(Icons.image_not_supported),
-                title: Text(post["postDescription"] ?? ""),
-                subtitle: Text(post["dateTimePost"]?.toString() ?? ""),
-                trailing: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.favorite, color: Colors.red, size: 18),
-                    Text("${post["likeCount"]}"),
-                  ],
-                ),
-              ),
-            );
+            return PostWidget(post: post);
           },
         );
       }),
