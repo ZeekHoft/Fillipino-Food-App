@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flutter/material.dart';
 
@@ -81,7 +82,17 @@ class RecipeFeedItem extends StatelessWidget {
           ),
         ),
       ),
-      // OldRecipeItem(imageUrl: imageUrl, name: name, calories: calories, userCalorieLimit: userCalorieLimit, provider: provider, documentId: documentId, ingredients: ingredients, process: process),
+    );
+  }
+
+  factory RecipeFeedItem.fromDocumentSnapshot(QueryDocumentSnapshot recipeDoc) {
+    return RecipeFeedItem(
+      name: recipeDoc['name'].toString(),
+      imageUrl: recipeDoc['image'].toString(),
+      ingredients: recipeDoc['ingredients'].toString(),
+      process: recipeDoc['process'].toString(),
+      calories: recipeDoc['calories'],
+      documentId: recipeDoc.id,
     );
   }
 }

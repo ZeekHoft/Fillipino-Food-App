@@ -21,34 +21,37 @@ class _RecipeFeedState extends State<RecipeFeed> {
     return StreamBuilder<QuerySnapshot>(
       stream: recipeStream,
       builder: (context, snapshot) {
-        List<Widget> recipeWidgets = [];
-
         if (snapshot.hasError ||
             snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const SliverToBoxAdapter(
+            child: Center(
+              child: CircularProgressIndicator(
+                color: AppColors.yellowTheme,
+              ),
+            ),
+          );
         } else if (snapshot.hasData || snapshot.data != null) {
-          final recipeDocs = snapshot.data?.docs.reversed.toList();
-
-          for (var recipeDoc in recipeDocs!) {
-            final String documentId = recipeDoc.id;
-            final recipeWidget = RecipeFeedItem(
-              name: recipeDoc['name'].toString(),
-              imageUrl: recipeDoc['image'].toString(),
-              ingredients: recipeDoc['ingredients'].toString(),
-              process: recipeDoc['process'].toString(),
-              calories: recipeDoc['calories'],
-              documentId: documentId,
-            );
-            recipeWidgets.add(recipeWidget);
-          }
+          return SliverGrid.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: 16,
+              mainAxisSpacing: 24,
+            ),
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              return RecipeFeedItem.fromDocumentSnapshot(
+                snapshot.data!.docs[index],
+              );
+            },
+          );
+        } else {
+          // Finished fetching but snapshot has no data
+          return const SliverToBoxAdapter(
+            child: Center(
+              child: Text("No recipes available"),
+            ),
+          );
         }
-        return GridView.count(
-          shrinkWrap: true,
-          mainAxisSpacing: 24,
-          crossAxisSpacing: 16,
-          crossAxisCount: 2,
-          children: recipeWidgets,
-        );
       },
     );
   }
