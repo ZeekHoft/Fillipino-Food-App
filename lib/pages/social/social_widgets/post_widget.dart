@@ -1,7 +1,10 @@
+import 'package:flilipino_food_app/util/profile_data_storing.dart';
+import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   const PostWidget({
     super.key,
     required this.post,
@@ -10,8 +13,19 @@ class PostWidget extends StatelessWidget {
   final Map post;
 
   @override
+  State<PostWidget> createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
+  @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final profileDataStoring = context.read<ProfileDataStoring>();
+    bool likeState = false;
+    if (widget.post["likedAccounts"] != null) {
+      likeState =
+          widget.post["likedAccounts"].contains(profileDataStoring.userId!);
+    }
+    // print(widget.post);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -28,9 +42,10 @@ class PostWidget extends StatelessWidget {
                   ),
                   height: 300,
                   clipBehavior: Clip.antiAlias,
-                  child: post["postPic"] != null || post["postPic"] != ""
+                  child: widget.post["postPic"] != null ||
+                          widget.post["postPic"] != ""
                       ? Image.network(
-                          post["postPic"],
+                          widget.post["postPic"],
                           width: 50,
                           height: 50,
                           fit: BoxFit.fitWidth,
@@ -53,12 +68,12 @@ class PostWidget extends StatelessWidget {
                       ),
                       Opacity(
                           opacity: 0.8,
-                          child: Text(post["dateTimePost"] != null
+                          child: Text(widget.post["dateTimePost"] != null
                               ? DateFormat("MM/dd/yyyy")
-                                  .format(post["dateTimePost"])
+                                  .format(widget.post["dateTimePost"])
                               : "")),
                       const SizedBox(height: 8.0),
-                      Text(post["postDescription"] ?? ""),
+                      Text(widget.post["postDescription"] ?? ""),
                       const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -66,9 +81,26 @@ class PostWidget extends StatelessWidget {
                           // Like Button
                           Row(
                             children: [
-                              Icon(Icons.favorite_border),
+                              IconButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      Provider.of<SocialDataStoring>(context,
+                                              listen: false)
+                                          .triggerLike(
+                                              profileDataStoring.userId!,
+                                              widget.post["likedAccounts"]!);
+                                    });
+                                    print("changed: ${widget.post}");
+                                  },
+                                  icon: likeState
+                                      ? Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        )
+                                      : Icon(Icons.favorite_border)),
                               SizedBox(width: 4),
-                              Text("${post["likeCount"] ?? "0"}"),
+                              Text(
+                                  "${widget.post["likedAccounts"] != null ? widget.post["likedAccounts"].length : " "}"),
                             ],
                           ),
                           Icon(Icons.bookmark_border),
@@ -83,6 +115,29 @@ class PostWidget extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class LikeButton extends StatelessWidget {
+  const LikeButton({
+    super.key,
+    required this.widget,
+  });
+
+  final PostWidget widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
+        SizedBox(width: 4),
+        Text(
+            "${widget.post["likedAccounts"] != null ? widget.post["likedAccounts"].length : " "}"),
+      ],
     );
   }
 }

@@ -41,13 +41,17 @@ class _SocialPageState extends State<SocialPage> {
           },
         );
       }),
-      floatingActionButton: FloatingActionButton(
-        heroTag: "navigate_to_posting",
-        onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const SocialPost()));
-        },
-        child: const Icon(Icons.add_a_photo),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 12.0),
+        child: FloatingActionButton(
+          tooltip: "Create Post",
+          heroTag: "navigate_to_posting",
+          onPressed: () {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => const SocialPost()));
+          },
+          child: const Icon(Icons.add_a_photo),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
     );

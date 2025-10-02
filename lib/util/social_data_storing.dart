@@ -21,6 +21,7 @@ class SocialDataStoring extends ChangeNotifier {
   DateTime? _dateTimePost;
   int? _shares = 0;
   int? _likeCount = 0;
+  Set? _likedAccounts = <String>{};
   bool _isLoading = true;
   //checks if the user is logged in or not, if not shows the loading data if they are logged in pulls their data
   late final StreamSubscription<User?> _authStateChangesSubscription;
@@ -34,6 +35,7 @@ class SocialDataStoring extends ChangeNotifier {
   DateTime? get dateTimePost => _dateTimePost;
   int? get shares => _shares;
   int? get likeCount => _likeCount;
+  Set? get likedAccounts => _likedAccounts;
   bool get isLoading => _isLoading;
 
   SocialDataStoring() {
@@ -69,6 +71,8 @@ class SocialDataStoring extends ChangeNotifier {
         "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
         "shares": postsData["shares"],
         "likeCount": postsData["likeCount"],
+        "likedAccounts":
+            (postsData["likedAccounts"] as List?)?.toSet() ?? <String>{} as Set
       };
     }).toList();
 
@@ -106,10 +110,33 @@ class SocialDataStoring extends ChangeNotifier {
       _dateTimePost = null;
       _shares = 0;
       _likeCount = 0;
+      _likedAccounts = <String>{};
     } finally {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> triggerLike(String accountId, Set postLikedAccounts) async {
+    if (postLikedAccounts.contains(accountId)) {
+      // Remove acc
+      postLikedAccounts.remove(accountId);
+    } else {
+      postLikedAccounts.add(accountId);
+    }
+
+    // try {
+    //   final snapshot = await FirebaseFirestore.instance
+    //       .collection("social_data")
+    //       .where("postID", isEqualTo: _postID)
+    //       .get();
+    //
+    //   print('Document successfully updated!');
+    // } catch (e) {
+    //   print('Error updating document: $e');
+    // }
+
+    notifyListeners();
   }
 
   void clearPostData() {
@@ -120,6 +147,7 @@ class SocialDataStoring extends ChangeNotifier {
     _dateTimePost = null;
     _shares = 0;
     _likeCount = 0;
+    _likedAccounts = <String>{};
     notifyListeners();
   }
 
