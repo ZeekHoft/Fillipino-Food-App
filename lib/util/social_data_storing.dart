@@ -64,6 +64,7 @@ class SocialDataStoring extends ChangeNotifier {
 
     _posts = snapshot.docs.map((doc) {
       final postsData = doc.data();
+      print('fetched: $postsData');
       return {
         "postID": postsData["postID"],
         "postPic": postsData["postPic"],
@@ -71,8 +72,9 @@ class SocialDataStoring extends ChangeNotifier {
         "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
         "shares": postsData["shares"],
         "likeCount": postsData["likeCount"],
-        "likedAccounts":
-            (postsData["likedAccounts"] as List?)?.toSet() ?? <String>{} as Set
+        "likedAccounts": postsData["likedAccounts"] != null
+            ? (postsData["likedAccounts"] as List?)?.toSet()
+            : <String>{}
       };
     }).toList();
 
@@ -117,7 +119,8 @@ class SocialDataStoring extends ChangeNotifier {
     }
   }
 
-  Future<void> triggerLike(String accountId, Set postLikedAccounts) async {
+  Future<void> triggerLike(
+      String postId, String accountId, Set postLikedAccounts) async {
     if (postLikedAccounts.contains(accountId)) {
       // Remove acc
       postLikedAccounts.remove(accountId);
@@ -125,16 +128,18 @@ class SocialDataStoring extends ChangeNotifier {
       postLikedAccounts.add(accountId);
     }
 
-    // try {
-    //   final snapshot = await FirebaseFirestore.instance
-    //       .collection("social_data")
-    //       .where("postID", isEqualTo: _postID)
-    //       .get();
-    //
-    //   print('Document successfully updated!');
-    // } catch (e) {
-    //   print('Error updating document: $e');
-    // }
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("social_data")
+          .where("postID", isEqualTo: postId)
+          .get();
+      DocumentReference docRef = snapshot.docs[0].reference;
+      await docRef.update({"likedAccounts": postLikedAccounts.toList()});
+
+      print('Likes successfully updated!');
+    } catch (e) {
+      print('Error updating likes: $e');
+    }
 
     notifyListeners();
   }

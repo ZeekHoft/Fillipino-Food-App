@@ -87,6 +87,7 @@ class _PostWidgetState extends State<PostWidget> {
                                       Provider.of<SocialDataStoring>(context,
                                               listen: false)
                                           .triggerLike(
+                                              widget.post["postID"]!,
                                               profileDataStoring.userId!,
                                               widget.post["likedAccounts"]!);
                                     });
