@@ -66,8 +66,10 @@ class _SocialPostState extends State<SocialPost> {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.secondaryContainer,
+                      foregroundColor:
+                          Theme.of(context).colorScheme.onSecondaryContainer),
                   child: const Text('Select Image from Gallery or Camera'),
                   onPressed: () {
                     _showPicker(context: context);
@@ -102,7 +104,8 @@ class _SocialPostState extends State<SocialPost> {
         context: context,
         builder: (BuildContext context) {
           return SafeArea(
-              child: Wrap(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               ListTile(
                 leading: const Icon(Icons.photo_library),
@@ -164,11 +167,12 @@ class _SocialPostState extends State<SocialPost> {
             userId: profileDataStoring.userId!,
             postID: postId,
             // change the postpic from string ot Uint8List form social data storing
-            postPic: '',
+            postPic: "",
             likeCount: 0,
             shares: 0,
             postDescription: postDescription,
-            dateTimePost: DateTime.now());
+            dateTimePost: DateTime.now(),
+            likedAccounts: <String>{});
         // print("PICTURE HERE: $galleryBytes");
         try {
           final postData = parameterPosts.toFirestore();
