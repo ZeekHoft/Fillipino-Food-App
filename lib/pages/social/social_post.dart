@@ -1,14 +1,13 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flilipino_food_app/common_widgets/social_post_dish_data.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_set_up_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:uuid/uuid.dart';
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 
 class SocialPost extends StatefulWidget {
   const SocialPost({super.key});
@@ -21,6 +20,8 @@ class _SocialPostState extends State<SocialPost> {
   final _formKey = GlobalKey<FormState>();
   final _postPic = TextEditingController();
   final _postDescription = TextEditingController();
+  final _ingredientList = TextEditingController();
+  final _processList = TextEditingController();
   final _datetime = TextEditingController();
   final _shares = TextEditingController();
   final _likeCount = TextEditingController();
@@ -34,6 +35,8 @@ class _SocialPostState extends State<SocialPost> {
   @override
   void dispose() {
     _postDescription.dispose();
+    _ingredientList.dispose();
+    _processList.dispose();
     _datetime.dispose();
     _shares.dispose();
     _likeCount.dispose();
@@ -88,9 +91,28 @@ class _SocialPostState extends State<SocialPost> {
                   maxLines: null,
                   labelText: "Description",
                   errorText: 'Please enter Description',
+                  border: OutlineInputBorder(),
                 ),
                 const SizedBox(
                   height: 10,
+                ),
+                SocialPostDishData(
+                  controller: _ingredientList,
+                  labeltext: 'Enter ingredient',
+                  hintext: 'e.g., Tomatoes, Onions, Garlic,...',
+                  prefixicon: Icon(Icons.local_grocery_store_sharp),
+                  border: OutlineInputBorder(),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SocialPostDishData(
+                  controller: _processList,
+                  labeltext: 'Enter Process',
+                  hintext:
+                      'e.g., Chop the onions and garlic, steam the tomatoes,...',
+                  prefixicon: Icon(Icons.format_list_bulleted),
+                  border: OutlineInputBorder(),
                 ),
                 const SizedBox(
                   height: 50,
@@ -161,6 +183,13 @@ class _SocialPostState extends State<SocialPost> {
     try {
       if (_formKey.currentState!.validate()) {
         final postDescription = _postDescription.text;
+        // as the controller takes the users input as a string we covnert it to a list for each comma we seperate them
+        final ingredientList = _ingredientList.text.isNotEmpty
+            ? _ingredientList.text.split(',').map((e) => e.trim()).toList()
+            : <String>[];
+        final processList = _processList.text.isNotEmpty
+            ? _processList.text.split(',').map((e) => e.trim()).toList()
+            : <String>[];
         //user watch for consistent chagnges such as names, allergies, dietary restriction etc... use read to only fetch the thing that is needed when something is finished
         final profileDataStoring = context.read<ProfileDataStoring>();
         final postIDReference =
@@ -174,6 +203,8 @@ class _SocialPostState extends State<SocialPost> {
             likeCount: 0,
             shares: 0,
             postDescription: postDescription,
+            ingredients: ingredientList,
+            processSteps: processList,
             dateTimePost: DateTime.now(),
             likedAccounts: <String>{});
         // print("PICTURE HERE: $galleryBytes");
@@ -186,6 +217,8 @@ class _SocialPostState extends State<SocialPost> {
               const SnackBar(content: Text("Successfully Posted!!")));
           Navigator.pop(context);
           _postDescription.clear();
+          _ingredientList.clear();
+          _processList.clear();
           _datetime.clear();
           _shares.clear();
           _likeCount.clear();

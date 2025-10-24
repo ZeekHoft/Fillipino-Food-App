@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
-class SocialPostIngredients extends StatelessWidget {
+class SocialPostDishData extends StatelessWidget {
   final dynamic controller;
   final dynamic labeltext;
   final dynamic hintext;
   final dynamic prefixicon;
   final dynamic border;
+  final String? errorText;
 
-  const SocialPostIngredients(
+  const SocialPostDishData(
       {super.key,
       required this.controller,
       required this.labeltext,
       required this.hintext,
       required this.prefixicon,
-      required this.border});
+      required this.border,
+      this.errorText});
 
   @override
   Widget build(BuildContext context) {

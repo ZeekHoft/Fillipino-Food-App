@@ -1,11 +1,3 @@
-// required this.userId,
-// required this.postID,
-// required this.postPic,
-// required this.postDescription,
-// required this.dateTimePost,
-// this.shares = 0,
-// this.likeCount = 0,
-
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,7 +14,10 @@ class SocialDataStoring extends ChangeNotifier {
   int? _shares = 0;
   int? _likeCount = 0;
   Set? _likedAccounts = <String>{};
+  List<String>? _ingredients = [];
+  List<String>? _processSteps = [];
   bool _isLoading = true;
+
   //checks if the user is logged in or not, if not shows the loading data if they are logged in pulls their data
   late final StreamSubscription<User?> _authStateChangesSubscription;
 
@@ -36,6 +31,8 @@ class SocialDataStoring extends ChangeNotifier {
   int? get shares => _shares;
   int? get likeCount => _likeCount;
   Set? get likedAccounts => _likedAccounts;
+  List<String>? get ingredients => _ingredients;
+  List<String>? get processSteps => _processSteps;
   bool get isLoading => _isLoading;
 
   SocialDataStoring() {
@@ -44,7 +41,7 @@ class SocialDataStoring extends ChangeNotifier {
       if (user != null) {
         fetchUserPost(user.uid);
       } else {
-        //clearPostData
+        clearPostData();
       }
     });
   }
@@ -54,65 +51,56 @@ class SocialDataStoring extends ChangeNotifier {
     notifyListeners();
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null) {
-      //clearPostData();
+      clearPostData();
       return;
     }
-    final snapshot = await FirebaseFirestore.instance
-        .collection("social_data")
-        .where("userId", isEqualTo: uid)
-        .get();
 
-    _posts = snapshot.docs.map((doc) {
-      final postsData = doc.data();
-      print('fetched: $postsData');
-      return {
-        "postID": postsData["postID"],
-        "postPic": postsData["postPic"],
-        "postDescription": postsData["postDescription"],
-        "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
-        "shares": postsData["shares"],
-        "likeCount": postsData["likeCount"],
-        "likedAccounts": postsData["likedAccounts"] != null
-            ? (postsData["likedAccounts"] as List?)?.toSet()
-            : <String>{}
-      };
-    }).toList();
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("social_data")
+          .where("userId", isEqualTo: uid)
+          .get();
 
-    //old code not built for pulling a list of data
-    // if (snapshot.docs.isNotEmpty) {
-    //   final userPosts = snapshot.docs.first.data()!;
-    //   _userId = userPosts["userId"] ?? "N/A";
-    //   _postID = userPosts["postID"] ?? "N/A";
-    //   _postPic = userPosts["postPic"] ?? "N/A";
-    //   _postDescription = userPosts["postDescription"] ?? "N/A";
-    //   final Timestamp? birthdayTimestamp =
-    //       userPosts["dateTimePost"] as Timestamp?;
-    //   _dateTimePost = birthdayTimestamp?.toDate();
-    //   _shares = userPosts["shares"] ?? 0;
-    //   _likeCount = userPosts["likeCount"] ?? 0;
-    // } else {
-    //   _userId = "N/A UserID";
-    //   _postID = "N/A psotID";
-    //   _postPic = null;
-    //   _postDescription = "N/A";
-    //   _dateTimePost = null;
-    //   _shares = 0;
-    //   _likeCount = 0;
-    // }
-
-    try {} catch (e) {
+      _posts = snapshot.docs.map((doc) {
+        final postsData = doc.data();
+        print('fetched: $postsData');
+        return {
+          "postID": postsData["postID"],
+          "postPic": postsData["postPic"],
+          "postDescription": postsData["postDescription"],
+          "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
+          "shares": postsData["shares"],
+          "likeCount": postsData["likeCount"],
+          "likedAccounts": postsData["likedAccounts"] != null
+              ? (postsData["likedAccounts"] as List?)?.toSet()
+              : <String>{},
+          "ingredients": postsData["ingredients"] != null
+              ? (postsData["ingredients"] as List?)
+                  ?.map((e) => e.toString())
+                  .toList()
+              : <String>[],
+          "processSteps": postsData["processSteps"] != null
+              ? (postsData["processSteps"] as List?)
+                  ?.map((e) => e.toString())
+                  .toList()
+              : <String>[],
+        };
+      }).toList();
+    } catch (e) {
       if (kDebugMode) {
         print("Fetching Error in user posts: $e");
       }
 
       _userId = "N/A UserID";
-      _postID = "N/A psotID";
+      _postID = "N/A postID";
       _postPic = null;
       _postDescription = "N/A";
       _dateTimePost = null;
       _shares = 0;
       _likeCount = 0;
       _likedAccounts = <String>{};
+      _ingredients = [];
+      _processSteps = [];
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -122,7 +110,7 @@ class SocialDataStoring extends ChangeNotifier {
   Future<void> triggerLike(
       String postId, String accountId, Set postLikedAccounts) async {
     if (postLikedAccounts.contains(accountId)) {
-      // Remove acc
+      // Remove account
       postLikedAccounts.remove(accountId);
     } else {
       postLikedAccounts.add(accountId);
@@ -143,16 +131,72 @@ class SocialDataStoring extends ChangeNotifier {
 
     notifyListeners();
   }
+  // // dont uncoment was added by AI dont know why for the process yet
+  // // Method to update ingredients for a specific post
+  // Future<void> updateIngredients(
+  //     String postId, List<String> ingredients) async {
+  //   try {
+  //     final snapshot = await FirebaseFirestore.instance
+  //         .collection("social_data")
+  //         .where("postID", isEqualTo: postId)
+  //         .get();
+
+  //     if (snapshot.docs.isNotEmpty) {
+  //       DocumentReference docRef = snapshot.docs[0].reference;
+  //       await docRef.update({"ingredients": ingredients});
+
+  //       // Update local state
+  //       final postIndex = _posts.indexWhere((post) => post["postID"] == postId);
+  //       if (postIndex != -1) {
+  //         _posts[postIndex]["ingredients"] = ingredients;
+  //       }
+
+  //       print('Ingredients successfully updated!');
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     print('Error updating ingredients: $e');
+  //   }
+  // }
+
+  // // Method to update process steps for a specific post
+  // Future<void> updateProcessSteps(
+  //     String postId, List<String> processSteps) async {
+  //   try {
+  //     final snapshot = await FirebaseFirestore.instance
+  //         .collection("social_data")
+  //         .where("postID", isEqualTo: postId)
+  //         .get();
+
+  //     if (snapshot.docs.isNotEmpty) {
+  //       DocumentReference docRef = snapshot.docs[0].reference;
+  //       await docRef.update({"processSteps": processSteps});
+
+  //       // Update local state
+  //       final postIndex = _posts.indexWhere((post) => post["postID"] == postId);
+  //       if (postIndex != -1) {
+  //         _posts[postIndex]["processSteps"] = processSteps;
+  //       }
+
+  //       print('Process steps successfully updated!');
+  //       notifyListeners();
+  //     }
+  //   } catch (e) {
+  //     print('Error updating process steps: $e');
+  //   }
+  // }
 
   void clearPostData() {
     _userId = "N/A UserID";
-    _postID = "N/A psotID";
+    _postID = "N/A postID";
     _postPic = null;
     _postDescription = "N/A";
     _dateTimePost = null;
     _shares = 0;
     _likeCount = 0;
     _likedAccounts = <String>{};
+    _ingredients = [];
+    _processSteps = [];
     notifyListeners();
   }
 

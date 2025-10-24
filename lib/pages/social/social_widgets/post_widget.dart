@@ -25,6 +25,9 @@ class _PostWidgetState extends State<PostWidget> {
       likeState =
           widget.post["likedAccounts"].contains(profileDataStoring.userId!);
     }
+    final ingredients = widget.post["ingredients"] as List<String>? ?? [];
+    final processSteps = widget.post["processSteps"] as List<String>? ?? [];
+
     // print(widget.post);
     return Card(
       child: Padding(
@@ -74,7 +77,29 @@ class _PostWidgetState extends State<PostWidget> {
                               : "")),
                       const SizedBox(height: 8.0),
                       Text(widget.post["postDescription"] ?? ""),
+                      if (ingredients.isNotEmpty) ...[
+                        Text(
+                          "Ingredients:",
+                        ),
+                        Text(
+                          ingredients.join(", "),
+                          style: TextStyle(fontSize: 12),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                       const Spacer(),
+                      if (processSteps.isNotEmpty) ...[
+                        Text(
+                          "Process:",
+                        ),
+                        Text(
+                          processSteps.join(", "),
+                          style: TextStyle(fontSize: 12),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [

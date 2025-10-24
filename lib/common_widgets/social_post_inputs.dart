@@ -6,13 +6,16 @@ class SocialPostInputs extends StatelessWidget {
   final dynamic maxLines;
   final String labelText;
   final String errorText;
+  final dynamic border;
+
   const SocialPostInputs(
       {super.key,
       required this.controller,
       required this.keyboardType,
       required this.maxLines,
       required this.labelText,
-      required this.errorText});
+      required this.errorText,
+      required this.border});
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +28,9 @@ class SocialPostInputs extends StatelessWidget {
           maxLines: maxLines,
           decoration: InputDecoration(
             labelText: labelText,
+            border: border,
             enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Colors.grey),
-              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
             ),
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(
