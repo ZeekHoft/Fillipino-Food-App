@@ -16,37 +16,42 @@ class SocialPostInputs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: keyboardType,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        labelText: labelText,
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.grey),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.black,
-            width: 2,
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TextFormField(
+          controller: controller,
+          keyboardType: keyboardType,
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            labelText: labelText,
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.black,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(15),
+            ),
           ),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(
-            color: Colors.red,
-            width: 2,
-          ),
-          borderRadius: BorderRadius.circular(15),
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return errorText;
+            }
+            return null;
+          },
         ),
       ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return errorText;
-        }
-        return null;
-      },
     );
   }
 }

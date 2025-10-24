@@ -90,6 +90,9 @@ class _SocialPostState extends State<SocialPost> {
                   errorText: 'Please enter Description',
                 ),
                 const SizedBox(
+                  height: 10,
+                ),
+                const SizedBox(
                   height: 50,
                 ),
                 ElevatedButton(onPressed: _savePost, child: const Text("Post!"))
