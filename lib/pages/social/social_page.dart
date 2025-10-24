@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/social/social_post.dart';
 import 'package:flilipino_food_app/pages/social/social_widgets/post_widget.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
@@ -21,6 +22,15 @@ class _SocialPageState extends State<SocialPage> {
     // final postLikes = socialDataStoring.likeCount.toString();
     // final postShares = socialDataStoring.shares.toString();
 
+    // get user uid as reference
+    Future<void> _refreshPge(BuildContext context) async {
+      final socialData = Provider.of<SocialDataStoring>(context, listen: false);
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        await socialData.fetchUserPost(currentUser.uid);
+      }
+    }
+
     return Scaffold(
       body: Consumer<SocialDataStoring>(builder: (context, socialData, child) {
         if (socialData.isLoading) {
@@ -31,14 +41,17 @@ class _SocialPageState extends State<SocialPage> {
             child: Text("No posts available yet"),
           );
         }
-
-        return ListView.builder(
-          padding: const EdgeInsets.fromLTRB(16, 24, 16, 64),
-          itemCount: socialData.posts.length,
-          itemBuilder: (context, index) {
-            final post = socialData.posts[index];
-            return PostWidget(post: post);
-          },
+        //make the refresher widget a parent of the contents widget
+        return RefreshIndicator(
+          onRefresh: () => _refreshPge(context),
+          child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(16, 24, 16, 64),
+            itemCount: socialData.posts.length,
+            itemBuilder: (context, index) {
+              final post = socialData.posts[index];
+              return PostWidget(post: post);
+            },
+          ),
         );
       }),
       floatingActionButton: Padding(
