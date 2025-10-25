@@ -58,7 +58,6 @@ class SocialDataStoring extends ChangeNotifier {
     try {
       final snapshot = await FirebaseFirestore.instance
           .collection("social_data")
-          .where("userId", isEqualTo: uid)
           .get();
 
       _posts = snapshot.docs.map((doc) {
