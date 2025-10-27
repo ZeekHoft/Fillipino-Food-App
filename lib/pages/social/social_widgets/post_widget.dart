@@ -28,6 +28,7 @@ class _PostWidgetState extends State<PostWidget> {
     }
     final ingredients = widget.post["ingredients"] as List<String>? ?? [];
     final processSteps = widget.post["processSteps"] as List<String>? ?? [];
+    final calories = widget.post["calories"].toString();
 
     // print(widget.post);
     return GestureDetector(
@@ -97,6 +98,7 @@ class _PostWidgetState extends State<PostWidget> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
+                        SizedBox(child: Text("Total Calories: $calories")),
                         const Spacer(),
                         if (processSteps.isNotEmpty) ...[
                           Text(

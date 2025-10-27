@@ -6,6 +6,7 @@ import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_set_up_util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -18,14 +19,16 @@ class SocialPost extends StatefulWidget {
 
 class _SocialPostState extends State<SocialPost> {
   final _formKey = GlobalKey<FormState>();
-  final _postPic = TextEditingController();
+  // final _postPic = TextEditingController();
   final _postDescription = TextEditingController();
   final _ingredientList = TextEditingController();
   final _processList = TextEditingController();
   final _datetime = TextEditingController();
   final _shares = TextEditingController();
   final _likeCount = TextEditingController();
-  bool _isLoading = false;
+  final _caloriePost = TextEditingController();
+
+  // bool _isLoading = false;
 
   Uint8List? galleryBytes;
   final picker = ImagePicker();
@@ -102,6 +105,7 @@ class _SocialPostState extends State<SocialPost> {
                   hintext: 'e.g., Tomatoes, Onions, Garlic,...',
                   prefixicon: Icon(Icons.local_grocery_store_sharp),
                   border: OutlineInputBorder(),
+                  keyboardtype: TextInputType.text,
                 ),
                 const SizedBox(
                   height: 10,
@@ -113,6 +117,21 @@ class _SocialPostState extends State<SocialPost> {
                       'e.g., Chop the onions and garlic, steam the tomatoes,...',
                   prefixicon: Icon(Icons.format_list_bulleted),
                   border: OutlineInputBorder(),
+                  keyboardtype: TextInputType.text,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SocialPostDishData(
+                  controller: _caloriePost,
+                  labeltext: 'Enter Food Post Calories',
+                  hintext: 'e.g., 100 or 1300',
+                  prefixicon: Icon(Icons.numbers),
+                  border: OutlineInputBorder(),
+                  maxlength: 5,
+                  keyboardtype: TextInputType.number,
+                  inputformat: FilteringTextInputFormatter(RegExp(r'[0-9]'),
+                      allow: true),
                 ),
                 const SizedBox(
                   height: 50,
@@ -183,6 +202,7 @@ class _SocialPostState extends State<SocialPost> {
     try {
       if (_formKey.currentState!.validate()) {
         final postDescription = _postDescription.text;
+        final caloriePost = int.tryParse(_caloriePost.text); // parse to int
         // as the controller takes the users input as a string we covnert it to a list for each comma we seperate them
         final ingredientList = _ingredientList.text.isNotEmpty
             ? _ingredientList.text.split(',').map((e) => e.trim()).toList()
@@ -195,6 +215,7 @@ class _SocialPostState extends State<SocialPost> {
         final postIDReference =
             FirebaseFirestore.instance.collection('social_data').doc();
         final postId = postIDReference.id;
+
         final parameterPosts = SocialSetUpUtil(
             userId: profileDataStoring.userId!,
             postID: postId,
@@ -203,6 +224,7 @@ class _SocialPostState extends State<SocialPost> {
             likeCount: 0,
             shares: 0,
             postDescription: postDescription,
+            calories: caloriePost,
             ingredients: ingredientList,
             processSteps: processList,
             dateTimePost: DateTime.now(),

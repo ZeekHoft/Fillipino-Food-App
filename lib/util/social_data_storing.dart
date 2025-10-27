@@ -16,6 +16,7 @@ class SocialDataStoring extends ChangeNotifier {
   Set? _likedAccounts = <String>{};
   List<String>? _ingredients = [];
   List<String>? _processSteps = [];
+  int? _calories = 0; // Added calories field
   bool _isLoading = true;
 
   //checks if the user is logged in or not, if not shows the loading data if they are logged in pulls their data
@@ -33,6 +34,7 @@ class SocialDataStoring extends ChangeNotifier {
   Set? get likedAccounts => _likedAccounts;
   List<String>? get ingredients => _ingredients;
   List<String>? get processSteps => _processSteps;
+  int? get calories => _calories; // Added calories getter
   bool get isLoading => _isLoading;
 
   SocialDataStoring() {
@@ -56,9 +58,8 @@ class SocialDataStoring extends ChangeNotifier {
     }
 
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection("social_data")
-          .get();
+      final snapshot =
+          await FirebaseFirestore.instance.collection("social_data").get();
 
       _posts = snapshot.docs.map((doc) {
         final postsData = doc.data();
@@ -83,6 +84,7 @@ class SocialDataStoring extends ChangeNotifier {
                   ?.map((e) => e.toString())
                   .toList()
               : <String>[],
+          "calories": postsData["calories"] ?? 0, // Added calories mapping
         };
       }).toList();
     } catch (e) {
@@ -100,6 +102,7 @@ class SocialDataStoring extends ChangeNotifier {
       _likedAccounts = <String>{};
       _ingredients = [];
       _processSteps = [];
+      _calories = 0; // Added calories to error state
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -130,10 +133,9 @@ class SocialDataStoring extends ChangeNotifier {
 
     notifyListeners();
   }
-  // // dont uncoment was added by AI dont know why for the process yet
-  // // Method to update ingredients for a specific post
-  // Future<void> updateIngredients(
-  //     String postId, List<String> ingredients) async {
+
+  // // Optional: Method to update calories for a specific post
+  // Future<void> updateCalories(String postId, int calories) async {
   //   try {
   //     final snapshot = await FirebaseFirestore.instance
   //         .collection("social_data")
@@ -142,46 +144,19 @@ class SocialDataStoring extends ChangeNotifier {
 
   //     if (snapshot.docs.isNotEmpty) {
   //       DocumentReference docRef = snapshot.docs[0].reference;
-  //       await docRef.update({"ingredients": ingredients});
+  //       await docRef.update({"calories": calories});
 
   //       // Update local state
   //       final postIndex = _posts.indexWhere((post) => post["postID"] == postId);
   //       if (postIndex != -1) {
-  //         _posts[postIndex]["ingredients"] = ingredients;
+  //         _posts[postIndex]["calories"] = calories;
   //       }
 
-  //       print('Ingredients successfully updated!');
+  //       print('Calories successfully updated!');
   //       notifyListeners();
   //     }
   //   } catch (e) {
-  //     print('Error updating ingredients: $e');
-  //   }
-  // }
-
-  // // Method to update process steps for a specific post
-  // Future<void> updateProcessSteps(
-  //     String postId, List<String> processSteps) async {
-  //   try {
-  //     final snapshot = await FirebaseFirestore.instance
-  //         .collection("social_data")
-  //         .where("postID", isEqualTo: postId)
-  //         .get();
-
-  //     if (snapshot.docs.isNotEmpty) {
-  //       DocumentReference docRef = snapshot.docs[0].reference;
-  //       await docRef.update({"processSteps": processSteps});
-
-  //       // Update local state
-  //       final postIndex = _posts.indexWhere((post) => post["postID"] == postId);
-  //       if (postIndex != -1) {
-  //         _posts[postIndex]["processSteps"] = processSteps;
-  //       }
-
-  //       print('Process steps successfully updated!');
-  //       notifyListeners();
-  //     }
-  //   } catch (e) {
-  //     print('Error updating process steps: $e');
+  //     print('Error updating calories: $e');
   //   }
   // }
 
@@ -196,6 +171,7 @@ class SocialDataStoring extends ChangeNotifier {
     _likedAccounts = <String>{};
     _ingredients = [];
     _processSteps = [];
+    _calories = 0; // Added calories to clear method
     notifyListeners();
   }
 

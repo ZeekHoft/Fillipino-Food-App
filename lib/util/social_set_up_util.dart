@@ -1,5 +1,5 @@
 // postID, postPic, postDescription, datetime, shares/reposts, likeCount,
-// accounts that interacted, ingredients list, process steps
+// accounts that interacted, ingredients list, process steps, calories
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -14,6 +14,7 @@ class SocialSetUpUtil {
   Set<String>? likedAccounts;
   List<String>? ingredients;
   List<String>? processSteps;
+  int? calories; // Added calories field
 
   SocialSetUpUtil({
     this.userId,
@@ -26,6 +27,7 @@ class SocialSetUpUtil {
     this.likedAccounts,
     this.ingredients,
     this.processSteps,
+    this.calories = 0, // Added calories parameter with default value 0
   });
 
   // Convert to Map for Firestore
@@ -41,6 +43,7 @@ class SocialSetUpUtil {
       'likedAccounts': likedAccounts?.toList(),
       'ingredients': ingredients,
       'processSteps': processSteps,
+      'calories': calories, // Added calories to Firestore map
     };
   }
 
@@ -64,42 +67,43 @@ class SocialSetUpUtil {
       processSteps: (data['processSteps'] as List?)
           ?.map((step) => step.toString())
           .toList(),
+      calories: data['calories'] ?? 0, // Added calories from Firestore
     );
   }
+  // might be helpful later
+  // // Helper method to add an ingredient
+  // void addIngredient(String ingredient) {
+  //   ingredients ??= [];
+  //   if (!ingredients!.contains(ingredient)) {
+  //     ingredients!.add(ingredient);
+  //   }
+  // }
 
-  // Helper method to add an ingredient
-  void addIngredient(String ingredient) {
-    ingredients ??= [];
-    if (!ingredients!.contains(ingredient)) {
-      ingredients!.add(ingredient);
-    }
-  }
+  // // Helper method to remove an ingredient
+  // void removeIngredient(String ingredient) {
+  //   ingredients?.remove(ingredient);
+  // }
 
-  // Helper method to remove an ingredient
-  void removeIngredient(String ingredient) {
-    ingredients?.remove(ingredient);
-  }
+  // // Helper method to add a process step
+  // void addProcessStep(String step) {
+  //   processSteps ??= [];
+  //   processSteps!.add(step);
+  // }
 
-  // Helper method to add a process step
-  void addProcessStep(String step) {
-    processSteps ??= [];
-    processSteps!.add(step);
-  }
+  // // Helper method to remove a process step
+  // void removeProcessStep(int index) {
+  //   if (processSteps != null && index >= 0 && index < processSteps!.length) {
+  //     processSteps!.removeAt(index);
+  //   }
+  // }
 
-  // Helper method to remove a process step
-  void removeProcessStep(int index) {
-    if (processSteps != null && index >= 0 && index < processSteps!.length) {
-      processSteps!.removeAt(index);
-    }
-  }
-
-  // Helper method to reorder process steps
-  void reorderProcessSteps(int oldIndex, int newIndex) {
-    if (processSteps == null) return;
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    final step = processSteps!.removeAt(oldIndex);
-    processSteps!.insert(newIndex, step);
-  }
+  // // Helper method to reorder process steps
+  // void reorderProcessSteps(int oldIndex, int newIndex) {
+  //   if (processSteps == null) return;
+  //   if (newIndex > oldIndex) {
+  //     newIndex -= 1;
+  //   }
+  //   final step = processSteps!.removeAt(oldIndex);
+  //   processSteps!.insert(newIndex, step);
+  // }
 }

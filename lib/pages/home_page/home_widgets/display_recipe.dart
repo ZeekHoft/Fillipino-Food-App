@@ -26,54 +26,57 @@ class DisplayRecipe extends StatefulWidget {
 
 class _DisplayRecipeState extends State<DisplayRecipe> {
   // Add this helper method in your _DisplayRecipeState class
-bool _hasAllergen(String ingredients, String allergies) {
-  if (allergies.isEmpty) return false;
-  
-  // Convert both to lowercase for case-insensitive comparison
-  final ingredientsLower = ingredients.toLowerCase();
-  
-  // Split allergies by common separators (comma, semicolon, etc.)
-  final allergenList = allergies
-      .toLowerCase()
-      .split(RegExp(r'[,;]'))
-      .map((e) => e.trim())
-      .where((e) => e.isNotEmpty)
-      .toList();
-  
-  // Check if any allergen appears in the ingredients
-  for (final allergen in allergenList) {
-    // Use word boundary check to avoid partial matches
-    // e.g., "garlic" will match "garlic clove" but not "garlicky"
-    if (RegExp(r'\b' + RegExp.escape(allergen) + r'\b').hasMatch(ingredientsLower)) {
-      return true;
+  bool _hasAllergen(String ingredients, String allergies) {
+    if (allergies.isEmpty) return false;
+
+    // Convert both to lowercase for case-insensitive comparison
+    final ingredientsLower = ingredients.toLowerCase();
+
+    // Split allergies by common separators (comma, semicolon, etc.)
+    final allergenList = allergies
+        .toLowerCase()
+        .split(RegExp(r'[,;]'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+
+    // Check if any allergen appears in the ingredients
+    for (final allergen in allergenList) {
+      // Use word boundary check to avoid partial matches
+      // e.g., "garlic" will match "garlic clove" but not "garlicky"
+      if (RegExp(r'\b' + RegExp.escape(allergen) + r'\b')
+          .hasMatch(ingredientsLower)) {
+        return true;
+      }
     }
+
+    return false;
   }
-  
-  return false;
-}
 
 // Get list of detected allergens for display
-List<String> _getDetectedAllergens(String ingredients, String allergies) {
-  if (allergies.isEmpty) return [];
-  
-  final ingredientsLower = ingredients.toLowerCase();
-  final detectedAllergens = <String>[];
-  
-  final allergenList = allergies
-      .toLowerCase()
-      .split(RegExp(r'[,;]'))
-      .map((e) => e.trim())
-      .where((e) => e.isNotEmpty)
-      .toList();
-  
-  for (final allergen in allergenList) {
-    if (RegExp(r'\b' + RegExp.escape(allergen) + r'\b').hasMatch(ingredientsLower)) {
-      detectedAllergens.add(allergen);
+  List<String> _getDetectedAllergens(String ingredients, String allergies) {
+    if (allergies.isEmpty) return [];
+
+    final ingredientsLower = ingredients.toLowerCase();
+    final detectedAllergens = <String>[];
+
+    final allergenList = allergies
+        .toLowerCase()
+        .split(RegExp(r'[,;]'))
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+
+    for (final allergen in allergenList) {
+      if (RegExp(r'\b' + RegExp.escape(allergen) + r'\b')
+          .hasMatch(ingredientsLower)) {
+        detectedAllergens.add(allergen);
+      }
     }
+
+    return detectedAllergens;
   }
-  
-  return detectedAllergens;
-}
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<FavoriteProvider>(context);
@@ -81,11 +84,9 @@ List<String> _getDetectedAllergens(String ingredients, String allergies) {
     final profileDataStoring = context.watch<ProfileDataStoring>();
     final allergies = profileDataStoring.allergies;
 
-    
     final hasAllergen = _hasAllergen(widget.recipeIngredients, allergies);
-    final detectedAllergens = _getDetectedAllergens(widget.recipeIngredients, allergies);
-
-
+    final detectedAllergens =
+        _getDetectedAllergens(widget.recipeIngredients, allergies);
 
     return Scaffold(
       appBar: AppBar(
@@ -151,30 +152,29 @@ List<String> _getDetectedAllergens(String ingredients, String allergies) {
           // TODO: add logic
 
           if (hasAllergen)
-          Center(
-            child: Card(
-              color: Theme.of(context).colorScheme.error,
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-              
-                    Icon(
-                      Icons.warning,
-                      color: Theme.of(context).colorScheme.onError,
-                    ),
-                    Text(
-                            "Contains: ${detectedAllergens.join(', ')}",
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.onError),
-                    ),
-                  ],
+            Center(
+              child: Card(
+                color: Theme.of(context).colorScheme.error,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.warning,
+                        color: Theme.of(context).colorScheme.onError,
+                      ),
+                      Text(
+                        "Contains: ${detectedAllergens.join(', ')}",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onError),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
           const SizedBox(height: 16),
           Center(
             child: SizedBox(
