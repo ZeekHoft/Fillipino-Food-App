@@ -158,8 +158,8 @@ class FavoriteProvider extends ChangeNotifier {
       //Honestly idk... HAHAAH all i know is it bases on index place rather then the values themselve
       //by doing that it can be more precise, -1 becuase u know... 0 is 1
 
-      final index = _recipeName.indexOf(
-          name); // need changes here lets not assume the name is unique enough
+      final index = _recipeName.indexOf(name);
+      // need changes here lets not assume the name is unique enough
       if (index != -1) {
         _recipeName.removeAt(index);
         _recipeImage.removeAt(index);

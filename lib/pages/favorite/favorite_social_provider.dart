@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class FavoriteSocialPost extends ChangeNotifier {
+class FavoriteSocialProvider extends ChangeNotifier {
   final List<String> _socialFavoriteId = [];
 
   final List<String> _postIngredients = [];
@@ -74,6 +74,39 @@ class FavoriteSocialPost extends ChangeNotifier {
       if (kDebugMode) {
         print("Error in updating firesoter: $e");
       }
+    } finally {
+      notifyListeners();
     }
+  }
+
+  void toggleSocialFavorite(String postId, String ingredient, String porcess,
+      String description, int calories) {
+    if (_socialFavoriteId.contains(postId)) {
+      _socialFavoriteId.remove(postId);
+
+      final index = _socialFavoriteId.indexOf(postId);
+      if (index != -1) {
+        _socialFavoriteId.removeAt(index);
+        _postIngredients.removeAt(index);
+        _postProcessSteps.removeAt(index);
+        _postDescriptoin.removeAt(index);
+        _postCalories.removeAt(index);
+        _storeSocialFavoriteInFireBase(postId, false);
+      }
+    } else {
+      // If not a favorite, add the document ID
+      _socialFavoriteId.add(postId);
+      _postIngredients.add(ingredient);
+      _postProcessSteps.add(porcess);
+      _postDescriptoin.add(description);
+      _postCalories.add(calories);
+      _storeSocialFavoriteInFireBase(postId, true);
+    }
+    notifyListeners();
+  }
+
+  bool isSocialExist(String docId) {
+    return _socialFavoriteId.contains(
+        docId); // checks for only 1 positional argument to toggle the icon button in display page
   }
 }

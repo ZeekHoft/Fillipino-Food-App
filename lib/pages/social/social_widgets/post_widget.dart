@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
 import 'package:flilipino_food_app/pages/social/social_widgets/social_vew_post.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
@@ -20,16 +21,20 @@ class PostWidget extends StatefulWidget {
 class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<FavoriteSocialProvider>(context);
     final profileDataStoring = context.read<ProfileDataStoring>();
+
     bool likeState = false;
     if (widget.post["likedAccounts"] != null) {
       likeState =
           widget.post["likedAccounts"].contains(profileDataStoring.userId!);
     }
+    final postId = widget.post['postID'];
+
     final ingredients = widget.post["ingredients"] as List<String>? ?? [];
     final processSteps = widget.post["processSteps"] as List<String>? ?? [];
     final calories = widget.post["calories"].toString();
-    final descriptoin = widget.post["postDescription"] ?? "";
+    final description = widget.post["postDescription"] ?? "";
 
     // print(widget.post);
     return GestureDetector(
@@ -87,7 +92,7 @@ class _PostWidgetState extends State<PostWidget> {
                                     .format(widget.post["dateTimePost"])
                                 : "")),
                         const SizedBox(height: 8.0),
-                        Text(descriptoin),
+                        Text(description),
                         if (ingredients.isNotEmpty) ...[
                           Text(
                             "Ingredients:",
@@ -141,7 +146,28 @@ class _PostWidgetState extends State<PostWidget> {
                                     "${widget.post["likedAccounts"] != null ? widget.post["likedAccounts"].length : " "}"),
                               ],
                             ),
-                            Icon(Icons.bookmark_border),
+
+                            IconButton(
+                              onPressed: () {
+                                provider.toggleSocialFavorite(
+                                  postId.toString(),
+                                  ingredients.join(', '),
+                                  processSteps.join(', '),
+                                  description,
+                                  int.tryParse(calories) ?? 0,
+                                );
+                              },
+                              icon: provider.isSocialExist(
+                                      widget.post["postID"]?.toString() ?? '')
+                                  ? const Icon(
+                                      Icons.bookmark,
+                                      color: Colors
+                                          .red, // Or your AppColors.yellowTheme
+                                    )
+                                  : const Icon(
+                                      Icons.bookmark_add_outlined,
+                                    ),
+                            ),
                             Icon(Icons.share),
                           ],
                         )
