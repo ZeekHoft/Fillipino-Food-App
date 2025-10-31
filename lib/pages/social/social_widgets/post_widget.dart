@@ -29,6 +29,7 @@ class _PostWidgetState extends State<PostWidget> {
     final ingredients = widget.post["ingredients"] as List<String>? ?? [];
     final processSteps = widget.post["processSteps"] as List<String>? ?? [];
     final calories = widget.post["calories"].toString();
+    final descriptoin = widget.post["postDescription"] ?? "";
 
     // print(widget.post);
     return GestureDetector(
@@ -86,7 +87,7 @@ class _PostWidgetState extends State<PostWidget> {
                                     .format(widget.post["dateTimePost"])
                                 : "")),
                         const SizedBox(height: 8.0),
-                        Text(widget.post["postDescription"] ?? ""),
+                        Text(descriptoin),
                         if (ingredients.isNotEmpty) ...[
                           Text(
                             "Ingredients:",
