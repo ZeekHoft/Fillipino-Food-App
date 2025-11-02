@@ -3,20 +3,39 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+// Encapsulates all the favorited post details into a single, cohesive object
+// Previous approach was a data in parallel list which means deleting items on specific index
+//woudn't mean deleting all instances on those indexs on other list, this apporach deletes all
+class SocialPost {
+  final String postId;
+  final String ingredient;
+  final String processSteps;
+  final String description;
+  final int calories;
+
+  SocialPost({
+    required this.postId,
+    required this.ingredient,
+    required this.processSteps,
+    required this.description,
+    required this.calories,
+  });
+}
+
 class FavoriteSocialProvider extends ChangeNotifier {
-  final List<String> _socialFavoriteId = [];
+  final List<SocialPost> _favoritePosts =
+      []; // replace the 5 parallel list into one list that contains all data
+  List<SocialPost> get favoritePost => _favoritePosts;
 
-  final List<String> _postIngredients = [];
-  final List<String> _postProcessSteps = [];
-  final List<int> _postCalories = [];
-  final List<String> _postDescriptoin = [];
-
-  List<String> get postIngredients => _postIngredients;
-
-  List<String> get socialFavoriteId => _socialFavoriteId;
-  List<String> get postProcessSteps => _postProcessSteps;
-  List<int> get postCalories => _postCalories;
-  List<String> get postDescriptoin => _postDescriptoin;
+  List<String> get socialFavoriteId =>
+      _favoritePosts.map((p) => p.postId).toList();
+  List<String> get postIngredients =>
+      _favoritePosts.map((p) => p.ingredient).toList();
+  List<String> get postProcessSteps =>
+      _favoritePosts.map((p) => p.processSteps).toList();
+  List<int> get postCalories => _favoritePosts.map((p) => p.calories).toList();
+  List<String> get postDescription =>
+      _favoritePosts.map((p) => p.description).toList();
 
   Future<void> _storeSocialFavoriteInFireBase(
       String postId, bool isAdding) async {
@@ -74,39 +93,130 @@ class FavoriteSocialProvider extends ChangeNotifier {
       if (kDebugMode) {
         print("Error in updating firesoter: $e");
       }
+    }
+  }
+
+  void loadSocialFavorites() async {
+    _favoritePosts.clear();
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser == null || currentUser.email == null) {
+      if (kDebugMode) {
+        print("User not logged in. Cannot load favorites from Firestore.");
+      }
+      notifyListeners(); // Notify listeners even if no user, to clear state
+      return;
+    }
+    try {
+      final userDocQuery = await FirebaseFirestore.instance
+          .collection('users_data')
+          .where('email', isEqualTo: currentUser.email)
+          .limit(1)
+          .get();
+
+      if (userDocQuery.docs.isNotEmpty) {
+        final userDocRef =
+            userDocQuery.docs.first.reference; // Reference to the user document
+        final userData = userDocQuery.docs.first.data();
+        final List<dynamic> firestoreSocialFavorites =
+            userData['favorites_social'] ?? [];
+        // this is located in the documents field
+
+        final socialRecipeCollection = FirebaseFirestore.instance.collection(
+            'social_data'); // Use a list to track IDs that need to be removed from the user's document
+
+        final List<String> favoriteIds = firestoreSocialFavorites
+            .map((e) => e.toString())
+            .toList(); // we'll fetch the full recipe detail for each favorited ID in its specific document
+
+        final List<String> missingIds = [];
+        if (firestoreSocialFavorites.isNotEmpty) {
+          // convert dyanmic lists of IDs to list<String> so it can be easily read
+
+          for (String docId in favoriteIds) {
+            try {
+              DocumentSnapshot doc =
+                  await socialRecipeCollection.doc(docId).get();
+              if (doc.exists) {
+                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+                final String ingredients =
+                    (data['ingredients'] as List<dynamic>? ?? []).join(', ');
+                final String processSteps =
+                    (data['processSteps'] as List<dynamic>? ?? []).join(', ');
+                final int calories = (data['calories'] is int
+                    ? data['calories']
+                    : int.tryParse(data['calories'].toString()) ?? 0);
+                final String description =
+                    (data['postDescription']?.toString() ?? '');
+
+                // Add the complete post object to the list
+                _favoritePosts.add(SocialPost(
+                  postId: docId,
+                  ingredient: ingredients,
+                  processSteps: processSteps,
+                  description: description,
+                  calories: calories,
+                ));
+              } else {
+                // Handle cases where a favorited recipe might have been deleted from Firebase
+                if (kDebugMode) {
+                  print('Document widh ID ${docId} not found in Firebase DBA');
+                }
+                missingIds.add(
+                    docId); //deletes the ID thats missing whenver the system gets restarted
+              }
+            } catch (e) {
+              if (kDebugMode) {
+                print('Error fetching document $docId: $e');
+              }
+            }
+          }
+          if (missingIds.isNotEmpty) {
+            await userDocRef.update({
+              'favorites_social': FieldValue.arrayRemove(missingIds),
+            });
+            if (kDebugMode) {
+              print(
+                  'Cleaned up ${missingIds.length} stale favorite IDs from user document.');
+            }
+          }
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error in getting user data: $e");
+      }
     } finally {
       notifyListeners();
     }
   }
 
-  void toggleSocialFavorite(String postId, String ingredient, String porcess,
+  void toggleSocialFavorite(String postId, String ingredient, String process,
       String description, int calories) {
-    if (_socialFavoriteId.contains(postId)) {
-      _socialFavoriteId.remove(postId);
+    // Check if the post is already a favorite using the single list
+    final existingIndex =
+        _favoritePosts.indexWhere((post) => post.postId == postId);
 
-      final index = _socialFavoriteId.indexOf(postId);
-      if (index != -1) {
-        _socialFavoriteId.removeAt(index);
-        _postIngredients.removeAt(index);
-        _postProcessSteps.removeAt(index);
-        _postDescriptoin.removeAt(index);
-        _postCalories.removeAt(index);
-        _storeSocialFavoriteInFireBase(postId, false);
-      }
+    if (existingIndex != -1) {
+      // Post is a favorite, remove it
+      _favoritePosts.removeAt(existingIndex);
+      _storeSocialFavoriteInFireBase(postId, false);
     } else {
-      // If not a favorite, add the document ID
-      _socialFavoriteId.add(postId);
-      _postIngredients.add(ingredient);
-      _postProcessSteps.add(porcess);
-      _postDescriptoin.add(description);
-      _postCalories.add(calories);
+      // Post is not a favorite, create and add the full SocialPost object
+      final newPost = SocialPost(
+        postId: postId,
+        ingredient: ingredient,
+        processSteps: process,
+        description: description,
+        calories: calories,
+      );
+      _favoritePosts.add(newPost);
       _storeSocialFavoriteInFireBase(postId, true);
     }
     notifyListeners();
   }
 
-  bool isSocialExist(String docId) {
-    return _socialFavoriteId.contains(
-        docId); // checks for only 1 positional argument to toggle the icon button in display page
+  bool isSocialExist(String postId) {
+    return _favoritePosts.any((post) => post.postId == postId);
   }
 }
