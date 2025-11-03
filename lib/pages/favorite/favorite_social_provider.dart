@@ -13,6 +13,28 @@ class SocialPost {
   final String description;
   final int calories;
 
+  // convert the object to a map in firestore
+  Map<String, dynamic> toMap() {
+    return {
+      'postId': postId,
+      'ingredient': ingredient,
+      'processSteps': processSteps,
+      'description': description,
+      'calories': calories,
+      'timestamp': FieldValue.serverTimestamp(), // Optional but helpful
+    };
+  }
+
+// Factory constructor to create a SocialPost from a Firestore map
+  factory SocialPost.fromMap(Map<String, dynamic> data) {
+    return SocialPost(
+      postId: data['postId'] as String,
+      ingredient: data['ingredient'] as String,
+      processSteps: data['processSteps'] as String,
+      description: data['description'] as String,
+      calories: data['calories'] as int,
+    );
+  }
   SocialPost({
     required this.postId,
     required this.ingredient,
@@ -23,8 +45,8 @@ class SocialPost {
 }
 
 class FavoriteSocialProvider extends ChangeNotifier {
-  final List<SocialPost> _favoritePosts =
-      []; // replace the 5 parallel list into one list that contains all data
+  final List<SocialPost> _favoritePosts = [];
+  // replace the 5 parallel list into one list that contains all data
   List<SocialPost> get favoritePost => _favoritePosts;
 
   List<String> get socialFavoriteId =>
@@ -37,8 +59,8 @@ class FavoriteSocialProvider extends ChangeNotifier {
   List<String> get postDescription =>
       _favoritePosts.map((p) => p.description).toList();
 
-  Future<void> _storeSocialFavoriteInFireBase(
-      String postId, bool isAdding) async {
+  Future<void> _storeSocialFavoriteInFireBase(String postId, bool isAdding,
+      {SocialPost? post}) async {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null || currentUser.email == null) {
       //check if user is logged in
@@ -65,30 +87,48 @@ class FavoriteSocialProvider extends ChangeNotifier {
         return;
       }
 
-      final userDocRef =
-          userDocQuery.docs.first.reference; //user has been found
+      final userDocRef = userDocQuery.docs.first.reference;
+      // Reference to the document within the 'social_favorites' sub-collection
+      final favoriteRef = userDocRef.collection('social_favorites').doc(postId);
+      //user has been found
 
       if (isAdding) {
-        //adding
-        // Add the recipe ID from social to the 'favorites' array field
-        await userDocRef.update({
-          'favorites_social': FieldValue.arrayUnion([postId]),
-        });
-        if (kDebugMode) {
-          print(
-              "Added $postId to Firestore favorites for ${currentUser.email}");
+        if (post != null) {
+          // Store the complete post data in the user's sub-collection
+          await favoriteRef.set(post.toMap());
+          if (kDebugMode) {
+            print(
+                "Added $postId to Firestore favorites for ${currentUser.email}");
+          }
         }
       } else {
-        // removing
-        // Remove the recipe ID from the 'favorites' array field
-        await userDocRef.update({
-          'favorites_social': FieldValue.arrayRemove([postId]),
-        });
+        // Remove the document from the user's sub-collection
+        await favoriteRef.delete();
         if (kDebugMode) {
           print(
-              "Removed $postId from Firestore favorites for ${currentUser.email}"); // improve error handling
+              "Deleted $postId to Firestore favorites for ${currentUser.email}");
         }
       }
+      //   //adding
+      //   // Add the recipe ID from social to the 'favorites' array field
+      //   await userDocRef.update({
+      //     'favorites_social': FieldValue.arrayUnion([postId]),
+      //   });
+      //   if (kDebugMode) {
+      //     print(
+      //         "Added $postId to Firestore favorites for ${currentUser.email}");
+      //   }
+      // } else {
+      //   // removing
+      //   // Remove the recipe ID from the 'favorites' array field
+      //   await userDocRef.update({
+      //     'favorites_social': FieldValue.arrayRemove([postId]),
+      //   });
+      //   if (kDebugMode) {
+      //     print(
+      //         "Removed $postId from Firestore favorites for ${currentUser.email}"); // improve error handling
+      //   }
+      // }
     } catch (e) {
       if (kDebugMode) {
         print("Error in updating firesoter: $e");
@@ -115,69 +155,31 @@ class FavoriteSocialProvider extends ChangeNotifier {
           .get();
 
       if (userDocQuery.docs.isNotEmpty) {
-        final userDocRef =
-            userDocQuery.docs.first.reference; // Reference to the user document
-        final userData = userDocQuery.docs.first.data();
-        final List<dynamic> firestoreSocialFavorites =
-            userData['favorites_social'] ?? [];
-        // this is located in the documents field
+        final userDocRef = userDocQuery.docs.first.reference;
+        // Reference to the user document
 
-        final socialRecipeCollection = FirebaseFirestore.instance.collection(
-            'social_data'); // Use a list to track IDs that need to be removed from the user's document
-
-        final List<String> favoriteIds = firestoreSocialFavorites
-            .map((e) => e.toString())
-            .toList(); // we'll fetch the full recipe detail for each favorited ID in its specific document
-
-        final List<String> missingIds = [];
-        if (firestoreSocialFavorites.isNotEmpty) {
-          // convert dyanmic lists of IDs to list<String> so it can be easily read
-
-          for (String docId in favoriteIds) {
-            try {
-              DocumentSnapshot doc =
-                  await socialRecipeCollection.doc(docId).get();
-              if (doc.exists) {
-                Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-                final String ingredients =
-                    (data['ingredients'] as List<dynamic>? ?? []).join(', ');
-                final String processSteps =
-                    (data['processSteps'] as List<dynamic>? ?? []).join(', ');
-                final int calories = (data['calories'] is int
-                    ? data['calories']
-                    : int.tryParse(data['calories'].toString()) ?? 0);
-                final String description =
-                    (data['postDescription']?.toString() ?? '');
-
-                // Add the complete post object to the list
-                _favoritePosts.add(SocialPost(
-                  postId: docId,
-                  ingredient: ingredients,
-                  processSteps: processSteps,
-                  description: description,
-                  calories: calories,
-                ));
-              } else {
-                // Handle cases where a favorited recipe might have been deleted from Firebase
-                if (kDebugMode) {
-                  print('Document widh ID ${docId} not found in Firebase DBA');
-                }
-                missingIds.add(
-                    docId); //deletes the ID thats missing whenver the system gets restarted
-              }
-            } catch (e) {
-              if (kDebugMode) {
-                print('Error fetching document $docId: $e');
-              }
-            }
-          }
-          if (missingIds.isNotEmpty) {
-            await userDocRef.update({
-              'favorites_social': FieldValue.arrayRemove(missingIds),
-            });
+        // this creates a subcollection under the users_data collection of data
+        final favoritesSnapshot =
+            await userDocRef.collection('social_favorites').get();
+        if (kDebugMode) {
+          print(
+              "Loaded ${favoritesSnapshot.docs.length} favorite posts from sub-collection.");
+        }
+        //itterate thorugh the docs and build a socialpost object
+        for (final doc in favoritesSnapshot.docs) {
+          try {
+            final data = doc.data();
+            _favoritePosts.add(SocialPost(
+              postId: data['postId'] as String,
+              ingredient: data['ingredient'] as String,
+              processSteps: data['processSteps'] as String,
+              description: data['description'] as String,
+              calories: data['calories'] as int,
+            ));
+          } catch (e) {
+            // Handle corrupted documents in the sub-collection
             if (kDebugMode) {
-              print(
-                  'Cleaned up ${missingIds.length} stale favorite IDs from user document.');
+              print('Error parsing favorite document ${doc.id}: $e');
             }
           }
         }
@@ -191,8 +193,8 @@ class FavoriteSocialProvider extends ChangeNotifier {
     }
   }
 
-  void toggleSocialFavorite(String postId, String ingredient, String process,
-      String description, int calories) {
+  Future<void> toggleSocialFavorite(String postId, String ingredient,
+      String process, String description, int calories) async {
     // Check if the post is already a favorite using the single list
     final existingIndex =
         _favoritePosts.indexWhere((post) => post.postId == postId);
@@ -200,7 +202,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
     if (existingIndex != -1) {
       // Post is a favorite, remove it
       _favoritePosts.removeAt(existingIndex);
-      _storeSocialFavoriteInFireBase(postId, false);
+      await _storeSocialFavoriteInFireBase(postId, false);
     } else {
       // Post is not a favorite, create and add the full SocialPost object
       final newPost = SocialPost(
@@ -211,7 +213,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
         calories: calories,
       );
       _favoritePosts.add(newPost);
-      _storeSocialFavoriteInFireBase(postId, true);
+      await _storeSocialFavoriteInFireBase(postId, true, post: newPost);
     }
     notifyListeners();
   }
