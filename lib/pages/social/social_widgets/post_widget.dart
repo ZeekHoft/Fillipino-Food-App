@@ -156,6 +156,7 @@ class _PostWidgetState extends State<PostWidget> {
                                   processSteps.join(', '),
                                   description,
                                   int.tryParse(calories) ?? 0,
+                                  username,
                                 );
                               },
                               icon: provider.isSocialExist(

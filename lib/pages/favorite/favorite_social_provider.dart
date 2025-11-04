@@ -12,7 +12,16 @@ class SocialPost {
   final String processSteps;
   final String description;
   final int calories;
+  final String username;
 
+  SocialPost({
+    required this.postId,
+    required this.ingredient,
+    required this.processSteps,
+    required this.description,
+    required this.calories,
+    required this.username,
+  });
   // convert the object to a map in firestore
   Map<String, dynamic> toMap() {
     return {
@@ -21,6 +30,8 @@ class SocialPost {
       'processSteps': processSteps,
       'description': description,
       'calories': calories,
+      'postUsername': username,
+
       'timestamp': FieldValue.serverTimestamp(), // Optional but helpful
     };
   }
@@ -33,15 +44,9 @@ class SocialPost {
       processSteps: data['processSteps'] as String,
       description: data['description'] as String,
       calories: data['calories'] as int,
+      username: data['postUsername'] as String,
     );
   }
-  SocialPost({
-    required this.postId,
-    required this.ingredient,
-    required this.processSteps,
-    required this.description,
-    required this.calories,
-  });
 }
 
 class FavoriteSocialProvider extends ChangeNotifier {
@@ -58,7 +63,8 @@ class FavoriteSocialProvider extends ChangeNotifier {
   List<int> get postCalories => _favoritePosts.map((p) => p.calories).toList();
   List<String> get postDescription =>
       _favoritePosts.map((p) => p.description).toList();
-
+  List<String> get postUsername =>
+      _favoritePosts.map((p) => p.username).toList();
   Future<void> _storeSocialFavoriteInFireBase(String postId, bool isAdding,
       {SocialPost? post}) async {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -175,6 +181,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
               processSteps: data['processSteps'] as String,
               description: data['description'] as String,
               calories: data['calories'] as int,
+              username: data['postUsername'] as String,
             ));
           } catch (e) {
             // Handle corrupted documents in the sub-collection
@@ -194,7 +201,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
   }
 
   Future<void> toggleSocialFavorite(String postId, String ingredient,
-      String process, String description, int calories) async {
+      String process, String description, int calories, String username) async {
     // Check if the post is already a favorite using the single list
     final existingIndex =
         _favoritePosts.indexWhere((post) => post.postId == postId);
@@ -211,6 +218,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
         processSteps: process,
         description: description,
         calories: calories,
+        username: username,
       );
       _favoritePosts.add(newPost);
       await _storeSocialFavoriteInFireBase(postId, true, post: newPost);

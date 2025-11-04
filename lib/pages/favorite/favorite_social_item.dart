@@ -62,6 +62,10 @@ class _FavoriteSocialItemState extends State<FavoriteSocialItem> {
                   child: Column(
                     children: [
                       Text(
+                        ' ${postContent.username}',
+                        style: const TextStyle(color: Colors.brown),
+                      ),
+                      Text(
                         'Ingredients: ${postContent.ingredient}',
                         style: const TextStyle(color: Colors.redAccent),
                       ),
@@ -88,6 +92,7 @@ class _FavoriteSocialItemState extends State<FavoriteSocialItem> {
                         postContent.processSteps,
                         postContent.description,
                         postContent.calories,
+                        postContent.username,
                       );
                       // Optional: Show a small confirmation snackbar
                       ScaffoldMessenger.of(context).showSnackBar(
