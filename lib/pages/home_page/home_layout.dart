@@ -72,8 +72,8 @@ class _HomeLayoutState extends State<HomeLayout> {
           NavigationDestination(icon: Icon(Icons.people), label: "Social"),
           NavigationDestination(icon: Icon(Icons.bookmarks), label: "Saved"),
           NavigationDestination(icon: Icon(Icons.settings), label: "Settings"),
-          NavigationDestination(
-              icon: Icon(Icons.bookmark_add_rounded), label: "Social Favorite"),
+          // NavigationDestination(
+          // icon: Icon(Icons.bookmark_add_rounded), label: "Social Favorite"),
         ],
       ),
       body: [
@@ -81,7 +81,8 @@ class _HomeLayoutState extends State<HomeLayout> {
         const SocialPage(),
         const FavoritePage(),
         const SettingsPage(),
-        const FavoriteSocialItem()
+        // const FavoriteSocialItem()
+        // uncomment the two if u want to see directly only the social favorites
       ][_currentPageIndex],
     );
   }
