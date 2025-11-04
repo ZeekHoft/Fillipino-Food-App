@@ -35,6 +35,7 @@ class _PostWidgetState extends State<PostWidget> {
     final processSteps = widget.post["processSteps"] as List<String>? ?? [];
     final calories = widget.post["calories"].toString();
     final description = widget.post["postDescription"] ?? "";
+    final username = widget.post["postUsername"] ?? "N/A username";
 
     // print(widget.post);
     return GestureDetector(
@@ -81,7 +82,7 @@ class _PostWidgetState extends State<PostWidget> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Text(
-                          "Poster Username",
+                          username,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),

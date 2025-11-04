@@ -10,6 +10,7 @@ class SocialDataStoring extends ChangeNotifier {
   String? _postID;
   String? _postPic;
   String? _postDescription = 'Loading...';
+  String? _postUsername = 'N/A Username';
   DateTime? _dateTimePost;
   int? _shares = 0;
   int? _likeCount = 0;
@@ -28,6 +29,7 @@ class SocialDataStoring extends ChangeNotifier {
   String? get postID => _postID;
   String? get postPic => _postPic;
   String? get postDescription => _postDescription;
+  String? get postUsername => _postUsername;
   DateTime? get dateTimePost => _dateTimePost;
   int? get shares => _shares;
   int? get likeCount => _likeCount;
@@ -68,6 +70,7 @@ class SocialDataStoring extends ChangeNotifier {
           "postID": postsData["postID"],
           "postPic": postsData["postPic"],
           "postDescription": postsData["postDescription"],
+          "postUsername": postsData["postUsername"] ?? 'N/A Username',
           "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
           "shares": postsData["shares"],
           "likeCount": postsData["likeCount"],
@@ -96,6 +99,7 @@ class SocialDataStoring extends ChangeNotifier {
       _postID = "N/A postID";
       _postPic = null;
       _postDescription = "N/A";
+      _postUsername = "N/A";
       _dateTimePost = null;
       _shares = 0;
       _likeCount = 0;
@@ -165,6 +169,7 @@ class SocialDataStoring extends ChangeNotifier {
     _postID = "N/A postID";
     _postPic = null;
     _postDescription = "N/A";
+    _postUsername = "N/A";
     _dateTimePost = null;
     _shares = 0;
     _likeCount = 0;

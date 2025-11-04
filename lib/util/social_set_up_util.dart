@@ -8,6 +8,7 @@ class SocialSetUpUtil {
   String? postID;
   String? postPic;
   String? postDescription;
+  String? postUsername;
   DateTime? dateTimePost;
   int? shares;
   int? likeCount;
@@ -21,6 +22,7 @@ class SocialSetUpUtil {
     this.postID,
     this.postPic,
     this.postDescription,
+    this.postUsername,
     this.dateTimePost,
     this.shares = 0,
     this.likeCount = 0,
@@ -37,6 +39,7 @@ class SocialSetUpUtil {
       'postID': postID,
       'postPic': postPic,
       'postDescription': postDescription,
+      'postUsername': postUsername,
       'dateTimePost': dateTimePost,
       'shares': shares,
       'likeCount': likeCount,
@@ -55,6 +58,7 @@ class SocialSetUpUtil {
       postID: data['postID'] ?? '',
       postPic: data['postPic'] ?? '',
       postDescription: data['postDescription'] ?? '',
+      postUsername: data['postUsername'] ?? 'N/A Username',
       dateTimePost: (data['dateTimePost'] as Timestamp?)?.toDate(),
       shares: data['shares'] ?? 0,
       likeCount: data['likeCount'] ?? 0,

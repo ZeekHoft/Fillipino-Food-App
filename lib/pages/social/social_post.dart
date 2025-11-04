@@ -191,6 +191,9 @@ class _SocialPostState extends State<SocialPost> {
   }
 
   Future _savePost() async {
+    final profileDataStoring = context.read<ProfileDataStoring>();
+    final username = profileDataStoring.username;
+    final userId = profileDataStoring.userId;
     showDialog(
       context: context,
       builder: (context) {
@@ -211,19 +214,19 @@ class _SocialPostState extends State<SocialPost> {
             ? _processList.text.split(',').map((e) => e.trim()).toList()
             : <String>[];
         //user watch for consistent chagnges such as names, allergies, dietary restriction etc... use read to only fetch the thing that is needed when something is finished
-        final profileDataStoring = context.read<ProfileDataStoring>();
         final postIDReference =
             FirebaseFirestore.instance.collection('social_data').doc();
         final postId = postIDReference.id;
 
         final parameterPosts = SocialSetUpUtil(
-            userId: profileDataStoring.userId!,
+            userId: userId,
             postID: postId,
             // change the postpic from string ot Uint8List form social data storing
             postPic: "",
             likeCount: 0,
             shares: 0,
             postDescription: postDescription,
+            postUsername: username,
             calories: caloriePost,
             ingredients: ingredientList,
             processSteps: processList,
