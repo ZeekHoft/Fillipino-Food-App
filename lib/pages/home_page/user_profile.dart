@@ -9,6 +9,7 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    //user watch for consistent chagnges such as names, allergies, dietary restriction etc... use read to only fetch the thing that is needed when something is finished
 
     final profileDataStoring = context.watch<ProfileDataStoring>();
 
@@ -23,7 +24,7 @@ class UserProfile extends StatelessWidget {
     final username = profileDataStoring.username;
     // final email = profileDataStoring.email;
     // final calories = profileDataStoring.caloriesLimit.toString();
-    // final allergies = profileDataStoring.allergies;
+    final allergies = profileDataStoring.allergies;
     // List<String> characters = allergies.split('');
 
     return Column(
@@ -67,7 +68,7 @@ class UserProfile extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ),
-        _convertAllergies(profileDataStoring.allergies),
+        _convertAllergies(allergies),
         const IntrinsicHeight(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -1,10 +1,11 @@
 import 'dart:convert';
+import 'package:flilipino_food_app/pages/home_page/home_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
-// // Main entry point of the Flutter application
+// Main entry point of the Flutter application
 // void main() {
 //   runApp(const MyApp());
 // }
@@ -22,22 +23,20 @@ import 'package:http/http.dart' as http;
 //         visualDensity: VisualDensity.adaptivePlatformDensity,
 //         fontFamily: 'Inter', // Using Inter font as per instructions
 //       ),
-//       home: const RecipeGeneratorScreenOriginalCode(),
+//       home: const RecipeGeneratorScreen(),
 //     );
 //   }
 // }
 
-// RecipeGeneratorScreenOriginalCode is the main screen of the application
-class RecipeGeneratorScreenOriginalCode extends StatefulWidget {
-  const RecipeGeneratorScreenOriginalCode({super.key});
+// RecipeGeneratorScreen is the main screen of the application
+class RecipeGeneratorScreen extends StatefulWidget {
+  const RecipeGeneratorScreen({super.key});
 
   @override
-  State<RecipeGeneratorScreenOriginalCode> createState() =>
-      _RecipeGeneratorScreenOriginalCodeState();
+  State<RecipeGeneratorScreen> createState() => _RecipeGeneratorScreenState();
 }
 
-class _RecipeGeneratorScreenOriginalCodeState
-    extends State<RecipeGeneratorScreenOriginalCode> {
+class _RecipeGeneratorScreenState extends State<RecipeGeneratorScreen> {
   // State variables to hold recipe data and UI state
   String? _recipeName;
   List<String>? _ingredientsList;
@@ -213,6 +212,11 @@ class _RecipeGeneratorScreenOriginalCodeState
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.exit_to_app)),
         title: const Text('AI Recipe Generator'),
         centerTitle: true,
         backgroundColor: Colors.blueAccent,

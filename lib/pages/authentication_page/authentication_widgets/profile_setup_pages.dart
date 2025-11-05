@@ -15,8 +15,6 @@ typedef UserDetailsCallback = void Function({
   required DateTime? birthday,
 });
 
-typedef UserGoalsCallback = void Function(List<String> goals);
-
 class UserDetails extends StatefulWidget {
   final UserDetailsCallback onDataChanged;
   //initialData displays pre-existing data instead of blank
@@ -141,6 +139,8 @@ class _UserDetailsState extends State<UserDetails> {
     );
   }
 }
+
+typedef UserGoalsCallback = void Function(List<String> goals);
 
 class UserGoals extends StatefulWidget {
   final UserGoalsCallback onDataChanged;

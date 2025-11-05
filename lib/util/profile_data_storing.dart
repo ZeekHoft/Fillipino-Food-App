@@ -1,7 +1,6 @@
 //make OOP type sht to make this data accessible to other pages
 
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -20,6 +19,7 @@ class ProfileDataStoring extends ChangeNotifier {
   List<String> _goals = [];
   bool _isLoading = true;
   String? _survey;
+  String? _userId;
 
   late final StreamSubscription<User?> _authStateChangesSubscription;
 
@@ -34,6 +34,7 @@ class ProfileDataStoring extends ChangeNotifier {
   List<String> get goals => _goals;
   String? get surevey => _survey;
   bool get isLoading => _isLoading;
+  String? get userId => _userId;
 
   ProfileDataStoring() {
     _authStateChangesSubscription =
@@ -80,6 +81,7 @@ class ProfileDataStoring extends ChangeNotifier {
             (userData["weight"] as num?)?.toDouble(); // Cast num to double
         final Timestamp? birthdayTimestamp = userData["birthday"] as Timestamp?;
         _birthday = birthdayTimestamp?.toDate();
+        _userId = userData["userId"] ?? "N/A UserID";
       } else {
         // This case would mean a user is authenticated but no profile document exists
         // (e.g., if they were created before profile setup was completed or if there's a data sync issue)
@@ -93,6 +95,7 @@ class ProfileDataStoring extends ChangeNotifier {
         _birthday = null;
         _goals = [];
         _survey = null;
+        _userId = "N/A UserID";
 
         if (kDebugMode) {
           print(
@@ -114,6 +117,7 @@ class ProfileDataStoring extends ChangeNotifier {
       _birthday = null;
       _goals = [];
       _survey = null;
+      _userId = "Error no UserID";
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -168,6 +172,7 @@ class ProfileDataStoring extends ChangeNotifier {
     _goals = [];
     _survey = null;
     _isLoading = false;
+    _userId = "Error no UserID";
     notifyListeners();
   }
 

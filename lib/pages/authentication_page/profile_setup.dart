@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authenticate.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/profile_setup_pages.dart';
-import 'package:flilipino_food_app/pages/home_page/home_layout.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/profile_set_up_util.dart';
 import 'package:flutter/foundation.dart';
@@ -177,15 +175,15 @@ class _ProfileSetupState extends State<ProfileSetup>
     }
   }
 
-  void _skipProfileSetup() {
-    // Optionally save partial data or just navigate
-    // For now, just navigate to home page without saving if skipped.
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const HomeLayout()),
-      (route) => false,
-    );
-  }
+  // void _skipProfileSetup() {
+  //   // Optionally save partial data or just navigate
+  //   // For now, just navigate to home page without saving if skipped.
+  //   Navigator.pushAndRemoveUntil(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const HomeLayout()),
+  //     (route) => false,
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -252,11 +250,11 @@ class _ProfileSetupState extends State<ProfileSetup>
               child: isLastPage ? const Text("Done") : const Text("Next"),
             ),
             const SizedBox(height: 16),
-            Center(
-                child: LinkTextButton(
-              text: "Skip",
-              onTap: _isLoading ? null : _skipProfileSetup,
-            )),
+            // Center(
+            //     child: LinkTextButton(
+            //   text: "Skip",
+            //   onTap: _isLoading ? null : _skipProfileSetup,
+            // )),
             const SizedBox(height: 24),
           ],
         ),
