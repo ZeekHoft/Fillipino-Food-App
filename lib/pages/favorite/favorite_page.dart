@@ -87,7 +87,10 @@ class _FavoritePageState extends State<FavoritePage> {
           Expanded(
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: FavoriteSocialItem()))
+                  child: FavoriteSocialItem(
+                    screenState: true,
+                    post: {}, //passes an emtpy array of value, need fix later
+                  )))
         ],
       );
 

@@ -39,12 +39,13 @@ class SocialPost {
 // Factory constructor to create a SocialPost from a Firestore map
   factory SocialPost.fromMap(Map<String, dynamic> data) {
     return SocialPost(
-      postId: data['postId'] as String,
-      ingredient: data['ingredient'] as String,
-      processSteps: data['processSteps'] as String,
-      description: data['description'] as String,
-      calories: data['calories'] as int,
-      username: data['postUsername'] as String,
+      // This is for potential handling error
+      postId: data['postId'] as String? ?? 'N/A',
+      ingredient: data['ingredient'] as String? ?? 'N/A',
+      processSteps: data['processSteps'] as String? ?? 'N/A',
+      description: data['description'] as String? ?? 'N/A',
+      calories: (data['calories'] as num?)?.toInt() ?? 0,
+      username: data['postUsername'] as String? ?? 'N/A',
     );
   }
 }
@@ -176,12 +177,12 @@ class FavoriteSocialProvider extends ChangeNotifier {
           try {
             final data = doc.data();
             _favoritePosts.add(SocialPost(
-              postId: data['postId'] as String,
-              ingredient: data['ingredient'] as String,
-              processSteps: data['processSteps'] as String,
-              description: data['description'] as String,
-              calories: data['calories'] as int,
-              username: data['postUsername'] as String,
+              postId: data['postId'] as String? ?? 'N/A',
+              ingredient: data['ingredient'] as String? ?? 'N/A',
+              processSteps: data['processSteps'] as String? ?? 'N/A',
+              description: data['description'] as String? ?? 'N/A',
+              calories: (data['calories'] as num?)?.toInt() ?? 0,
+              username: data['postUsername'] as String? ?? 'N/A',
             ));
           } catch (e) {
             // Handle corrupted documents in the sub-collection
