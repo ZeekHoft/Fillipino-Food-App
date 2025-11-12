@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/social/social_post.dart';
 import 'package:flilipino_food_app/pages/social/social_widgets/post_widget.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +35,7 @@ class _SocialPageState extends State<SocialPage> {
     return Scaffold(
       body: Consumer<SocialDataStoring>(builder: (context, socialData, child) {
         if (socialData.isLoading) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: DappliProgressIndicator());
         }
         if (socialData.posts.isEmpty) {
           return const Center(

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class SearchRecipe extends StatefulWidget {
@@ -102,6 +103,12 @@ class _SearchRecipeState extends State<SearchRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    if (_allResult.isEmpty) {
+      return Center(
+        child: DappliProgressIndicator(),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight * 1.3,

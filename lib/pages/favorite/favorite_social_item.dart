@@ -39,7 +39,7 @@ class _FavoriteSocialItemState extends State<FavoriteSocialItem> {
     //     child: Column(
     //       mainAxisAlignment: MainAxisAlignment.center,
     //       children: [
-    //         CircularProgressIndicator(),
+    //         DappliProgressIndicator(),
     //         SizedBox(height: 10),
     //         Text("Loading favorite social posts...")
     //       ],

@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/authentication_page/profile_setup.dart';
 import 'package:flilipino_food_app/pages/authentication_page/registered_or_login.dart';
 import 'package:flilipino_food_app/pages/home_page/home_layout.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class LoadFoodDisplay extends StatelessWidget {
@@ -29,7 +30,7 @@ class LoadFoodDisplay extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             body: Center(
-              child: CircularProgressIndicator(),
+              child: DappliProgressIndicator(),
             ),
           );
         }
