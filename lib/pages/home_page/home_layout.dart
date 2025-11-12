@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_page.dart';
-import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
 import 'package:flilipino_food_app/pages/settings/settings_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';

@@ -47,6 +47,7 @@ class _SearchRecipeState extends State<SearchRecipe> {
         var ingredients =
             recipesSnapShot['ingredients'].toString().toLowerCase();
         //check if all thats being search is present
+
         bool containsAllIngredients = searchIngredients
             .every((ingredient) => ingredients.contains(ingredient));
 
@@ -59,7 +60,10 @@ class _SearchRecipeState extends State<SearchRecipe> {
     }
 
     setState(() {
-      _resutlList = showResults;
+      //below just show results base on firebase input positioning
+      // _resutlList = showResults;
+      //descending order least to most length
+      _resutlList = showResults.reversed.toList();
     });
   }
 
