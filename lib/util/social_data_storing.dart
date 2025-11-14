@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
 import 'package:flutter/foundation.dart';
 
 class SocialDataStoring extends ChangeNotifier {
@@ -115,6 +116,7 @@ class SocialDataStoring extends ChangeNotifier {
     return {
       "postID": postsData["postID"],
       "postPic": postsData["postPic"],
+      "userId": postsData["userId"],
       "postDescription": postsData["postDescription"],
       "postUsername": postsData["postUsername"] ?? 'N/A Username',
       "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
@@ -138,6 +140,46 @@ class SocialDataStoring extends ChangeNotifier {
       // Added calories mapping
     };
   }
+
+  // Future<void> deletePost(String postId) async {
+  //   try {
+  //     await FirebaseFirestore.instance.collection('posts').doc(postId).delete();
+  //     print('Post with ID $postId deleted successfully!');
+  //   } catch (e) {
+  //     print('Error deleting post: $e');
+  //   }
+  // }
+
+  // need
+  // In SocialDataStoring class
+
+  // THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
+  Future<void> deletePost(
+      String postId, FavoriteSocialProvider favoriteProvider) async {
+    try {
+      final snapshot = await FirebaseFirestore.instance
+          .collection("social_data")
+          .where("postID", isEqualTo: postId)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        await snapshot.docs[0].reference.delete();
+        print('Post with ID $postId deleted successfully from Firestore!');
+
+        _posts.removeWhere((post) => post["postID"] == postId);
+        _historyPosts.removeWhere((post) => post["postID"] == postId);
+
+        await favoriteProvider.removeSocialFavorite(postId);
+
+        notifyListeners();
+      } else {
+        print('Post with ID $postId not found in social_data.');
+      }
+    } catch (e) {
+      print('Error deleting post: $e');
+    }
+  }
+// THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
 
   Future<void> triggerLike(
       String postId, String accountId, Set postLikedAccounts) async {

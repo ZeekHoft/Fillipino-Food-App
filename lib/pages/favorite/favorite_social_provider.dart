@@ -226,6 +226,28 @@ class FavoriteSocialProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+// In FavoriteSocialProvider class
+
+// THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
+// New method to be called after a post is deleted from the main collection
+  Future<void> removeSocialFavorite(String postId) async {
+    final existingIndex =
+        _favoritePosts.indexWhere((post) => post.postId == postId);
+
+    if (existingIndex != -1) {
+      // Remove from local list
+      _favoritePosts.removeAt(existingIndex);
+      // Remove from Firestore sub-collection
+      await _storeSocialFavoriteInFireBase(postId, false);
+
+      notifyListeners(); // Notify listeners of this provider
+      if (kDebugMode) {
+        print("Removed favorite post $postId due to main post deletion.");
+      }
+    }
+    // No need to notifyListeners if it wasn't a favorite.
+  }
+// THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
 
   bool isSocialExist(String postId) {
     return _favoritePosts.any((post) => post.postId == postId);
