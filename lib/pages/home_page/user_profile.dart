@@ -1,3 +1,4 @@
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,7 @@ class UserProfile extends StatelessWidget {
 
     if (profileDataStoring.isLoading) {
       return const Center(
-        child: CircularProgressIndicator(),
+        child: DappliProgressIndicator(),
       );
     }
 

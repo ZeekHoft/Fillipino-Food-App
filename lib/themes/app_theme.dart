@@ -167,3 +167,35 @@ const ColorScheme darkColorScheme = ColorScheme(
   inversePrimary: Color(0xFF306C00),
   surfaceTint: Color(0xFF8EDA5C),
 );
+
+// Source - https://stackoverflow.com/a
+// Posted by Ratakondala Arun
+// Retrieved 2025-11-12, License - CC BY-SA 4.0
+
+class DappliProgressIndicator extends StatelessWidget {
+  const DappliProgressIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          height: 80,
+          width: 80,
+          child: Image.asset(
+            "assets/dappli_logo.png",
+          ),
+        ),
+        // you can replace
+        SizedBox(
+          height: 85,
+          width: 85,
+          child: const CircularProgressIndicator(
+              // strokeWidth: 2,
+              ),
+        ),
+      ],
+    );
+  }
+}

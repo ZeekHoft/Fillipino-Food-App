@@ -4,30 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
-// // Main entry point of the Flutter application
-// void main() {
-//   runApp(const MyApp());
-// }
-
-// // MyApp is the root widget of the application
-// class MyApp extends StatelessWidget {
-//   const MyApp({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'AI Recipe Generator',
-//       theme: ThemeData(
-//         primarySwatch: Colors.blue,
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//         fontFamily: 'Inter', // Using Inter font as per instructions
-//       ),
-//       home: const RecipeGeneratorScreenOriginalCode(),
-//     );
-//   }
-// }
-
-// RecipeGeneratorScreenOriginalCode is the main screen of the application
 class RecipeGeneratorScreenOriginalCode extends StatefulWidget {
   const RecipeGeneratorScreenOriginalCode({super.key});
 

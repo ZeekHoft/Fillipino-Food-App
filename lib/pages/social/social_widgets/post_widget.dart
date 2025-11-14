@@ -1,5 +1,5 @@
+import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
-import 'package:flilipino_food_app/pages/social/social_widgets/social_vew_post.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
@@ -37,14 +37,17 @@ class _PostWidgetState extends State<PostWidget> {
     final description = widget.post["postDescription"] ?? "";
     final username = widget.post["postUsername"] ?? "N/A username";
 
+    final socialDataStoring = context.read<SocialDataStoring>();
+    final favoriteProvider = context.read<FavoriteSocialProvider>();
+    final currentUserId = profileDataStoring.userId;
+    final postUserId = widget.post["userId"];
+    final isPostOwner = currentUserId != null && currentUserId == postUserId;
     // print(widget.post);
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => SocialVewPost(
-            post: widget.post,
-          ),
-        ));
+            builder: (context) =>
+                FavoriteSocialItem(screenState: false, post: widget.post)));
       },
       child: Card(
         child: Padding(
@@ -170,7 +173,48 @@ class _PostWidgetState extends State<PostWidget> {
                                       Icons.bookmark_add_outlined,
                                     ),
                             ),
+
                             Icon(Icons.share),
+                            // THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
+
+                            if (isPostOwner)
+                              IconButton(
+                                onPressed: () async {
+                                  // Confirmation dialog is highly recommended here!
+                                  final confirm = await showDialog<bool>(
+                                    context: context,
+                                    builder: (ctx) => AlertDialog(
+                                      title: const Text('Delete Post'),
+                                      content: const Text(
+                                          'Are you sure you want to delete this post? This cannot be undone.'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          child: const Text('Cancel'),
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(false),
+                                        ),
+                                        TextButton(
+                                          child: const Text('Delete',
+                                              style:
+                                                  TextStyle(color: Colors.red)),
+                                          onPressed: () =>
+                                              Navigator.of(ctx).pop(true),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+
+                                  if (confirm == true) {
+                                    // Call the delete function from the provider
+                                    await socialDataStoring.deletePost(
+                                        postId!, favoriteProvider);
+                                  }
+                                },
+                                icon: const Icon(Icons.delete_forever,
+                                    color: Colors.red),
+                              ),
+
+                            // THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
                           ],
                         )
                       ],

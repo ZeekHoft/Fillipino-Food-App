@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_dish_data.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_set_up_util.dart';
 import 'package:flutter/material.dart';
@@ -198,7 +199,7 @@ class _SocialPostState extends State<SocialPost> {
       context: context,
       builder: (context) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: DappliProgressIndicator(),
         );
       },
     );

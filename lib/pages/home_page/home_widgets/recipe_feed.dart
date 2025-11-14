@@ -1,5 +1,5 @@
 import 'package:flilipino_food_app/pages/home_page/home_widgets/recipe_feed_item.dart';
-import 'package:flilipino_food_app/themes/color_themes.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/recipe_stream_builder.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -25,9 +25,7 @@ class _RecipeFeedState extends State<RecipeFeed> {
             snapshot.connectionState == ConnectionState.waiting) {
           return const SliverToBoxAdapter(
             child: Center(
-              child: CircularProgressIndicator(
-                color: AppColors.yellowTheme,
-              ),
+              child: DappliProgressIndicator(),
             ),
           );
         } else if (snapshot.hasData || snapshot.data != null) {

@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/link_text_button.dart';
 import 'package:flilipino_food_app/pages/authentication_page/authentication_widgets/credential_field.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
           false, // Prevents dismissing the dialog by tapping outside
       builder: (context) {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: DappliProgressIndicator(),
         );
       },
     );

@@ -1,3 +1,5 @@
+import 'package:flilipino_food_app/common_widgets/settings_buttons.dart';
+import 'package:flilipino_food_app/pages/social/social_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -26,8 +28,12 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 24),
         const ListTile(
             leading: Icon(Icons.edit_outlined), title: Text("Edit Profile")),
-        const ListTile(
-            leading: Icon(Icons.history_outlined), title: Text("History")),
+        ListTile(
+            title: SettingsButtons(
+                // Reusable widget
+                pageRoute: SocialPage(screenChnage: true),
+                settingsIcon: const Icon(Icons.history),
+                settingsText: const Text("History Posts"))),
         const ListTile(
             leading: Icon(Icons.settings_outlined), title: Text("Settings")),
         const Divider(),

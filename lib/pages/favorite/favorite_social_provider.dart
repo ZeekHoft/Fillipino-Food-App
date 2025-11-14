@@ -39,12 +39,13 @@ class SocialPost {
 // Factory constructor to create a SocialPost from a Firestore map
   factory SocialPost.fromMap(Map<String, dynamic> data) {
     return SocialPost(
-      postId: data['postId'] as String,
-      ingredient: data['ingredient'] as String,
-      processSteps: data['processSteps'] as String,
-      description: data['description'] as String,
-      calories: data['calories'] as int,
-      username: data['postUsername'] as String,
+      // This is for potential handling error
+      postId: data['postId'] as String? ?? 'N/A',
+      ingredient: data['ingredient'] as String? ?? 'N/A',
+      processSteps: data['processSteps'] as String? ?? 'N/A',
+      description: data['description'] as String? ?? 'N/A',
+      calories: (data['calories'] as num?)?.toInt() ?? 0,
+      username: data['postUsername'] as String? ?? 'N/A',
     );
   }
 }
@@ -176,12 +177,12 @@ class FavoriteSocialProvider extends ChangeNotifier {
           try {
             final data = doc.data();
             _favoritePosts.add(SocialPost(
-              postId: data['postId'] as String,
-              ingredient: data['ingredient'] as String,
-              processSteps: data['processSteps'] as String,
-              description: data['description'] as String,
-              calories: data['calories'] as int,
-              username: data['postUsername'] as String,
+              postId: data['postId'] as String? ?? 'N/A',
+              ingredient: data['ingredient'] as String? ?? 'N/A',
+              processSteps: data['processSteps'] as String? ?? 'N/A',
+              description: data['description'] as String? ?? 'N/A',
+              calories: (data['calories'] as num?)?.toInt() ?? 0,
+              username: data['postUsername'] as String? ?? 'N/A',
             ));
           } catch (e) {
             // Handle corrupted documents in the sub-collection
@@ -225,6 +226,28 @@ class FavoriteSocialProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+// In FavoriteSocialProvider class
+
+// THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
+// New method to be called after a post is deleted from the main collection
+  Future<void> removeSocialFavorite(String postId) async {
+    final existingIndex =
+        _favoritePosts.indexWhere((post) => post.postId == postId);
+
+    if (existingIndex != -1) {
+      // Remove from local list
+      _favoritePosts.removeAt(existingIndex);
+      // Remove from Firestore sub-collection
+      await _storeSocialFavoriteInFireBase(postId, false);
+
+      notifyListeners(); // Notify listeners of this provider
+      if (kDebugMode) {
+        print("Removed favorite post $postId due to main post deletion.");
+      }
+    }
+    // No need to notifyListeners if it wasn't a favorite.
+  }
+// THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
 
   bool isSocialExist(String postId) {
     return _favoritePosts.any((post) => post.postId == postId);

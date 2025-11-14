@@ -2,6 +2,7 @@ import 'package:flilipino_food_app/pages/favorite/favorite_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -51,7 +52,7 @@ class _FavoritePageState extends State<FavoritePage> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          CircularProgressIndicator(),
+          DappliProgressIndicator(),
           SizedBox(
             height: 20,
           ),
@@ -87,7 +88,10 @@ class _FavoritePageState extends State<FavoritePage> {
           Expanded(
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: FavoriteSocialItem()))
+                  child: FavoriteSocialItem(
+                    screenState: true,
+                    post: {}, //passes an emtpy array of value, need fix later
+                  )))
         ],
       );
 

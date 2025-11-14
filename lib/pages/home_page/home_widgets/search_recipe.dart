@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class SearchRecipe extends StatefulWidget {
@@ -47,6 +48,7 @@ class _SearchRecipeState extends State<SearchRecipe> {
         var ingredients =
             recipesSnapShot['ingredients'].toString().toLowerCase();
         //check if all thats being search is present
+
         bool containsAllIngredients = searchIngredients
             .every((ingredient) => ingredients.contains(ingredient));
 
@@ -59,7 +61,10 @@ class _SearchRecipeState extends State<SearchRecipe> {
     }
 
     setState(() {
-      _resutlList = showResults;
+      //below just show results base on firebase input positioning
+      // _resutlList = showResults;
+      //descending order least to most length
+      _resutlList = showResults.reversed.toList();
     });
   }
 
@@ -98,6 +103,12 @@ class _SearchRecipeState extends State<SearchRecipe> {
 
   @override
   Widget build(BuildContext context) {
+    if (_allResult.isEmpty) {
+      return Center(
+        child: DappliProgressIndicator(),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: kToolbarHeight * 1.3,
