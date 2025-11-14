@@ -77,7 +77,9 @@ class _HomeLayoutState extends State<HomeLayout> {
       ),
       body: [
         const HomePage(),
-        const SocialPage(),
+        const SocialPage(
+          screenChnage: false,
+        ),
         const FavoritePage(),
         const SettingsPage(),
         // const FavoriteSocialItem()

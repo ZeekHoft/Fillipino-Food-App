@@ -6,6 +6,7 @@ import 'package:flutter/foundation.dart';
 class SocialDataStoring extends ChangeNotifier {
   String? _userId;
   List<Map<String, dynamic>> _posts = [];
+  List<Map<String, dynamic>> _historyPosts = [];
 
   String? _postID;
   String? _postPic;
@@ -24,7 +25,9 @@ class SocialDataStoring extends ChangeNotifier {
   late final StreamSubscription<User?> _authStateChangesSubscription;
 
   String? get userId => _userId;
+  // The lists map posts and history are being referenced in social page to display posts data
   List<Map<String, dynamic>> get posts => _posts;
+  List<Map<String, dynamic>> get history => _historyPosts;
 
   String? get postID => _postID;
   String? get postPic => _postPic;
@@ -58,42 +61,15 @@ class SocialDataStoring extends ChangeNotifier {
       clearPostData();
       return;
     }
-
+// QuerySnapshot<Map<String, dynamic>>
     try {
-      final snapshot =
+      final snapshotSocialPage =
           await FirebaseFirestore.instance.collection("social_data").get();
-
-      _posts = snapshot.docs.map((doc) {
-        final postsData = doc.data();
-        print('fetched: $postsData');
-        return {
-          "postID": postsData["postID"],
-          "postPic": postsData["postPic"],
-          "postDescription": postsData["postDescription"],
-          "postUsername": postsData["postUsername"] ?? 'N/A Username',
-          "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
-          "shares": postsData["shares"],
-          "likeCount": postsData["likeCount"],
-          "likedAccounts": postsData["likedAccounts"] != null
-              ? (postsData["likedAccounts"] as List?)?.toSet()
-              : <String>{},
-          "ingredients": postsData["ingredients"] != null
-              ? (postsData["ingredients"] as List?)
-                  ?.map((e) => e.toString())
-                  .toList()
-              : <String>[],
-          "processSteps": postsData["processSteps"] != null
-              ? (postsData["processSteps"] as List?)
-                  ?.map((e) => e.toString())
-                  .toList()
-              : <String>[],
-          "calories": postsData["calories"] ?? 0, // Added calories mapping
-        };
-      }).toList();
-    } catch (e) {
-      if (kDebugMode) {
-        print("Fetching Error in user posts: $e");
-      }
+      final snapshotSocialHistory = await FirebaseFirestore.instance
+          .collection("social_data")
+          .where("userId", isEqualTo: uid)
+          .get();
+      socialDataInformation(snapshotSocialPage, snapshotSocialHistory);
 
       _userId = "N/A UserID";
       _postID = "N/A postID";
@@ -111,6 +87,56 @@ class SocialDataStoring extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> socialDataInformation(
+      QuerySnapshot<Map<String, dynamic>> socialSnapShot,
+      QuerySnapshot<Map<String, dynamic>> historySnapShot) async {
+    try {
+      _posts = socialSnapShot.docs.map((doc) {
+        final postsData = doc.data();
+        print('fetched social: $postsData');
+        return _mapPostData(postsData);
+      }).toList();
+
+      _historyPosts = historySnapShot.docs.map((doc) {
+        final postsData = doc.data();
+        print('fetched history: $postsData');
+        return _mapPostData(postsData);
+      }).toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print("Fetching Error in user posts: $e");
+      }
+    }
+  }
+
+  Map<String, dynamic> _mapPostData(Map<String, dynamic> postsData) {
+    return {
+      "postID": postsData["postID"],
+      "postPic": postsData["postPic"],
+      "postDescription": postsData["postDescription"],
+      "postUsername": postsData["postUsername"] ?? 'N/A Username',
+      "dateTimePost": (postsData["dateTimePost"] as Timestamp).toDate(),
+      "shares": postsData["shares"],
+      "likeCount": postsData["likeCount"],
+      "likedAccounts": postsData["likedAccounts"] != null
+          ? (postsData["likedAccounts"] as List?)?.toSet()
+          : <String>{},
+      "ingredients": postsData["ingredients"] != null
+          ? (postsData["ingredients"] as List?)
+              ?.map((e) => e.toString())
+              .toList()
+          : <String>[],
+      "processSteps": postsData["processSteps"] != null
+          ? (postsData["processSteps"] as List?)
+              ?.map((e) => e.toString())
+              .toList()
+          : <String>[],
+      "calories": postsData["calories"] ?? 0,
+
+      // Added calories mapping
+    };
   }
 
   Future<void> triggerLike(
