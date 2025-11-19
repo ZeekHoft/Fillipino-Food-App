@@ -63,9 +63,15 @@ class _SocialPageState extends State<SocialPage> {
           child: FloatingActionButton(
             tooltip: "Create Post",
             heroTag: "navigate_to_posting",
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const SocialPost()));
+            onPressed: () async { // Add async here
+              final result = await Navigator.push( // Add await here
+                  context,
+                  MaterialPageRoute(builder: (context) => const SocialPost())
+              );
+              // If post was successful, refresh the page
+              if (result == true) {
+                _refreshPge(context);
+              }
             },
             child: const Icon(Icons.add_a_photo),
           ),

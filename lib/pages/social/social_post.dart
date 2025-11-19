@@ -257,7 +257,7 @@ class _SocialPostState extends State<SocialPost> {
             SnackBar(content: Text('Failed to post: $e')),
           );
         }
-        Navigator.pop(context);
+        Navigator.pop(context, true);
       }
     } catch (e) {
       print("ERROR HERE: $e");
