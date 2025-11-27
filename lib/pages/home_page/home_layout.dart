@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
@@ -20,6 +21,54 @@ class _HomeLayoutState extends State<HomeLayout> {
   final user = FirebaseAuth.instance.currentUser!;
   int _currentPageIndex = 0;
 
+  void switchToAI() async {
+    try {
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      // Initialize cameras
+      final cameras = await availableCameras();
+
+      // Close loading dialog
+      if (mounted) Navigator.pop(context);
+
+      // Check if cameras are available
+      if (cameras.isEmpty) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No cameras found on device')),
+          );
+        }
+        return;
+      }
+
+      // Navigate to camera screen
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeGeneratorAI(cameras: cameras),
+          ),
+        );
+      }
+    } catch (e) {
+      // Close loading dialog if still open
+      if (mounted) Navigator.pop(context);
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error accessing camera: $e')),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,10 +88,7 @@ class _HomeLayoutState extends State<HomeLayout> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => RecipeGeneratorScreenOriginalCode()));
+          switchToAI();
         },
         elevation: 0,
         backgroundColor: Theme.of(context).colorScheme.surface,

@@ -1,392 +1,340 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'dart:io';
 
-class RecipeGeneratorScreenOriginalCode extends StatefulWidget {
-  const RecipeGeneratorScreenOriginalCode({super.key});
+class RecipeGeneratorAI extends StatelessWidget {
+  final List<CameraDescription> cameras;
+
+  const RecipeGeneratorAI({Key? key, required this.cameras}) : super(key: key);
 
   @override
-  State<RecipeGeneratorScreenOriginalCode> createState() =>
-      _RecipeGeneratorScreenOriginalCodeState();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Filipino Recipe Finder',
+      theme: ThemeData(
+        primarySwatch: Colors.orange,
+        useMaterial3: true,
+      ),
+      home: CameraScreen(cameras: cameras),
+    );
+  }
 }
 
-class _RecipeGeneratorScreenOriginalCodeState
-    extends State<RecipeGeneratorScreenOriginalCode> {
-  // State variables to hold recipe data and UI state
-  String? _recipeName;
-  List<String>? _ingredientsList;
-  List<String>? _instructions;
-  String?
-      _recipeImageBase64; // This will remain null as ChatGPT cannot generate images.
+class CameraScreen extends StatefulWidget {
+  final List<CameraDescription> cameras;
+
+  const CameraScreen({Key? key, required this.cameras}) : super(key: key);
+
+  @override
+  State<CameraScreen> createState() => _CameraScreenState();
+}
+
+class _CameraScreenState extends State<CameraScreen> {
+  late CameraController _controller;
+  late Future<void> _initializeControllerFuture;
   bool _isLoading = false;
-  String? _errorMessage;
+  String? _capturedImagePath;
 
-  // Initialize ImagePicker instance
-  final ImagePicker _picker = ImagePicker();
+  @override
+  void initState() {
+    super.initState();
+    _controller = CameraController(
+      widget.cameras[0],
+      ResolutionPreset.high,
+    );
+    _initializeControllerFuture = _controller.initialize();
+  }
 
-  // API key for ChatGPT - IMPORTANT: Replace with your actual API key.
-  // For production, use environment variables or a secure configuration.
-  final String _chatGptApiKey =
-      dotenv.env["API_KEY_CHAT_GPT"]!; // Your ChatGPT API Key (e.g., sk-...)
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
-  // Function to pick an image from the camera
-  Future<void> _pickImage() async {
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-      _recipeName = null;
-      _ingredientsList = null;
-      _instructions = null;
-      _recipeImageBase64 = null; // Reset image
-    });
-
+  Future<void> _takePicture() async {
     try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+      await _initializeControllerFuture;
+      final image = await _controller.takePicture();
 
-      if (image != null) {
-        // Read image bytes and encode to Base64
-        List<int> imageBytes = await image.readAsBytes();
-        String base64Image = base64Encode(imageBytes);
-
-        // Step 1: Get ingredients from image using ChatGPT Vision API (e.g., GPT-4o)
-        final String? identifiedIngredients =
-            await _getIngredientsFromImage(base64Image);
-
-        if (identifiedIngredients != null) {
-          // Step 2: Generate recipe text using ChatGPT Text API
-          final Map<String, dynamic>? recipeData =
-              await _generateRecipeText(identifiedIngredients);
-
-          if (recipeData != null) {
-            setState(() {
-              _recipeName = recipeData['recipeName'];
-              _ingredientsList =
-                  List<String>.from(recipeData['ingredientsList']);
-              _instructions = List<String>.from(recipeData['instructions']);
-            });
-
-            // Note: ChatGPT does not generate images. _recipeImageBase64 will remain null.
-            // If you need image generation, you would need to integrate a separate image generation API.
-          }
-        }
-      }
-    } catch (e) {
       setState(() {
-        _errorMessage = 'Error: ${e.toString()}';
+        _capturedImagePath = image.path;
+        _isLoading = true;
       });
-      print('Error during recipe generation: $e');
-    } finally {
+
+      // Get recipes from ChatGPT
+      final recipes = await _getRecipesFromImage(image.path);
+
       setState(() {
         _isLoading = false;
       });
-    }
-  }
 
-  // Function to call ChatGPT Vision API for ingredient recognition
-  // Uses GPT-4o model for multimodal capabilities.
-  Future<String?> _getIngredientsFromImage(String base64Image) async {
-    final url = Uri.parse("https://api.openai.com/v1/chat/completions");
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_chatGptApiKey',
-        },
-        body: jsonEncode({
-          "model": "gpt-4o", // Use a model capable of vision, e.g., gpt-4o
-          "messages": [
-            {
-              "role": "user",
-              "content": [
-                {
-                  "type": "text",
-                  "text":
-                      "What ingredients do you see in this image? List them concisely, separated by commas."
-                },
-                {
-                  "type": "image_url",
-                  "image_url": {"url": "data:image/jpeg;base64,$base64Image"}
-                }
-              ]
-            }
-          ],
-          "max_tokens": 300, // Limit response length for ingredients
-        }),
-      );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        // Extract and return ingredients text
-        return jsonResponse['choices'][0]['message']['content'];
-      } else {
-        throw Exception(
-            'Failed to get ingredients from ChatGPT: ${response.statusCode} - ${response.body}');
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => RecipeResultScreen(
+              imagePath: image.path,
+              recipes: recipes,
+            ),
+          ),
+        );
       }
     } catch (e) {
-      print('Error getting ingredients from image using ChatGPT: $e');
-      rethrow;
-    }
-  }
-
-  // Function to call ChatGPT Text API for recipe generation
-  Future<Map<String, dynamic>?> _generateRecipeText(String ingredients) async {
-    final url = Uri.parse("https://api.openai.com/v1/chat/completions");
-    try {
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_chatGptApiKey',
-        },
-        body: jsonEncode({
-          "model":
-              "gpt-4o", // You can use gpt-3.5-turbo or gpt-4 for text generation
-          "messages": [
-            {
-              "role": "system",
-              "content":
-                  "You are a helpful assistant that generates recipes. Your output must be a JSON object."
-            },
-            {
-              "role": "user",
-              "content":
-                  "Based on these ingredients: $ingredients, generate a recipe. Provide the recipe name, a list of ingredients with quantities, and step-by-step instructions. Format the response as a JSON object with keys: 'recipeName' (string), 'ingredientsList' (array of strings), 'instructions' (array of strings)."
-            }
-          ],
-          "response_format": {"type": "json_object"}, // Request JSON output
-          "max_tokens": 1000, // Adjust as needed for recipe length
-        }),
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: ${e.toString()}')),
       );
-
-      if (response.statusCode == 200) {
-        final jsonResponse = jsonDecode(response.body);
-        final String jsonString =
-            jsonResponse['choices'][0]['message']['content'];
-        // The response content is already a JSON string, parse it directly
-        return jsonDecode(jsonString);
-      } else {
-        throw Exception(
-            'Failed to generate recipe text from ChatGPT: ${response.statusCode} - ${response.body}');
-      }
-    } catch (e) {
-      print('Error generating recipe text using ChatGPT: $e');
-      rethrow;
     }
   }
 
-  // This function is no longer used as ChatGPT does not generate images.
-  // Kept for reference.
-  // Future<String?> _generateRecipeImage(String recipeName) async {
-  //   // ChatGPT does not provide image generation.
-  //   // You would need a separate image generation API (like DALL-E or Imagen).
-  //   return null;
-  // }
+  Future<List<Recipe>> _getRecipesFromImage(String imagePath) async {
+    // Replace with your OpenAI API key
+    final apiKey = dotenv.env["API_KEY_CHAT_GPT"]!;
+
+    final bytes = await File(imagePath).readAsBytes();
+    final base64Image = base64Encode(bytes);
+
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/chat/completions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $apiKey',
+      },
+      body: jsonEncode({
+        'model': 'gpt-4o',
+        'messages': [
+          {
+            'role': 'user',
+            'content': [
+              {
+                'type': 'text',
+                'text':
+                    '''Analyze this image and identify all the ingredients visible. 
+Then provide EXACTLY 5 Filipino recipes that can be made using ONLY the ingredients you see in this image.
+
+IMPORTANT RULES:
+1. Only suggest recipes where ALL ingredients are visible in the image
+2. Do not suggest recipes that require ingredients not shown
+3. Provide exactly 5 recipes
+4. All recipes must be Filipino cuisine
+
+Format each recipe as:
+RECIPE NAME: [name]
+INGREDIENTS: [list ingredients from image]
+INSTRUCTIONS: [step by step cooking instructions]
+PREP TIME: [time]
+---'''
+              },
+              {
+                'type': 'image_url',
+                'image_url': {'url': 'data:image/jpeg;base64,$base64Image'}
+              }
+            ]
+          }
+        ],
+        'max_tokens': 2000,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final content = data['choices'][0]['message']['content'];
+      return _parseRecipes(content);
+    } else {
+      throw Exception('Failed to get recipes: ${response.body}');
+    }
+  }
+
+  List<Recipe> _parseRecipes(String content) {
+    final recipes = <Recipe>[];
+    final recipeBlocks = content.split('---');
+
+    for (var block in recipeBlocks) {
+      if (block.trim().isEmpty) continue;
+
+      final nameMatch = RegExp(r'RECIPE NAME:\s*(.+)', caseSensitive: false)
+          .firstMatch(block);
+      final ingredientsMatch = RegExp(
+              r'INGREDIENTS:\s*(.+?)(?=INSTRUCTIONS:|$)',
+              caseSensitive: false,
+              dotAll: true)
+          .firstMatch(block);
+      final instructionsMatch = RegExp(r'INSTRUCTIONS:\s*(.+?)(?=PREP TIME:|$)',
+              caseSensitive: false, dotAll: true)
+          .firstMatch(block);
+      final prepTimeMatch =
+          RegExp(r'PREP TIME:\s*(.+)', caseSensitive: false).firstMatch(block);
+
+      if (nameMatch != null) {
+        recipes.add(Recipe(
+          name: nameMatch.group(1)?.trim() ?? 'Unknown Recipe',
+          ingredients: ingredientsMatch?.group(1)?.trim() ?? 'N/A',
+          instructions: instructionsMatch?.group(1)?.trim() ?? 'N/A',
+          prepTime: prepTimeMatch?.group(1)?.trim() ?? 'N/A',
+        ));
+      }
+    }
+
+    return recipes;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('AI Recipe Generator'),
+        title: const Text('Filipino Recipe Finder'),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            // Button to pick image
-            ElevatedButton.icon(
-              onPressed: _isLoading ? null : _pickImage,
-              icon: const Icon(Icons.camera_alt),
-              label: const Text('Take Picture of Ingredients'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+      body: Stack(
+        children: [
+          FutureBuilder<void>(
+            future: _initializeControllerFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                return CameraPreview(_controller);
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+          if (_isLoading)
+            Container(
+              color: Colors.black87,
+              child: const Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(color: Colors.orange),
+                    SizedBox(height: 20),
+                    Text(
+                      'Analyzing ingredients...\nFinding Filipino recipes...',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
                 ),
-                backgroundColor: Colors.blueAccent,
-                foregroundColor: Colors.white,
-                textStyle: const TextStyle(fontSize: 18),
               ),
             ),
-            const SizedBox(height: 20),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _isLoading ? null : _takePicture,
+        child: const Icon(Icons.camera_alt),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
+  }
+}
 
-            // Loading indicator
-            if (_isLoading)
-              const Center(
-                child: Column(
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 10),
-                    Text('Generating recipe...',
-                        style: TextStyle(fontSize: 16)),
-                  ],
-                ),
+class Recipe {
+  final String name;
+  final String ingredients;
+  final String instructions;
+  final String prepTime;
+
+  Recipe({
+    required this.name,
+    required this.ingredients,
+    required this.instructions,
+    required this.prepTime,
+  });
+}
+
+class RecipeResultScreen extends StatelessWidget {
+  final String imagePath;
+  final List<Recipe> recipes;
+
+  const RecipeResultScreen({
+    Key? key,
+    required this.imagePath,
+    required this.recipes,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Filipino Recipes'),
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: 200,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: FileImage(File(imagePath)),
+                fit: BoxFit.cover,
               ),
-
-            // Error message display
-            if (_errorMessage != null)
-              Container(
-                padding: const EdgeInsets.all(12),
-                margin: const EdgeInsets.only(bottom: 20),
-                decoration: BoxDecoration(
-                  color: Colors.red.shade100,
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.shade400),
-                ),
-                child: Text(
-                  _errorMessage!,
-                  style: TextStyle(
-                      color: Colors.red.shade800, fontWeight: FontWeight.bold),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-
-            // Display generated recipe image (will be empty if using only ChatGPT)
-            if (_recipeImageBase64 != null)
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.5),
-                      spreadRadius: 2,
-                      blurRadius: 7,
-                      offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ),
+          Expanded(
+            child: recipes.isEmpty
+                ? const Center(
+                    child: Text(
+                      'No recipes found.\nTry taking another photo with clearer ingredients.',
+                      textAlign: TextAlign.center,
                     ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.memory(
-                    base64Decode(_recipeImageBase64!),
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                    height: 250, // Fixed height for recipe image
-                    errorBuilder: (context, error, stackTrace) => Container(
-                      height: 250,
-                      color: Colors.grey[300],
-                      child: const Center(
-                        child: Text('Could not load image',
-                            style: TextStyle(color: Colors.black54)),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            // Message if no image is generated
-            if (!_isLoading &&
-                _recipeName != null &&
-                _recipeImageBase64 == null)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 10.0),
-                child: Text(
-                  'Note: Image generation is not available with ChatGPT. You can integrate a separate image generation API (e.g., DALL-E) if needed.',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontStyle: FontStyle.italic,
-                      color: Colors.grey[600]),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            const SizedBox(height: 20),
-
-            // Display recipe name
-            if (_recipeName != null)
-              Text(
-                _recipeName!,
-                style: const TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.deepPurple),
-                textAlign: TextAlign.center,
-              ),
-            const SizedBox(height: 20),
-
-            // Display ingredients list
-            if (_ingredientsList != null && _ingredientsList!.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Ingredients:',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Disable scrolling for nested ListView
-                      itemCount: _ingredientsList!.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Text(
-                            '• ${_ingredientsList![index]}',
-                            style: const TextStyle(fontSize: 16),
+                  )
+                : ListView.builder(
+                    itemCount: recipes.length,
+                    itemBuilder: (context, index) {
+                      final recipe = recipes[index];
+                      return Card(
+                        margin: const EdgeInsets.all(12),
+                        elevation: 4,
+                        child: ExpansionTile(
+                          title: Text(
+                            recipe.name,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
                           ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            const SizedBox(height: 20),
-
-            // Display instructions
-            if (_instructions != null && _instructions!.isNotEmpty)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Instructions:',
-                    style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade100,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      physics:
-                          const NeverScrollableScrollPhysics(), // Disable scrolling for nested ListView
-                      itemCount: _instructions!.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: Text(
-                            '${index + 1}. ${_instructions![index]}',
-                            style: const TextStyle(fontSize: 16),
+                          subtitle: Text(
+                            'Prep Time: ${recipe.prepTime}',
+                            style: TextStyle(color: Colors.grey[600]),
                           ),
-                        );
-                      },
-                    ),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Ingredients:',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(recipe.ingredients),
+                                  const SizedBox(height: 16),
+                                  const Text(
+                                    'Instructions:',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(recipe.instructions),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

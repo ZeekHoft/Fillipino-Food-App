@@ -67,12 +67,16 @@ class _PostWidgetState extends State<PostWidget> {
                     clipBehavior: Clip.antiAlias,
                     child: widget.post["postPic"] != null ||
                             widget.post["postPic"] != ""
-                        ? Image.network(
-                            widget.post["postPic"],
-                            width: 50,
-                            height: 50,
-                            fit: BoxFit.fitWidth,
+                        ? Image.asset(
+                            "assets/dappli_logo.png",
+                            fit: BoxFit.cover,
                           )
+                        // Image.network(
+                        //     widget.post["postPic"],
+                        //     width: 50,
+                        //     height: 50,
+                        //     fit: BoxFit.fitWidth,
+                        //   )
                         : const Icon(Icons.image_not_supported),
                   ),
                 ),
