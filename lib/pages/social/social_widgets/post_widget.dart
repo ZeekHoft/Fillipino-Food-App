@@ -108,8 +108,9 @@ class _PostWidgetState extends State<PostWidget> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
-                        SizedBox(child: Text("Total Calories: $calories")),
-                        const Spacer(),
+                        SizedBox(height: 4),
+                        Text("Total Calories: $calories"),
+                        SizedBox(height: 4),
                         if (processSteps.isNotEmpty) ...[
                           Text(
                             "Process:",
@@ -121,6 +122,7 @@ class _PostWidgetState extends State<PostWidget> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ],
+                        const Spacer(),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
@@ -175,7 +177,7 @@ class _PostWidgetState extends State<PostWidget> {
                             ),
 
                             Icon(Icons.share),
-                            // THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
+                            // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
 
                             if (isPostOwner)
                               IconButton(
