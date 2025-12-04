@@ -176,7 +176,8 @@ class _PostWidgetState extends State<PostWidget> {
                                     ),
                             ),
 
-                            Icon(Icons.share),
+                            IconButton(
+                                onPressed: () {}, icon: Icon(Icons.share)),
                             // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
 
                             if (isPostOwner)
