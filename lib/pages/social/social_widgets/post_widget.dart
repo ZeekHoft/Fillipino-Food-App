@@ -57,7 +57,7 @@ class _PostWidgetState extends State<PostWidget> {
               children: [
                 // Picture Here
                 Expanded(
-                  flex: 4,
+                  flex: 5,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
@@ -77,7 +77,7 @@ class _PostWidgetState extends State<PostWidget> {
                   ),
                 ),
                 Expanded(
-                  flex: 3,
+                  flex: 4,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Column(
