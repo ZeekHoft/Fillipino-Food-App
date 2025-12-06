@@ -1,4 +1,5 @@
 import 'package:flilipino_food_app/common_widgets/settings_buttons.dart';
+import 'package:flilipino_food_app/pages/settings/edit_profile_data.dart';
 import 'package:flilipino_food_app/pages/social/social_page.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,8 +27,12 @@ class _SettingsPageState extends State<SettingsPage> {
               Text("Settings", style: Theme.of(context).textTheme.titleLarge),
         ),
         const SizedBox(height: 24),
-        const ListTile(
-            leading: Icon(Icons.edit_outlined), title: Text("Edit Profile")),
+        ListTile(
+            title: SettingsButtons(
+                // Reusable widget
+                pageRoute: EditProfileData(),
+                settingsIcon: const Icon(Icons.edit),
+                settingsText: const Text("Edit Profile"))),
         ListTile(
             title: SettingsButtons(
                 // Reusable widget
