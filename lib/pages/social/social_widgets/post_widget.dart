@@ -52,184 +52,205 @@ class _PostWidgetState extends State<PostWidget> {
       child: Card(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: IntrinsicHeight(
-            child: Row(
-              children: [
-                // Picture Here
-                Expanded(
-                  flex: 5,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      color: Colors.black54,
-                    ),
-                    height: 300,
-                    clipBehavior: Clip.antiAlias,
-                    child: widget.post["postPic"] != null ||
-                            widget.post["postPic"] != ""
-                        ? Image.asset(
-                            "assets/dappli_logo.png",
-                            fit: BoxFit.cover,
-                          )
-                        // Image.network(
-                        //     widget.post["postPic"],
-                        //     width: 50,
-                        //     height: 50,
-                        //     fit: BoxFit.fitWidth,
-                        //   )
-                        : const Icon(Icons.image_not_supported),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(),
+                  const SizedBox(width: 4.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        username,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Opacity(
+                        opacity: 0.8,
+                        child: Text(widget.post["dateTimePost"] != null
+                            ? DateFormat("MM/dd/yyyy")
+                                .format(widget.post["dateTimePost"])
+                            : ""),
+                      ),
+                    ],
                   ),
-                ),
-                Expanded(
-                  flex: 4,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                          username,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Opacity(
-                            opacity: 0.8,
-                            child: Text(widget.post["dateTimePost"] != null
-                                ? DateFormat("MM/dd/yyyy")
-                                    .format(widget.post["dateTimePost"])
-                                : "")),
-                        const SizedBox(height: 8.0),
-                        Text(description),
-                        if (ingredients.isNotEmpty) ...[
-                          Text(
-                            "Ingredients:",
-                          ),
-                          Text(
-                            ingredients.join(", "),
-                            style: TextStyle(fontSize: 12),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                        SizedBox(height: 4),
-                        Text("Total Calories: $calories"),
-                        SizedBox(height: 4),
-                        if (processSteps.isNotEmpty) ...[
-                          Text(
-                            "Process:",
-                          ),
-                          Text(
-                            processSteps.join(", "),
-                            style: TextStyle(fontSize: 12),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                        const Spacer(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Like Button
-                            Row(
-                              children: [
-                                IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        Provider.of<SocialDataStoring>(context,
-                                                listen: false)
-                                            .triggerLike(
-                                                widget.post["postID"]!,
-                                                profileDataStoring.userId!,
-                                                widget.post["likedAccounts"]!);
-                                      });
-                                      print("changed: ${widget.post}");
-                                    },
-                                    icon: likeState
-                                        ? Icon(
-                                            Icons.favorite,
-                                            color: Colors.red,
-                                          )
-                                        : Icon(Icons.favorite_border)),
-                                SizedBox(width: 4),
-                                Text(
-                                    "${widget.post["likedAccounts"] != null ? widget.post["likedAccounts"].length : " "}"),
-                              ],
+                  const Spacer(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.more_vert),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8.0),
+              IntrinsicHeight(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // Picture Here
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .surfaceContainerHighest,
                             ),
-
-                            IconButton(
-                              onPressed: () {
-                                provider.toggleSocialFavorite(
-                                  postId.toString(),
-                                  ingredients.join(', '),
-                                  processSteps.join(', '),
-                                  description,
-                                  int.tryParse(calories) ?? 0,
-                                  username,
-                                );
-                              },
-                              icon: provider.isSocialExist(
-                                      widget.post["postID"]?.toString() ?? '')
-                                  ? const Icon(
-                                      Icons.bookmark,
-                                      color: Colors
-                                          .red, // Or your AppColors.yellowTheme
-                                    )
-                                  : const Icon(
-                                      Icons.bookmark_add_outlined,
-                                    ),
+                            height: 300,
+                            clipBehavior: Clip.antiAlias,
+                            child: widget.post["postPic"] != null ||
+                                    widget.post["postPic"] != ""
+                                ? Image.asset(
+                                    "assets/dappli_logo.png",
+                                    fit: BoxFit.cover,
+                                  )
+                                // Image.network(
+                                //     widget.post["postPic"],
+                                //     width: 50,
+                                //     height: 50,
+                                //     fit: BoxFit.fitWidth,
+                                //   )
+                                : const Icon(Icons.image_not_supported),
+                          ),
+                          const SizedBox(height: 8.0),
+                          Text(
+                            description,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
                             ),
-
-                            IconButton(
-                                onPressed: () {}, icon: Icon(Icons.share)),
-                            // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
-
-                            if (isPostOwner)
-                              IconButton(
-                                onPressed: () async {
-                                  // Confirmation dialog is highly recommended here!
-                                  final confirm = await showDialog<bool>(
-                                    context: context,
-                                    builder: (ctx) => AlertDialog(
-                                      title: const Text('Delete Post'),
-                                      content: const Text(
-                                          'Are you sure you want to delete this post? This cannot be undone.'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          child: const Text('Cancel'),
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(false),
-                                        ),
-                                        TextButton(
-                                          child: const Text('Delete',
-                                              style:
-                                                  TextStyle(color: Colors.red)),
-                                          onPressed: () =>
-                                              Navigator.of(ctx).pop(true),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-
-                                  if (confirm == true) {
-                                    // Call the delete function from the provider
-                                    await socialDataStoring.deletePost(
-                                        postId!, favoriteProvider);
-                                  }
-                                },
-                                icon: const Icon(Icons.delete_forever,
-                                    color: Colors.red),
-                              ),
-
-                            // THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
+                          ),
+                          if (ingredients.isNotEmpty) ...[
+                            Text(
+                              "Ingredients:",
+                            ),
+                            Text(
+                              ingredients.join(", "),
+                              style: TextStyle(fontSize: 12),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ],
-                        )
+                          SizedBox(height: 4),
+                          Text("Total Calories: $calories"),
+                          SizedBox(height: 4),
+                          if (processSteps.isNotEmpty) ...[
+                            Text(
+                              "Process:",
+                            ),
+                            Text(
+                              processSteps.join(", "),
+                              style: TextStyle(fontSize: 12),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 8.0),
+                    Column(
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Like Button
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                Provider.of<SocialDataStoring>(context,
+                                        listen: false)
+                                    .triggerLike(
+                                        widget.post["postID"]!,
+                                        profileDataStoring.userId!,
+                                        widget.post["likedAccounts"]!);
+                              });
+                              print("changed: ${widget.post}");
+                            },
+                            icon: likeState
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : Icon(Icons.favorite_border)),
+                        // Like Count
+                        Text(
+                          widget.post["likedAccounts"] != null &&
+                                  widget.post["likedAccounts"].length != 0
+                              ? widget.post["likedAccounts"].length.toString()
+                              : "0",
+                        ),
+
+                        const SizedBox(height: 8.0),
+                        IconButton(
+                          onPressed: () {
+                            provider.toggleSocialFavorite(
+                              postId.toString(),
+                              ingredients.join(', '),
+                              processSteps.join(', '),
+                              description,
+                              int.tryParse(calories) ?? 0,
+                              username,
+                            );
+                          },
+                          icon: provider.isSocialExist(
+                                  widget.post["postID"]?.toString() ?? '')
+                              ? const Icon(
+                                  Icons.bookmark,
+                                  color: Colors
+                                      .red, // Or your AppColors.yellowTheme
+                                )
+                              : const Icon(
+                                  Icons.bookmark_add_outlined,
+                                ),
+                        ),
+                        const SizedBox(height: 8.0),
+
+                        IconButton(onPressed: () {}, icon: Icon(Icons.share)),
+                        // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
+                        const SizedBox(height: 8.0),
+                        if (isPostOwner)
+                          IconButton(
+                            onPressed: () async {
+                              // Confirmation dialog is highly recommended here!
+                              final confirm = await showDialog<bool>(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: const Text('Delete Post'),
+                                  content: const Text(
+                                      'Are you sure you want to delete this post? This cannot be undone.'),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: const Text('Cancel'),
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(false),
+                                    ),
+                                    TextButton(
+                                      child: const Text('Delete',
+                                          style: TextStyle(color: Colors.red)),
+                                      onPressed: () =>
+                                          Navigator.of(ctx).pop(true),
+                                    ),
+                                  ],
+                                ),
+                              );
+
+                              if (confirm == true) {
+                                // Call the delete function from the provider
+                                await socialDataStoring.deletePost(
+                                    postId!, favoriteProvider);
+                              }
+                            },
+                            icon: const Icon(Icons.delete_forever,
+                                color: Colors.red),
+                          ),
+
+                        // THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
                       ],
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
