@@ -184,8 +184,13 @@ class _PostWidgetState extends State<PostWidget> {
                                           Navigator.of(ctx).pop(false),
                                     ),
                                     TextButton(
-                                      child: const Text('Delete',
-                                          style: TextStyle(color: Colors.red)),
+                                      child: Text(
+                                        'Delete',
+                                        style: TextStyle(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .error),
+                                      ),
                                       onPressed: () =>
                                           Navigator.of(ctx).pop(true),
                                     ),
@@ -199,8 +204,8 @@ class _PostWidgetState extends State<PostWidget> {
                                     postId!, favoriteProvider);
                               }
                             },
-                            icon: const Icon(Icons.delete_forever,
-                                color: Colors.red),
+                            icon: Icon(Icons.delete,
+                                color: Theme.of(context).colorScheme.error),
                           ),
                         // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
                       ],
@@ -259,7 +264,7 @@ class _LikeButtonState extends State<LikeButton> {
             icon: likeState
                 ? Icon(
                     Icons.favorite,
-                    color: Theme.of(context).colorScheme.error,
+                    color: Colors.red.shade600,
                   )
                 : Icon(Icons.favorite_border)),
         // Like Count
@@ -307,12 +312,12 @@ class _SaveButtonState extends State<SaveButton> {
           );
         });
       },
-      icon: widget.provider
-              .isSocialExist(widget.post["postID"]?.toString() ?? '')
-          ? Icon(Icons.bookmark, color: Theme.of(context).colorScheme.secondary)
-          : const Icon(
-              Icons.bookmark_add_outlined,
-            ),
+      icon:
+          widget.provider.isSocialExist(widget.post["postID"]?.toString() ?? '')
+              ? Icon(Icons.bookmark, color: Colors.amber.shade600)
+              : const Icon(
+                  Icons.bookmark_add_outlined,
+                ),
     );
   }
 }
