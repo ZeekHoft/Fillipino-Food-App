@@ -155,33 +155,18 @@ class _PostWidgetState extends State<PostWidget> {
                         ),
 
                         const SizedBox(height: 8.0),
-                        IconButton(
-                          onPressed: () {
-                            provider.toggleSocialFavorite(
-                              postId.toString(),
-                              ingredients.join(', '),
-                              processSteps.join(', '),
-                              description,
-                              int.tryParse(calories) ?? 0,
-                              username,
-                            );
-                          },
-                          icon: provider.isSocialExist(
-                                  widget.post["postID"]?.toString() ?? '')
-                              ? const Icon(
-                                  Icons.bookmark,
-                                  color: Colors
-                                      .red, // Or your AppColors.yellowTheme
-                                )
-                              : const Icon(
-                                  Icons.bookmark_add_outlined,
-                                ),
-                        ),
+
+                        SaveButton(post: widget.post, provider: provider),
+
                         const SizedBox(height: 8.0),
 
+                        // Share Button (unimplemented)
                         IconButton(onPressed: () {}, icon: Icon(Icons.share)),
-                        // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
+
                         const SizedBox(height: 8.0),
+
+                        // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
+                        // Delete Post Button
                         if (isPostOwner)
                           IconButton(
                             onPressed: () async {
@@ -217,8 +202,7 @@ class _PostWidgetState extends State<PostWidget> {
                             icon: const Icon(Icons.delete_forever,
                                 color: Colors.red),
                           ),
-
-                        // THIS NEEDS TO BE REVIEWD FOR POTENTIAL ERRORS
+                        // THIS NEEDS TO BE REVIEWED FOR POTENTIAL ERRORS
                       ],
                     ),
                   ],
@@ -285,6 +269,50 @@ class _LikeButtonState extends State<LikeButton> {
               : "0",
         ),
       ],
+    );
+  }
+}
+
+class SaveButton extends StatefulWidget {
+  const SaveButton({super.key, required this.post, required this.provider});
+
+  final Map post;
+  final FavoriteSocialProvider provider;
+
+  @override
+  State<SaveButton> createState() => _SaveButtonState();
+}
+
+class _SaveButtonState extends State<SaveButton> {
+  @override
+  Widget build(BuildContext context) {
+    final postId = widget.post['postID'];
+
+    final ingredients = widget.post["ingredients"] as List<String>? ?? [];
+    final processSteps = widget.post["processSteps"] as List<String>? ?? [];
+    final calories = widget.post["calories"].toString();
+    final description = widget.post["postDescription"] ?? "";
+    final username = widget.post["postUsername"] ?? "N/A username";
+
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          widget.provider.toggleSocialFavorite(
+            postId.toString(),
+            ingredients.join(', '),
+            processSteps.join(', '),
+            description,
+            int.tryParse(calories) ?? 0,
+            username,
+          );
+        });
+      },
+      icon: widget.provider
+              .isSocialExist(widget.post["postID"]?.toString() ?? '')
+          ? Icon(Icons.bookmark, color: Theme.of(context).colorScheme.secondary)
+          : const Icon(
+              Icons.bookmark_add_outlined,
+            ),
     );
   }
 }
