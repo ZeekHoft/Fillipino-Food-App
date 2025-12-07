@@ -21,6 +21,11 @@ class PostWidget extends StatefulWidget {
 class _PostWidgetState extends State<PostWidget> {
   @override
   Widget build(BuildContext context) {
+    final formatter = NumberFormat.decimalPatternDigits(
+      locale: 'en_us',
+      decimalDigits: 0,
+    );
+
     final provider = Provider.of<FavoriteSocialProvider>(context);
     final profileDataStoring = context.read<ProfileDataStoring>();
     final postId = widget.post['postID'];
@@ -115,28 +120,21 @@ class _PostWidgetState extends State<PostWidget> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+                          Text(
+                              "${formatter.format(double.parse(calories))} calories"),
+                          SizedBox(height: 4),
                           if (ingredients.isNotEmpty) ...[
                             Text(
-                              "Ingredients:",
-                            ),
-                            Text(
-                              ingredients.join(", "),
-                              style: TextStyle(fontSize: 12),
-                              maxLines: 2,
+                              "Ingredients: ${ingredients.join(", ")}",
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                            ),
+                            )
                           ],
-                          SizedBox(height: 4),
-                          Text("Total Calories: $calories"),
                           SizedBox(height: 4),
                           if (processSteps.isNotEmpty) ...[
                             Text(
-                              "Process:",
-                            ),
-                            Text(
-                              processSteps.join(", "),
-                              style: TextStyle(fontSize: 12),
-                              maxLines: 2,
+                              "Process: ${processSteps.join(", ")}",
+                              maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ],
