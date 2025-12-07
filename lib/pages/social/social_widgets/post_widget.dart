@@ -23,12 +23,6 @@ class _PostWidgetState extends State<PostWidget> {
   Widget build(BuildContext context) {
     final provider = Provider.of<FavoriteSocialProvider>(context);
     final profileDataStoring = context.read<ProfileDataStoring>();
-
-    bool likeState = false;
-    if (widget.post["likedAccounts"] != null) {
-      likeState =
-          widget.post["likedAccounts"].contains(profileDataStoring.userId!);
-    }
     final postId = widget.post['postID'];
 
     final ingredients = widget.post["ingredients"] as List<String>? ?? [];
@@ -154,30 +148,10 @@ class _PostWidgetState extends State<PostWidget> {
                       // crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Like Button
-                        IconButton(
-                            onPressed: () {
-                              setState(() {
-                                Provider.of<SocialDataStoring>(context,
-                                        listen: false)
-                                    .triggerLike(
-                                        widget.post["postID"]!,
-                                        profileDataStoring.userId!,
-                                        widget.post["likedAccounts"]!);
-                              });
-                              print("changed: ${widget.post}");
-                            },
-                            icon: likeState
-                                ? Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                  )
-                                : Icon(Icons.favorite_border)),
-                        // Like Count
-                        Text(
-                          widget.post["likedAccounts"] != null &&
-                                  widget.post["likedAccounts"].length != 0
-                              ? widget.post["likedAccounts"].length.toString()
-                              : "0",
+                        LikeButton(
+                          postId: postId,
+                          userId: currentUserId!,
+                          likedAccounts: widget.post["likedAccounts"],
                         ),
 
                         const SizedBox(height: 8.0),
@@ -258,24 +232,58 @@ class _PostWidgetState extends State<PostWidget> {
   }
 }
 
-class LikeButton extends StatelessWidget {
+class LikeButton extends StatefulWidget {
   const LikeButton({
     super.key,
-    required this.widget,
+    required this.postId,
+    required this.userId,
+    required this.likedAccounts,
   });
 
-  final PostWidget widget;
+  final String postId;
+  final String userId;
+  final Set? likedAccounts;
 
   @override
+  State<LikeButton> createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButton> {
+  @override
   Widget build(BuildContext context) {
-    return Row(
+    bool likeState = false;
+
+    if (widget.likedAccounts != null) {
+      likeState = widget.likedAccounts!.contains(widget.userId);
+    }
+
+    return Column(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.favorite_border)),
-        SizedBox(width: 4),
+        IconButton(
+            onPressed: () {
+              setState(() {
+                Provider.of<SocialDataStoring>(context, listen: false)
+                    .triggerLike(
+                  widget.postId,
+                  widget.userId,
+                  widget.likedAccounts!,
+                );
+              });
+              print("changed: ${widget.postId}");
+            },
+            icon: likeState
+                ? Icon(
+                    Icons.favorite,
+                    color: Theme.of(context).colorScheme.error,
+                  )
+                : Icon(Icons.favorite_border)),
+        // Like Count
         Text(
-            "${widget.post["likedAccounts"] != null ? widget.post["likedAccounts"].length : " "}"),
+          widget.likedAccounts != null && widget.likedAccounts!.isNotEmpty
+              ? widget.likedAccounts!.length.toString()
+              : "0",
+        ),
       ],
     );
   }
