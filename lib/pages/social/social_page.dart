@@ -77,7 +77,7 @@ class _SocialPageState extends State<SocialPage> {
                 _refreshPge(context);
               }
             },
-            child: const Icon(Icons.add_a_photo),
+            child: const Icon(Icons.post_add_outlined),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
