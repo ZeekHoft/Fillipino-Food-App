@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_dish_data.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_inputs.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
@@ -64,81 +65,108 @@ class _SocialPostState extends State<SocialPost> {
             ),
           ),
         ),
-        body: Padding(
-          padding: EdgeInsetsGeometry.all(10.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.secondaryContainer,
-                      foregroundColor:
-                          Theme.of(context).colorScheme.onSecondaryContainer),
-                  child: const Text('Select Image from Gallery or Camera'),
-                  onPressed: () {
-                    _showPicker(context: context);
-                  },
-                ),
-                Container(
-                  child: galleryBytes == null
-                      ? const Center(child: Text("Nothing is Selected."))
-                      : Center(
-                          child: Image.memory(galleryBytes!, fit: BoxFit.cover),
-                        ),
-                ),
-                SocialPostInputs(
-                  controller: _postDescription,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  labelText: "Description",
-                  errorText: 'Please enter Description',
-                  border: OutlineInputBorder(),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SocialPostDishData(
-                  controller: _ingredientList,
-                  labeltext: 'Enter ingredient',
-                  hintext: 'e.g., Tomatoes, Onions, Garlic,...',
-                  prefixicon: Icon(Icons.local_grocery_store_sharp),
-                  border: OutlineInputBorder(),
-                  keyboardtype: TextInputType.text,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SocialPostDishData(
-                  controller: _processList,
-                  labeltext: 'Enter Process',
-                  hintext:
-                      'e.g., Chop the onions and garlic, steam the tomatoes,...',
-                  prefixicon: Icon(Icons.format_list_bulleted),
-                  border: OutlineInputBorder(),
-                  keyboardtype: TextInputType.text,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                SocialPostDishData(
-                  controller: _caloriePost,
-                  labeltext: 'Enter Food Post Calories',
-                  hintext: 'e.g., 100 or 1300',
-                  prefixicon: Icon(Icons.numbers),
-                  border: OutlineInputBorder(),
-                  maxlength: 5,
-                  keyboardtype: TextInputType.number,
-                  inputformat: FilteringTextInputFormatter(RegExp(r'[0-9]'),
-                      allow: true),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                ElevatedButton(onPressed: _savePost, child: const Text("Post!"))
-              ],
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.secondaryContainer,
+                        foregroundColor:
+                            Theme.of(context).colorScheme.onSecondaryContainer),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add_photo_alternate_outlined, size: 24),
+                        SizedBox(width: 16),
+                        const Text('Select Image from Gallery or Camera'),
+                      ],
+                    ),
+                    onPressed: () {
+                      _showPicker(context: context);
+                    },
+                  ),
+                  const SizedBox(height: 12),
+                  DottedBorder(
+                    options: RoundedRectDottedBorderOptions(
+                      radius: Radius.circular(12),
+                      dashPattern: [10, 5],
+                      strokeWidth: 2,
+                      padding: EdgeInsets.all(8),
+                    ),
+                    child: galleryBytes == null
+                        ? Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 48),
+                              child: Text("No Image Selected"),
+                            ),
+                          )
+                        : Center(
+                            child: Image.memory(
+                              galleryBytes!,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                  ),
+                  const SizedBox(height: 12),
+                  SocialPostInputs(
+                    controller: _postDescription,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    labelText: "Description",
+                    errorText: 'Please enter Description',
+                    border: OutlineInputBorder(),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SocialPostDishData(
+                    controller: _ingredientList,
+                    labeltext: 'Enter ingredient',
+                    hintext: 'e.g., Tomatoes, Onions, Garlic,...',
+                    prefixicon: Icon(Icons.local_grocery_store_sharp),
+                    border: OutlineInputBorder(),
+                    keyboardtype: TextInputType.text,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SocialPostDishData(
+                    controller: _processList,
+                    labeltext: 'Enter Process',
+                    hintext:
+                        'e.g., Chop the onions and garlic, steam the tomatoes,...',
+                    prefixicon: Icon(Icons.format_list_bulleted),
+                    border: OutlineInputBorder(),
+                    keyboardtype: TextInputType.text,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  SocialPostDishData(
+                    controller: _caloriePost,
+                    labeltext: 'Enter Food Post Calories',
+                    hintext: 'e.g., 100 or 1300',
+                    prefixicon: Icon(Icons.numbers),
+                    border: OutlineInputBorder(),
+                    maxlength: 5,
+                    keyboardtype: TextInputType.number,
+                    inputformat: FilteringTextInputFormatter(RegExp(r'[0-9]'),
+                        allow: true),
+                  ),
+                  const SizedBox(height: 48),
+                  ElevatedButton(
+                    onPressed: _savePost,
+                    child: const Text("Post!"),
+                  ),
+                  const SizedBox(height: 48),
+                ],
+              ),
             ),
           ),
         ));
