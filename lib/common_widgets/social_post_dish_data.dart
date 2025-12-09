@@ -2,43 +2,46 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class SocialPostDishData extends StatelessWidget {
-  final dynamic controller;
-  final dynamic labeltext;
-  final dynamic hintext;
-  final dynamic prefixicon;
-  final dynamic border;
+  final int? maxLength;
+  final String? hintText;
+  final String? labelText;
   final String? errorText;
-  final int? maxlength;
-  final dynamic keyboardtype;
-  final FilteringTextInputFormatter? inputformat;
+  final Icon? prefixIcon;
+  final TextInputType? keyboardType;
+  final TextEditingController controller;
+  final FilteringTextInputFormatter? inputFormat;
 
   const SocialPostDishData(
       {super.key,
       required this.controller,
-      required this.labeltext,
-      required this.hintext,
-      required this.prefixicon,
-      required this.border,
+      required this.labelText,
+      required this.hintText,
+      required this.prefixIcon,
       this.errorText,
-      this.maxlength,
-      this.keyboardtype,
-      this.inputformat});
+      this.maxLength,
+      this.keyboardType,
+      this.inputFormat});
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextField(
-          keyboardType: keyboardtype,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: TextField(
+        keyboardType: keyboardType,
 
-          inputFormatters:
-              inputformat != null ? [inputformat!] : [], // Handle null case
-          // Only numbers can be entere,
-          maxLength: maxlength,
-          controller: controller,
-          decoration: InputDecoration(
-              labelText: labeltext, prefixIcon: prefixicon, border: border),
+        inputFormatters:
+            inputFormat != null ? [inputFormat!] : [], // Handle null case
+        // Only numbers can be entere,
+        maxLength: maxLength,
+        controller: controller,
+        decoration: InputDecoration(
+          hintText: hintText,
+          prefixIcon: prefixIcon != null
+              ? Opacity(opacity: 0.8, child: prefixIcon)
+              : null,
+          border: OutlineInputBorder(borderSide: BorderSide.none),
         ),
       ),
     );
