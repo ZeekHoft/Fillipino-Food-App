@@ -111,16 +111,15 @@ class _SocialPostState extends State<SocialPost> {
                             ),
                           ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 16),
                   SocialPostInputs(
                     controller: _postDescription,
                     keyboardType: TextInputType.multiline,
                     labelText: "Description",
                     errorText: 'Please enter Description',
+                    maxLines: 1,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 16),
                   SocialPostDishData(
                     controller: _ingredientList,
                     labelText: 'Enter ingredient',
@@ -128,9 +127,7 @@ class _SocialPostState extends State<SocialPost> {
                     prefixIcon: Icon(Icons.local_grocery_store_sharp),
                     keyboardType: TextInputType.text,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 16),
                   SocialPostDishData(
                     controller: _processList,
                     labelText: 'Enter Process',
@@ -139,9 +136,7 @@ class _SocialPostState extends State<SocialPost> {
                     prefixIcon: Icon(Icons.format_list_bulleted),
                     keyboardType: TextInputType.text,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
+                  const SizedBox(height: 16),
                   SocialPostDishData(
                     controller: _caloriePost,
                     labelText: 'Enter Food Post Calories',
