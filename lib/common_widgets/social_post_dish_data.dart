@@ -29,7 +29,7 @@ class SocialPostDishData extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 8.0),
-          child: Text(labelText, style: Theme.of(context).textTheme.labelLarge),
+          child: Text(labelText, style: Theme.of(context).textTheme.bodyLarge),
         ),
         SizedBox(height: 4.0),
         Card(
