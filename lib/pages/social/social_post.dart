@@ -92,7 +92,7 @@ class _SocialPostState extends State<SocialPost> {
                   const SizedBox(height: 12),
                   DottedBorder(
                     options: RoundedRectDottedBorderOptions(
-                      radius: Radius.circular(12),
+                      radius: Radius.circular(16),
                       dashPattern: [10, 5],
                       strokeWidth: 2,
                       padding: EdgeInsets.all(8),
@@ -116,8 +116,9 @@ class _SocialPostState extends State<SocialPost> {
                     controller: _postDescription,
                     keyboardType: TextInputType.multiline,
                     labelText: "Description",
+                    hintText: "Name of the dish",
                     errorText: 'Please enter Description',
-                    maxLines: 1,
+                    maxLines: null,
                   ),
                   const SizedBox(height: 16),
                   SocialPostDishData(
