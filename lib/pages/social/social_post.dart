@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flilipino_food_app/common_widgets/social_post_dish_data.dart';
@@ -117,10 +115,8 @@ class _SocialPostState extends State<SocialPost> {
                   SocialPostInputs(
                     controller: _postDescription,
                     keyboardType: TextInputType.multiline,
-                    maxLines: null,
                     labelText: "Description",
                     errorText: 'Please enter Description',
-                    border: OutlineInputBorder(),
                   ),
                   const SizedBox(
                     height: 10,
