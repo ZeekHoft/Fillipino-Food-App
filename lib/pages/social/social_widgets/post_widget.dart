@@ -30,7 +30,6 @@ class _PostWidgetState extends State<PostWidget> {
           widget.post["likedAccounts"].contains(profileDataStoring.userId!);
     }
     final postId = widget.post['postID'];
-
     final ingredients = widget.post["ingredients"] as List<String>? ?? [];
     final processSteps = widget.post["processSteps"] as List<String>? ?? [];
     final calories = widget.post["calories"].toString();
