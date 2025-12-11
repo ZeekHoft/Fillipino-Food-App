@@ -30,6 +30,7 @@ class _SocialPageState extends State<SocialPage> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
         await socialData.fetchUserPost(currentUser.uid);
+        await socialData.countUserPost(currentUser.uid);
       }
     }
 
@@ -53,7 +54,10 @@ class _SocialPageState extends State<SocialPage> {
               itemCount: socialData.posts.length,
               itemBuilder: (context, index) {
                 final post = socialData.posts[index];
-                return PostWidget(post: post);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: PostWidget(post: post),
+                );
               },
             ),
           );
@@ -63,17 +67,18 @@ class _SocialPageState extends State<SocialPage> {
           child: FloatingActionButton(
             tooltip: "Create Post",
             heroTag: "navigate_to_posting",
-            onPressed: () async { // Add async here
-              final result = await Navigator.push( // Add await here
+            onPressed: () async {
+              // Add async here
+              final result = await Navigator.push(
+                  // Add await here
                   context,
-                  MaterialPageRoute(builder: (context) => const SocialPost())
-              );
+                  MaterialPageRoute(builder: (context) => const SocialPost()));
               // If post was successful, refresh the page
               if (result == true) {
                 _refreshPge(context);
               }
             },
-            child: const Icon(Icons.add_a_photo),
+            child: const Icon(Icons.post_add_outlined),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

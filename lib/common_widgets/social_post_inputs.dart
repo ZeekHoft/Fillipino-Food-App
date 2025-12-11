@@ -1,60 +1,58 @@
 import 'package:flutter/material.dart';
 
 class SocialPostInputs extends StatelessWidget {
-  final dynamic controller;
-  final dynamic keyboardType;
-  final dynamic maxLines;
+  final int? maxLines;
   final String labelText;
   final String errorText;
-  final dynamic border;
+  final String? hintText;
+  final TextInputType keyboardType;
+  final TextEditingController controller;
 
   const SocialPostInputs(
       {super.key,
       required this.controller,
       required this.keyboardType,
-      required this.maxLines,
       required this.labelText,
       required this.errorText,
-      required this.border});
+      this.maxLines = 3,
+      this.hintText});
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          controller: controller,
-          keyboardType: keyboardType,
-          maxLines: maxLines,
-          decoration: InputDecoration(
-            labelText: labelText,
-            border: border,
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: Colors.black,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(15),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: Colors.red,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(15),
-            ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(
+            left: 8.0,
+            bottom: 4.0,
           ),
-          validator: (value) {
-            if (value == null || value.isEmpty) {
-              return errorText;
-            }
-            return null;
-          },
+          child: Text(labelText, style: Theme.of(context).textTheme.bodyLarge),
         ),
-      ),
+        Card(
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: TextFormField(
+            controller: controller,
+            keyboardType: keyboardType,
+            maxLines: maxLines,
+            decoration: InputDecoration(
+              hintText: hintText,
+              border: OutlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return errorText;
+              }
+              return null;
+            },
+          ),
+        ),
+      ],
     );
   }
 }
