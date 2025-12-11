@@ -125,23 +125,23 @@ class _UpdateFormState extends State<UpdateForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        EditUserDataForm(
+        EditUserDataFormText(
           controller: dietaryRestrictionsController,
           hint: 'Dietary Restrictions update',
         ),
-        EditUserDataForm(
+        EditUserDataFormText(
           controller: userNameController,
           hint: 'User name update',
         ),
-        EditUserDataForm(
+        EditUserDataFormNumbers(
           controller: caloriesLimitController,
           hint: 'Calorie limit update',
         ),
-        EditUserDataForm(
+        EditUserDataFormNumbers(
           controller: heightController,
           hint: 'Height update',
         ),
-        EditUserDataForm(
+        EditUserDataFormNumbers(
           controller: weightController,
           hint: 'Weight update',
         ),
