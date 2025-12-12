@@ -191,9 +191,7 @@ class DappliProgressIndicator extends StatelessWidget {
         SizedBox(
           height: 85,
           width: 85,
-          child: const CircularProgressIndicator(
-              // strokeWidth: 2,
-              ),
+          child: const CircularProgressIndicator(),
         ),
       ],
     );
