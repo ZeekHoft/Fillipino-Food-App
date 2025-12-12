@@ -47,7 +47,7 @@ class _FavoritePageState extends State<FavoritePage> {
     final bool allFavoritesEmpty =
         favoriteRecipeIds.isEmpty && socialPostFavorites.isEmpty;
 
-    if (isLoadingRecipes || allFavoritesEmpty) {
+    if (isLoadingRecipes) {
       return const Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -59,6 +59,28 @@ class _FavoritePageState extends State<FavoritePage> {
           Text("Waiting for favorites")
         ],
       ));
+    } else if (allFavoritesEmpty) {
+      return Center(
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "No saved recipes or posts yet!",
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                "Bookmark recipes to see them here.",
+                style: Theme.of(context).textTheme.labelLarge,
+                textAlign: TextAlign.center,
+              )
+            ],
+          ),
+        ),
+      );
     } else {
       return Column(
         children: [
