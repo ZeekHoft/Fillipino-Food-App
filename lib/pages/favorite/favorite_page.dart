@@ -47,18 +47,19 @@ class _FavoritePageState extends State<FavoritePage> {
     final bool allFavoritesEmpty =
         favoriteRecipeIds.isEmpty && socialPostFavorites.isEmpty;
 
-    if (isLoadingRecipes) {
+    if (recipeProvider.isLoading || socialProvider.isLoading) {
       return const Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          DappliProgressIndicator(),
-          SizedBox(
-            height: 20,
-          ),
-          Text("Waiting for favorites")
-        ],
-      ));
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            DappliProgressIndicator(),
+            SizedBox(
+              height: 20,
+            ),
+            Text("Waiting for favorites")
+          ],
+        ),
+      );
     } else if (allFavoritesEmpty) {
       return Center(
         child: Padding(
