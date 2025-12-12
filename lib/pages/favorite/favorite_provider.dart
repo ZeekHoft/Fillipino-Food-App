@@ -10,6 +10,7 @@ class FavoriteProvider extends ChangeNotifier {
   final List<String> _recipeIngredients = [];
   final List<String> _recipeProcess = [];
   final List<String> _favoriteRecipeIds = [];
+  bool _isLoading = false;
 
   List<String> get recipeName => _recipeName;
   List<String> get recipeImage => _recipeImage;
@@ -17,6 +18,7 @@ class FavoriteProvider extends ChangeNotifier {
   List<String> get recipeIngredients => _recipeIngredients;
   List<String> get recipeProcess => _recipeProcess;
   List<String> get favoriteRecipeIds => _favoriteRecipeIds;
+  bool get isLoading => _isLoading;
 
   // Key for SharedPreferences
   // static const String _favoritesKey = "favoriteRecipeIds";
@@ -84,6 +86,8 @@ class FavoriteProvider extends ChangeNotifier {
   void loadFavorites() async {
     // Clear previous data, as we will re-fetch it based on IDs
 
+    _isLoading = true;
+
     _favoriteRecipeIds.clear();
     _recipeName.clear();
     _recipeImage.clear();
@@ -137,6 +141,8 @@ class FavoriteProvider extends ChangeNotifier {
               if (kDebugMode) {
                 print('Error fetching document $docId: $e');
               }
+            } finally {
+              _isLoading = false;
             }
           }
         }
