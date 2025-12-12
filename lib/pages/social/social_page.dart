@@ -30,7 +30,6 @@ class _SocialPageState extends State<SocialPage> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
         await socialData.fetchUserPost(currentUser.uid);
-        await socialData.countUserPost(currentUser.uid);
       }
     }
 

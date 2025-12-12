@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/edit_user_data_form.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
@@ -84,27 +85,50 @@ class UpdateForm extends StatefulWidget {
   State<UpdateForm> createState() => _UpdateFormState();
 }
 
+Future<void> _refreshPge(BuildContext context) async {
+  final userData = Provider.of<ProfileDataStoring>(context, listen: false);
+  final currentUser = FirebaseAuth.instance.currentUser;
+  if (currentUser != null) {
+    await userData.fetchUserData();
+  }
+}
+
 class _UpdateFormState extends State<UpdateForm> {
   final dietaryRestrictionsController = TextEditingController();
   final userNameController = TextEditingController();
   final caloriesLimitController = TextEditingController();
   final heightController = TextEditingController();
   final weightController = TextEditingController();
-  void updateUserData() {
+  bool _isLoading = false;
+
+  void updateUserData() async {
+    setState(() {
+      _isLoading = true;
+    });
     var collection = FirebaseFirestore.instance.collection('users_data');
     List<String> updatedRestrictions = dietaryRestrictionsController
         .text // didn't porcess it as a list but a text/string
         .split(',')
         .map((e) => e.trim())
         .toList();
-    collection.doc(widget.userId).update({
+
+    await collection.doc(widget.userId).update({
       'dietaryRestrictions': updatedRestrictions,
       'caloricLimit': int.parse(caloriesLimitController.text),
       'username': userNameController.text, // String
       'height': int.parse(heightController.text),
       'weight': int.parse(weightController.text),
     });
-    Navigator.pop(context);
+    DappliProgressIndicator();
+
+    await _refreshPge(context);
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -125,34 +149,46 @@ class _UpdateFormState extends State<UpdateForm> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        EditUserDataFormText(
-          controller: dietaryRestrictionsController,
-          hint: 'Dietary Restrictions update',
-        ),
-        EditUserDataFormText(
-          controller: userNameController,
-          hint: 'User name update',
-        ),
-        EditUserDataFormNumbers(
-          controller: caloriesLimitController,
-          hint: 'Calorie limit update',
-        ),
-        EditUserDataFormNumbers(
-          controller: heightController,
-          hint: 'Height update',
-        ),
-        EditUserDataFormNumbers(
-          controller: weightController,
-          hint: 'Weight update',
-        ),
-        SizedBox(
-          height: 40,
-        ),
-        ElevatedButton(
-            onPressed: () {
-              updateUserData();
-            },
-            child: const Text("Update data"))
+        AbsorbPointer(
+          absorbing: _isLoading,
+          child: Center(
+            child: Column(
+              children: [
+                EditUserDataFormText(
+                  controller: dietaryRestrictionsController,
+                  hint: 'Dietary Restrictions update',
+                ),
+                EditUserDataFormText(
+                  controller: userNameController,
+                  hint: 'User name update',
+                ),
+                EditUserDataFormNumbers(
+                  controller: caloriesLimitController,
+                  hint: 'Calorie limit update',
+                ),
+                EditUserDataFormNumbers(
+                  controller: heightController,
+                  hint: 'Height update',
+                ),
+                EditUserDataFormNumbers(
+                  controller: weightController,
+                  hint: 'Weight update',
+                ),
+                SizedBox(
+                  height: 40,
+                ),
+                Center(
+                    child: _isLoading
+                        ? const DappliProgressIndicator()
+                        : ElevatedButton(
+                            onPressed: () {
+                              updateUserData();
+                            },
+                            child: const Text("Update data")))
+              ],
+            ),
+          ),
+        )
       ],
     );
   }
