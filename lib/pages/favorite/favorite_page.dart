@@ -25,23 +25,23 @@ class _FavoritePageState extends State<FavoritePage> {
 
   @override
   Widget build(BuildContext context) {
-    final recipProvider = Provider.of<FavoriteProvider>(context);
+    final recipeProvider = Provider.of<FavoriteProvider>(context);
     final socialProvider = Provider.of<FavoriteSocialProvider>(context);
 
     // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
-    final recipeNames = recipProvider.recipeName;
-    final favoriteRecipeIds = recipProvider.favoriteRecipeIds;
+    final recipeNames = recipeProvider.recipeName;
+    final favoriteRecipeIds = recipeProvider.favoriteRecipeIds;
 
-    final recipeImages = recipProvider.recipeImage;
-    final recipeCalories = recipProvider.recipeCalories;
-    final recipeIngredients = recipProvider.recipeIngredients;
-    final recipeProcesses = recipProvider.recipeProcess;
+    final recipeImages = recipeProvider.recipeImage;
+    final recipeCalories = recipeProvider.recipeCalories;
+    final recipeIngredients = recipeProvider.recipeIngredients;
+    final recipeProcesses = recipeProvider.recipeProcess;
     // Get the list of IDs
 
     final socialPostFavorites = socialProvider.favoritePost;
 
     // This part of the code avoids having to encounter index errors by
-    // asynchronus checking recipe and social favorites
+    // asynchronous checking recipe and social favorites
     final bool isLoadingRecipes = favoriteRecipeIds.isNotEmpty &&
         (recipeNames.length != favoriteRecipeIds.length);
     final bool allFavoritesEmpty =
@@ -106,46 +106,17 @@ class _FavoritePageState extends State<FavoritePage> {
           const Divider(height: 1),
           Text("Saved Social Posts",
               style: Theme.of(context).textTheme.titleLarge),
-          // FavoriteSocialItem()
           Expanded(
-              child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: FavoriteSocialItem(
-                    screenState: true,
-                    post: {}, //passes an emtpy array of value, need fix later
-                  )))
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: FavoriteSocialItem(
+                screenState: true,
+                post: {}, //passes an empty array of value, need fix later
+              ),
+            ),
+          )
         ],
       );
-
-      // CustomScrollView(
-      //   slivers: [
-      //     SliverList.list(children: [
-      //       const SizedBox(height: 24),
-      //       Padding(
-      //         padding: const EdgeInsets.symmetric(horizontal: 16),
-      //         child: Text("Saved Recipes",
-      //             style: Theme.of(context).textTheme.titleLarge),
-      //       ),
-      //       const SizedBox(height: 24)
-      //     ]),
-      //     SliverList.separated(
-      //       separatorBuilder: (context, index) => const Divider(),
-      //       itemCount: favoriteRecipeIds
-      //           .length, // Use recipeNames.length as they are aligned
-      //       itemBuilder: (context, index) {
-      //         return FavoriteItem(
-      //           favName: recipeNames[index],
-      //           favIngredient: recipeIngredients[index],
-      //           favProcess: recipeProcesses[index],
-      //           favImage: recipeImages[index],
-      //           favCalories: recipeCalories[index],
-      //           documentId: favoriteRecipeIds[index],
-      //           // Pass the document ID to FavoriteItem
-      //         );
-      //       },
-      //     )
-      //   ],
-      // );
     }
   }
 }
