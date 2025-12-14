@@ -1,6 +1,5 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
-import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +12,10 @@ class FavoritePage extends StatefulWidget {
   State<FavoritePage> createState() => _FavoritePageState();
 }
 
-class _FavoritePageState extends State<FavoritePage> {
+class _FavoritePageState extends State<FavoritePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
     super.initState();
@@ -21,6 +23,13 @@ class _FavoritePageState extends State<FavoritePage> {
     Provider.of<FavoriteProvider>(context, listen: false).loadFavorites();
     Provider.of<FavoriteSocialProvider>(context, listen: false)
         .loadSocialFavorites();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -29,21 +38,11 @@ class _FavoritePageState extends State<FavoritePage> {
     final socialProvider = Provider.of<FavoriteSocialProvider>(context);
 
     // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
-    final recipeNames = recipeProvider.recipeName;
     final favoriteRecipeIds = recipeProvider.favoriteRecipeIds;
-
-    final recipeImages = recipeProvider.recipeImage;
-    final recipeCalories = recipeProvider.recipeCalories;
-    final recipeIngredients = recipeProvider.recipeIngredients;
-    final recipeProcesses = recipeProvider.recipeProcess;
-    // Get the list of IDs
-
     final socialPostFavorites = socialProvider.favoritePost;
 
     // This part of the code avoids having to encounter index errors by
     // asynchronous checking recipe and social favorites
-    final bool isLoadingRecipes = favoriteRecipeIds.isNotEmpty &&
-        (recipeNames.length != favoriteRecipeIds.length);
     final bool allFavoritesEmpty =
         favoriteRecipeIds.isEmpty && socialPostFavorites.isEmpty;
 
@@ -85,39 +84,92 @@ class _FavoritePageState extends State<FavoritePage> {
     } else {
       return Column(
         children: [
-          Text("Saved Recipes", style: Theme.of(context).textTheme.titleLarge),
+          TabBar(
+            controller: _tabController,
+            // indicatorSize: TabBarIndicatorSize.tab,
+            tabs: [
+              Tab(text: "Recipes"),
+              Tab(text: "Posts"),
+            ],
+          ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: ListView.builder(
-                  itemCount: favoriteRecipeIds.length,
-                  itemBuilder: (context, index) {
-                    return FavoriteItem(
-                      favName: recipeNames[index],
-                      favIngredient: recipeIngredients[index],
-                      favProcess: recipeProcesses[index],
-                      favImage: recipeImages[index],
-                      favCalories: recipeCalories[index],
-                      documentId: favoriteRecipeIds[index],
-                      // Pass the document ID to FavoriteItem
-                    );
-                  }),
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                FavoriteRecipesList(recipeProvider: recipeProvider),
+                FavoritePostsList(socialProvider: socialProvider),
+              ],
             ),
           ),
-          const Divider(height: 1),
-          Text("Saved Social Posts",
-              style: Theme.of(context).textTheme.titleLarge),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: FavoriteSocialItem(
-                screenState: true,
-                post: {}, //passes an empty array of value, need fix later
-              ),
-            ),
-          )
         ],
       );
     }
+  }
+}
+
+class FavoriteRecipesList extends StatelessWidget {
+  const FavoriteRecipesList({super.key, required this.recipeProvider});
+
+  final FavoriteProvider recipeProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    final recipeNames = recipeProvider.recipeName;
+    final recipeImages = recipeProvider.recipeImage;
+    final recipeCalories = recipeProvider.recipeCalories;
+    final recipeProcesses = recipeProvider.recipeProcess;
+    final favoriteRecipeIds = recipeProvider.favoriteRecipeIds;
+    final recipeIngredients = recipeProvider.recipeIngredients;
+
+    return ListView.builder(
+      itemCount: recipeProvider.favoriteRecipeIds.length,
+      itemBuilder: (context, index) {
+        return FavoriteItem(
+          favName: recipeNames[index],
+          favIngredient: recipeIngredients[index],
+          favProcess: recipeProcesses[index],
+          favImage: recipeImages[index],
+          favCalories: recipeCalories[index],
+          documentId: favoriteRecipeIds[index],
+        );
+      },
+    );
+  }
+}
+
+class FavoritePostsList extends StatelessWidget {
+  const FavoritePostsList({
+    super.key,
+    required this.socialProvider,
+  });
+
+  final FavoriteSocialProvider socialProvider;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: socialProvider.favoritePost.length,
+      itemBuilder: (context, index) {
+        final bookmarkItem = socialProvider.favoritePost[index];
+        return ListTile(
+          title: Text(
+            bookmarkItem.description,
+          ),
+          subtitle: Opacity(
+            opacity: 0.6,
+            child: Text(
+              bookmarkItem.processSteps,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
+        );
+        // OLD WAY
+        // FavoriteSocialItem(
+        //   screenState: true,
+        //   post: {}, //passes an empty array of value, need fix later
+        // ),
+      },
+    );
   }
 }
