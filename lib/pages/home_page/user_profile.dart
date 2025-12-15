@@ -27,7 +27,7 @@ class _UserProfileState extends State<UserProfile> {
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       final count = await socialData.countUserPost(currentUser.uid);
-      print(count);
+      // print(count);
       if (mounted) {
         setState(() {
           numberOfPosts = count;

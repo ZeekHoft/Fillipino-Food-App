@@ -126,7 +126,7 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
               ),
               IconButton(
                 onPressed: () {
-                  provider.toggleFavorite(
+                  provider.toggleRecipeFavorite(
                     widget.documentId, // Pass the document ID
                     widget.recipeName,
                     widget.recipeImage,
@@ -135,7 +135,7 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                     widget.recipeProcess,
                   );
                 },
-                icon: provider.isExist(
+                icon: provider.isRecipeExist(
                         widget.documentId) // Check existence with document ID
                     ? const Icon(
                         Icons.bookmark,
