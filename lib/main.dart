@@ -12,20 +12,24 @@ import 'package:provider/provider.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  // IMPORTANT: Initialize Flutter binding FIRST
   WidgetsFlutterBinding.ensureInitialized();
-  dotenv.load(fileName: "./dotenv");
+
+  // Load environment variables
+  await dotenv.load(fileName: "assets/dotenv");
+
+  // Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  var userId;
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => FavoriteProvider()),
 
         //ChangeNotifierProvider just gives access to FavoriteProvider in the tree
-        //it’s the bridge that makes your FavoriteProvider accessible and reactive throughout the app.
+        //it's the bridge that makes your FavoriteProvider accessible and reactive throughout the app.
         ChangeNotifierProvider(create: (_) => FavoriteSocialProvider()),
 
         ChangeNotifierProvider(
