@@ -36,13 +36,13 @@ class IngredientDetectionService {
 
       _isInitialized = true;
 
-      print('✅ IngredientDetectionService initialized successfully.');
-      print('📋 Loaded ${_labels.length} labels.');
-      print('📊 Model input shape: ${_interpreter!.getInputTensor(0).shape}');
-      print('📊 Model output shape: ${_interpreter!.getOutputTensor(0).shape}');
-      print('🔧 Input tensor type: ${_interpreter!.getInputTensor(0).type}');
+      print('IngredientDetectionService initialized successfully.');
+      print('Loaded ${_labels.length} labels.');
+      print('Model input shape: ${_interpreter!.getInputTensor(0).shape}');
+      print('Model output shape: ${_interpreter!.getOutputTensor(0).shape}');
+      print('Input tensor type: ${_interpreter!.getInputTensor(0).type}');
     } catch (e, stack) {
-      print('❌ Initialization failed: $e');
+      print('Initialization failed: $e');
       print(stack);
     }
   }
@@ -59,19 +59,19 @@ class IngredientDetectionService {
       try {
         image = img.decodeImage(bytes);
       } catch (e) {
-        print('⚠️ Failed to decode with default decoder, trying JPEG decoder: $e');
+        print('Failed to decode with default decoder, trying JPEG decoder: $e');
         image = img.decodeJpg(bytes);
       }
 
       if (image == null) {
-        print('❌ Failed to decode image from path: $imagePath');
+        print('Failed to decode image from path: $imagePath');
         return [];
       }
 
-      print('📸 Image decoded: ${image.width}x${image.height}');
+      print('Image decoded: ${image.width}x${image.height}');
       return await _detectFromImage(image);
     } catch (e, stack) {
-      print('❌ Detection from path error: $e');
+      print('Detection from path error: $e');
       print(stack);
       return [];
     }
@@ -86,7 +86,7 @@ class IngredientDetectionService {
       final rgbImage = _convertYUV420toImage(cameraImage);
       return await _detectFromImage(rgbImage);
     } catch (e, stack) {
-      print('❌ Detection from camera error: $e');
+      print('Detection from camera error: $e');
       print(stack);
       return [];
     }
@@ -131,14 +131,14 @@ class IngredientDetectionService {
       // Parse detections
       final parsed = _parseDetections(output[0], scaleX, scaleY);
 
-      print('📦 Got ${parsed.length} detections');
+      print('Got ${parsed.length} detections');
       if (parsed.isNotEmpty) {
-        print('👀 Sample detections: ${parsed.take(3).toList()}');
+        print('Sample detections: ${parsed.take(3).toList()}');
       }
 
       return parsed;
     } catch (e, stack) {
-      print('❌ Detection error: $e');
+      print('Detection error: $e');
       print(stack);
       return [];
     }
@@ -156,7 +156,7 @@ class IngredientDetectionService {
     final int numPredictions = rawOutput[0].length;
     final int numClasses = rawOutput.length - 4;
 
-    print('🔍 DEBUG: Processing $numPredictions predictions with $numClasses classes');
+    print('DEBUG: Processing $numPredictions predictions with $numClasses classes');
 
     for (int i = 0; i < numPredictions; i++) {
       final double xCenter = rawOutput[0][i].toDouble();
@@ -194,7 +194,7 @@ class IngredientDetectionService {
       );
     }
 
-    print('🎯 Found ${detections.length} detections above ${(confThreshold * 100).toStringAsFixed(0)}% confidence');
+    print('Found ${detections.length} detections above ${(confThreshold * 100).toStringAsFixed(0)}% confidence');
 
     return _applyNMS(detections, 0.55);
   }
@@ -229,7 +229,7 @@ class IngredientDetectionService {
       }
     }
 
-    print('📊 NMS: ${detections.length} → ${keep.length} detections');
+    print('NMS: ${detections.length} → ${keep.length} detections');
     return keep;
   }
 

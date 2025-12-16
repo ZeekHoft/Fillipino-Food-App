@@ -67,10 +67,10 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
       }
 
       setState(() => _isCameraReady = true);
-      print('✅ Camera initialized successfully');
-      print('📸 Preview size: ${_cameraController!.value.previewSize}');
+
+      print('Preview size: ${_cameraController!.value.previewSize}');
     } catch (e, stackTrace) {
-      print('❌ Camera initialization error: $e');
+      print('Camera initialization error: $e');
       print(stackTrace);
       if (mounted) {
         _showError('Failed to initialize camera: ${e.toString()}');
@@ -115,14 +115,14 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
 
     try {
       final XFile imageFile = await _cameraController!.takePicture();
-      print('📸 Image captured: ${imageFile.path}');
+      print('Image captured: ${imageFile.path}');
 
       final imageBytes = await File(imageFile.path).readAsBytes();
       final decodedImage = await decodeImageFromList(imageBytes);
       final actualWidth = decodedImage.width.toDouble();
       final actualHeight = decodedImage.height.toDouble();
 
-      print('🖼️ Actual image size: ${actualWidth}x${actualHeight}');
+      print('Actual image size: ${actualWidth}x${actualHeight}');
 
       final rawResults = await _detectionService.detectFromImagePath(imageFile.path);
 
@@ -138,7 +138,7 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
         return;
       }
 
-      print('📦 Got ${rawResults.length} raw detections');
+      print('Got ${rawResults.length} raw detections');
 
       final scaleX = actualWidth / 640.0;
       final scaleY = actualHeight / 640.0;
@@ -177,9 +177,9 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
         _isProcessing = false;
       });
 
-      print('✅ Detection complete: ${results.length} ingredients found');
+      print('Detection complete: ${results.length} ingredients found');
     } catch (e, stackTrace) {
-      print('⚠️ Detection error: $e');
+      print('Detection error: $e');
       print(stackTrace);
       if (mounted && !_isDisposed) {
         setState(() => _isProcessing = false);
@@ -195,7 +195,7 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
       _capturedImageSize = null;
       if (_lastCapturedImagePath != null) {
         File(_lastCapturedImagePath!).delete().catchError((e) {
-          print('⚠️ Could not delete temp file: $e');
+          print('Could not delete temp file: $e');
         });
         _lastCapturedImagePath = null;
       }
@@ -321,7 +321,7 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
 
     if (_lastCapturedImagePath != null) {
       File(_lastCapturedImagePath!).delete().catchError((e) {
-        print('⚠️ Could not delete temp file: $e');
+        print('Could not delete temp file: $e');
       });
     }
 
