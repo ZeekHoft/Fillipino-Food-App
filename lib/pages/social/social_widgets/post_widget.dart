@@ -1,5 +1,6 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +41,7 @@ class _PostWidgetState extends State<PostWidget> {
     final currentUserId = profileDataStoring.userId;
     final postUserId = widget.post["userId"];
     final isPostOwner = currentUserId != null && currentUserId == postUserId;
+
     // print(widget.post);
     return GestureDetector(
       onTap: () {
@@ -279,6 +281,8 @@ class SaveButton extends StatefulWidget {
 }
 
 class _SaveButtonState extends State<SaveButton> {
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final postId = widget.post['postID'];
@@ -289,25 +293,36 @@ class _SaveButtonState extends State<SaveButton> {
     final description = widget.post["postDescription"] ?? "";
     final username = widget.post["postUsername"] ?? "N/A username";
 
-    return IconButton(
-      onPressed: () {
-        setState(() {
-          widget.provider.toggleSocialFavorite(
-            postId.toString(),
-            ingredients.join(', '),
-            processSteps.join(', '),
-            description,
-            int.tryParse(calories) ?? 0,
-            username,
-          );
-        });
-      },
-      icon:
-          widget.provider.isSocialExist(widget.post["postID"]?.toString() ?? '')
-              ? Icon(Icons.bookmark, color: Colors.amber.shade600)
-              : const Icon(
-                  Icons.bookmark_add_outlined,
-                ),
+    return Padding(
+      padding: const EdgeInsets.all(0.0),
+      child: _isLoading
+          ? const FavoriteProgressIndicator()
+          : IconButton(
+              onPressed: () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                await widget.provider.toggleSocialFavorite(
+                  postId.toString(),
+                  ingredients.join(', '),
+                  processSteps.join(', '),
+                  description,
+                  int.tryParse(calories) ?? 0,
+                  username,
+                );
+                if (mounted) {
+                  setState(() {
+                    _isLoading = false;
+                  });
+                }
+              },
+              icon: widget.provider
+                      .isSocialExist(widget.post["postID"]?.toString() ?? '')
+                  ? Icon(Icons.bookmark, color: Colors.amber.shade600)
+                  : const Icon(
+                      Icons.bookmark_add_outlined,
+                    ),
+            ),
     );
   }
 }

@@ -119,7 +119,6 @@ class _UpdateFormState extends State<UpdateForm> {
       'height': int.parse(heightController.text),
       'weight': int.parse(weightController.text),
     });
-    DappliProgressIndicator();
 
     await _refreshPge(context);
 
