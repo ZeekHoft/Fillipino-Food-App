@@ -2,6 +2,7 @@ import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
 import 'package:flilipino_food_app/pages/social/social_widgets/like_button.dart';
 import 'package:flilipino_food_app/pages/social/social_widgets/save_post_button.dart';
+import 'package:flilipino_food_app/pages/social/social_widgets/social_vew_post.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +48,8 @@ class _PostWidgetState extends State<PostWidget> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                FavoriteSocialItem(screenState: false, post: widget.post)));
+          builder: (context) => SocialVewPost(post: widget.post),
+        ));
       },
       child: Card(
         child: Padding(
