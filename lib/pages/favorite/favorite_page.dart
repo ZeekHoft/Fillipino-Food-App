@@ -1,6 +1,8 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
+import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
+import 'package:flilipino_food_app/pages/social/social_widgets/social_vew_post.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -151,24 +153,10 @@ class FavoritePostsList extends StatelessWidget {
       itemCount: socialProvider.favoritePost.length,
       itemBuilder: (context, index) {
         final bookmarkItem = socialProvider.favoritePost[index];
-        return ListTile(
-          title: Text(
-            bookmarkItem.description,
-          ),
-          subtitle: Opacity(
-            opacity: 0.6,
-            child: Text(
-              bookmarkItem.processSteps,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ),
+        return FavoriteSocialItem(
+          socialPost: bookmarkItem,
+          socialProvider: socialProvider,
         );
-        // OLD WAY
-        // FavoriteSocialItem(
-        //   screenState: true,
-        //   post: {}, //passes an empty array of value, need fix later
-        // ),
       },
     );
   }
