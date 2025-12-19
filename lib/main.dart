@@ -13,7 +13,8 @@ import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  dotenv.load(fileName: "./dotenv");
+  await dotenv.load(fileName: "assets/dotenv");
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );

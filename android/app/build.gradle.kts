@@ -27,17 +27,35 @@ android {
         applicationId = "com.example.flilipino_food_app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
-
+    signingConfigs {
+            create("release") {
+                // If you don't have a keystore yet, you can use the debug one 
+                // temporarily just to get the app to build.
+                val debugKey = signingConfigs.getByName("debug")
+                storeFile = debugKey.storeFile
+                storePassword = debugKey.storePassword
+                keyAlias = debugKey.keyAlias
+                keyPassword = debugKey.keyPassword
+            }
+        }
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            // Use 'isMinifyEnabled' instead of 'minifyEnabled'
+            // Use '=' for assignment in Kotlin
+            isMinifyEnabled = true
+            
+            // Use parentheses for proguardFiles and double quotes for strings
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+            
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

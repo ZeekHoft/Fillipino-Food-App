@@ -175,8 +175,8 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
         _detections = results;
         _lastCapturedImagePath = imageFile.path;
         _capturedImageSize = Size(actualWidth, actualHeight);
-        _showingResults = true;
         _isProcessing = false;
+        _showingResults = true;
       });
 
       print('Detection complete: ${results.length} ingredients found');

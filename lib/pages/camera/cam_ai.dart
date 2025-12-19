@@ -51,7 +51,7 @@ class _RecipeGeneratorScreenState extends State<RecipeGeneratorScreen> {
   // API key for ChatGPT - IMPORTANT: Replace with your actual API key.
   // For production, use environment variables or a secure configuration.
   final String _chatGptApiKey =
-      dotenv.env["API_KEY_CHAT_GPT"]!; // Your ChatGPT API Key (e.g., sk-...)
+      dotenv.env["OPENAI_API_KEY"]!; // Your ChatGPT API Key (e.g., sk-...)
 
   // Function to pick an image from the camera
   Future<void> _pickImage() async {

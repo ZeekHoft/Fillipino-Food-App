@@ -1,5 +1,6 @@
 import 'package:camera/camera.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flilipino_food_app/pages/camera/ingredient_scanner_screen.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_page.dart';
 import 'package:flilipino_food_app/pages/settings/settings_page.dart';
@@ -53,7 +54,7 @@ class _HomeLayoutState extends State<HomeLayout> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => RecipeGeneratorAI(cameras: cameras),
+            builder: (context) => IngredientScannerScreen(),
           ),
         );
       }
