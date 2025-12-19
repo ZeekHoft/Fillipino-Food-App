@@ -1,4 +1,6 @@
+//cam_ai.dart
 import 'dart:convert';
+import 'package:camera_platform_interface/src/types/camera_description.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:image_picker/image_picker.dart';
@@ -29,13 +31,21 @@ import 'package:http/http.dart' as http;
 
 // RecipeGeneratorScreen is the main screen of the application
 class RecipeGeneratorScreen extends StatefulWidget {
-  const RecipeGeneratorScreen({super.key});
+  const RecipeGeneratorScreen({super.key, required List<CameraDescription> cameras});
 
   @override
   State<RecipeGeneratorScreen> createState() => _RecipeGeneratorScreenState();
 }
 
 class _RecipeGeneratorScreenState extends State<RecipeGeneratorScreen> {
+  late final String _chatGptApiKey;
+  @override
+  void initState() {
+    super.initState();
+    _chatGptApiKey = dotenv.env["API_KEY_CHAT_GPT"]!; // Your ChatGPT API Key (e.g., sk-...)
+    print('API Key loaded: ${_chatGptApiKey.substring(0, 10)}...'); // Print first 10 chars only
+    print('API Key length: ${_chatGptApiKey.length}');
+  }
   // State variables to hold recipe data and UI state
   String? _recipeName;
   List<String>? _ingredientsList;
@@ -48,10 +58,6 @@ class _RecipeGeneratorScreenState extends State<RecipeGeneratorScreen> {
   // Initialize ImagePicker instance
   final ImagePicker _picker = ImagePicker();
 
-  // API key for ChatGPT - IMPORTANT: Replace with your actual API key.
-  // For production, use environment variables or a secure configuration.
-  final String _chatGptApiKey =
-      dotenv.env["API_KEY_CHAT_GPT"]!; // Your ChatGPT API Key (e.g., sk-...)
 
   // Function to pick an image from the camera
   Future<void> _pickImage() async {
@@ -170,7 +176,7 @@ class _RecipeGeneratorScreenState extends State<RecipeGeneratorScreen> {
             {
               "role": "system",
               "content":
-                  "You are a helpful assistant that generates recipes. Your output must be a JSON object."
+                  "You are a helpful assistant that generates filipino recipes. Your output must be a JSON object."
             },
             {
               "role": "user",
@@ -216,7 +222,7 @@ class _RecipeGeneratorScreenState extends State<RecipeGeneratorScreen> {
               Navigator.pop(context);
             },
             icon: const Icon(Icons.exit_to_app)),
-        title: const Text('AI Recipe Generator'),
+        title: const Text('Filipino Recipe Generator'),
         centerTitle: true,
         backgroundColor: Colors.blueAccent,
       ),
