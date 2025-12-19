@@ -55,7 +55,7 @@ class SocialVewPost extends StatelessWidget {
                         opacity: 0.8,
                         child: Text(postDateTime != null
                             ? DateFormat("MM/dd/yyyy").format(postDateTime)
-                            : ""),
+                            : "no date"),
                       ),
                     ],
                   ),

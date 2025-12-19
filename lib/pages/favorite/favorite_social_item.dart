@@ -29,6 +29,7 @@ class FavoriteSocialItem extends StatelessWidget {
           "postDescription": socialPost.description,
           "calories": socialPost.calories,
           "postUsername": socialPost.username,
+          "dateTimePost": socialPost.timestamp.toDate(),
         };
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -82,6 +83,7 @@ class FavoriteSocialItem extends StatelessWidget {
               socialPost.description,
               socialPost.calories,
               socialPost.username,
+              socialPost.timestamp,
             );
             // Optional: Show a small confirmation snackbar
             ScaffoldMessenger.of(context).showSnackBar(

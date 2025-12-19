@@ -21,6 +21,7 @@ class _SaveButtonState extends State<SaveButton> {
     final calories = widget.post["calories"].toString();
     final description = widget.post["postDescription"] ?? "";
     final username = widget.post["postUsername"] ?? "N/A username";
+    final timestamp = widget.post["dateTimePost"];
 
     return IconButton(
       onPressed: () {
@@ -32,6 +33,7 @@ class _SaveButtonState extends State<SaveButton> {
             description,
             int.tryParse(calories) ?? 0,
             username,
+            timestamp,
           );
         });
       },
