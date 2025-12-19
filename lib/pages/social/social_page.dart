@@ -30,7 +30,6 @@ class _SocialPageState extends State<SocialPage> {
       final currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
         await socialData.fetchUserPost(currentUser.uid);
-        await socialData.countUserPost(currentUser.uid);
       }
     }
 
@@ -54,7 +53,10 @@ class _SocialPageState extends State<SocialPage> {
               itemCount: socialData.posts.length,
               itemBuilder: (context, index) {
                 final post = socialData.posts[index];
-                return PostWidget(post: post);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: PostWidget(post: post),
+                );
               },
             ),
           );
@@ -75,7 +77,7 @@ class _SocialPageState extends State<SocialPage> {
                 _refreshPge(context);
               }
             },
-            child: const Icon(Icons.add_a_photo),
+            child: const Icon(Icons.post_add_outlined),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

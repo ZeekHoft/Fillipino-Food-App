@@ -33,6 +33,7 @@ class _FavoriteSocialItemState extends State<FavoriteSocialItem> {
   Widget build(BuildContext context) {
     final favoriteProvider = Provider.of<FavoriteSocialProvider>(context);
     final favoriteSocialPost = favoriteProvider.favoritePost;
+    final theme = Theme.of(context);
 
     // if (favoriteSocialPost.isEmpty) {
     //   return const Center(
@@ -78,68 +79,125 @@ class _FavoriteSocialItemState extends State<FavoriteSocialItem> {
                     builder: (context) => FavoriteSocialItem(
                         screenState: false, post: postDataMap)));
               },
-              child: Card(
-                child: Column(
+              child: ListTile(
+                // leading: Container(
+                //     decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
+                //     width: 52,
+                //     height: 52,
+                //     clipBehavior: Clip.antiAlias,
+                //     child: Image.network(
+                //       favImage,
+                //       fit: BoxFit.cover,
+                //     )),
+                title: Row(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       postContent.description.isEmpty
                           ? 'No Description'
                           : postContent.description,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    Center(
-                      child: Column(
-                        children: [
-                          Text(
-                            ' ${postContent.username}',
-                            style: const TextStyle(color: Colors.brown),
-                          ),
-                          Text(
-                            'Ingredients: ${postContent.ingredient}',
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
-                          Text(
-                            'Making Process: ${postContent.processSteps}',
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
-                          Text(
-                            'Calories: ${postContent.calories}',
-                            style: const TextStyle(color: Colors.redAccent),
-                          ),
-                        ],
-                      ),
+                    SizedBox(
+                      width: 4.0,
                     ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: IconButton(
-                        icon: const Icon(Icons.bookmark_remove,
-                            color: Colors.red),
-                        onPressed: () {
-                          // Use toggleSocialFavorite to remove the item
-                          favoriteProvider.toggleSocialFavorite(
-                            postContent.postId,
-                            postContent.ingredient,
-                            postContent.processSteps,
-                            postContent.description,
-                            postContent.calories,
-                            postContent.username,
-                          );
-                          // Optional: Show a small confirmation snackbar
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Removed from favorites!')),
-                          );
-                        },
+                    Expanded(
+                      child: Opacity(
+                        opacity: 0.4,
+                        child: Text(
+                          postContent.processSteps,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
-                    ),
+                    )
                   ],
                 ),
+                subtitle:
+                    Opacity(opacity: 0.8, child: Text(postContent.username)),
+                trailing: IconButton.filled(
+                  icon: Icon(Icons.bookmark_remove,
+                      color: theme.colorScheme.error),
+                  style: IconButton.styleFrom(
+                      backgroundColor: theme.colorScheme.errorContainer),
+                  onPressed: () {
+                    // Use toggleSocialFavorite to remove the item
+                    favoriteProvider.toggleSocialFavorite(
+                      postContent.postId,
+                      postContent.ingredient,
+                      postContent.processSteps,
+                      postContent.description,
+                      postContent.calories,
+                      postContent.username,
+                    );
+                    // Optional: Show a small confirmation snackbar
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Removed from favorites!')),
+                    );
+                  },
+                ),
               ),
+              /*
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    children: [
+                      // Post Title
+                      Text(
+                        postContent.description.isEmpty
+                            ? 'No Description'
+                            : postContent.description,
+                        style: theme.textTheme.titleLarge,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        ' ${postContent.username}',
+                        style: const TextStyle(color: Colors.brown),
+                      ),
+                      Text(
+                        'Ingredients: ${postContent.ingredient}',
+                        style: const TextStyle(color: Colors.redAccent),
+                      ),
+                      Text(
+                        'Making Process: ${postContent.processSteps}',
+                        style: const TextStyle(color: Colors.redAccent),
+                      ),
+                      Text(
+                        'Calories: ${postContent.calories}',
+                        style: const TextStyle(color: Colors.redAccent),
+                      ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          icon: const Icon(Icons.bookmark_remove,
+                              color: Colors.red),
+                          onPressed: () {
+                            // Use toggleSocialFavorite to remove the item
+                            favoriteProvider.toggleSocialFavorite(
+                              postContent.postId,
+                              postContent.ingredient,
+                              postContent.processSteps,
+                              postContent.description,
+                              postContent.calories,
+                              postContent.username,
+                            );
+                            // Optional: Show a small confirmation snackbar
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Removed from favorites!')),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              * */
             );
           });
     } else {

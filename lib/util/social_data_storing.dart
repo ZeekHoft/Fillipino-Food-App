@@ -72,7 +72,7 @@ class SocialDataStoring extends ChangeNotifier {
         print("Fetching Error in user posts: $e");
       }
     }
-    print("POSTSSSS: $numberOfDocuments");
+    // print("POSTSSSS: $numberOfDocuments");
     return numberOfDocuments;
   }
 
