@@ -37,6 +37,9 @@ void main() async {
 
         ChangeNotifierProvider(
             create: (context) => SocialDataStoring()..fetchUserPost('')),
+
+        ChangeNotifierProvider(
+            create: (context) => SocialDataStoring()..countUserPost('')),
       ],
       child: RecipeStreamBuilder(
         child: MaterialApp(

@@ -1,4 +1,5 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 
@@ -77,6 +78,8 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
     return detectedAllergens;
   }
 
+  bool _isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<FavoriteProvider>(context);
@@ -124,25 +127,38 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                   // softWrap: true,
                 ),
               ),
-              IconButton(
-                onPressed: () {
-                  provider.toggleFavorite(
-                    widget.documentId, // Pass the document ID
-                    widget.recipeName,
-                    widget.recipeImage,
-                    widget.recipeCalories,
-                    widget.recipeIngredients,
-                    widget.recipeProcess,
-                  );
-                },
-                icon: provider.isExist(
-                        widget.documentId) // Check existence with document ID
-                    ? const Icon(
-                        Icons.bookmark,
-                        color: AppColors.yellowTheme,
-                      )
-                    : const Icon(
-                        Icons.bookmark_add_outlined,
+              Padding(
+                padding: const EdgeInsets.all(0.0),
+                child: _isLoading
+                    ? const FavoriteProgressIndicator()
+                    : IconButton(
+                        onPressed: () async {
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          await provider.toggleRecipeFavorite(
+                            widget.documentId, // Pass the document ID
+                            widget.recipeName,
+                            widget.recipeImage,
+                            widget.recipeCalories,
+                            widget.recipeIngredients,
+                            widget.recipeProcess,
+                          );
+                          if (mounted) {
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          }
+                        },
+                        icon: provider.isRecipeExist(widget
+                                .documentId) // Check existence with document ID
+                            ? const Icon(
+                                Icons.bookmark,
+                                color: AppColors.yellowTheme,
+                              )
+                            : const Icon(
+                                Icons.bookmark_add_outlined,
+                              ),
                       ),
               ),
             ],

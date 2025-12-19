@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
+import 'package:flilipino_food_app/pages/home_page/user_profile.dart';
+import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/foundation.dart';
 
 class SocialDataStoring extends ChangeNotifier {
@@ -48,10 +50,30 @@ class SocialDataStoring extends ChangeNotifier {
         FirebaseAuth.instance.authStateChanges().listen((user) {
       if (user != null) {
         fetchUserPost(user.uid);
+        countUserPost(user.uid);
       } else {
         clearPostData();
       }
     });
+  }
+
+  Future<int?> countUserPost(String uid) async {
+    int? numberOfDocuments;
+    try {
+      AggregateQuerySnapshot query = await FirebaseFirestore.instance
+          .collection('social_data')
+          .where("userId", isEqualTo: uid)
+          .count()
+          .get();
+
+      numberOfDocuments = query.count;
+    } catch (e) {
+      if (kDebugMode) {
+        print("Fetching Error in user posts: $e");
+      }
+    }
+    // print("POSTSSSS: $numberOfDocuments");
+    return numberOfDocuments;
   }
 
   Future<void> fetchUserPost(String uid) async {

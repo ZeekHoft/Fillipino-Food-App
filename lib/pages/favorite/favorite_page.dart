@@ -18,7 +18,7 @@ class _FavoritePageState extends State<FavoritePage> {
   void initState() {
     super.initState();
     // This will trigger the loading of favorite IDs and then fetching their details from Firestore
-    Provider.of<FavoriteProvider>(context, listen: false).loadFavorites();
+    Provider.of<FavoriteProvider>(context, listen: false).loadRecipeFavorites();
     Provider.of<FavoriteSocialProvider>(context, listen: false)
         .loadSocialFavorites();
   }
@@ -29,10 +29,10 @@ class _FavoritePageState extends State<FavoritePage> {
     final socialProvider = Provider.of<FavoriteSocialProvider>(context);
 
     // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
-    final recipeNames = recipProvider.recipeName;
-    final favoriteRecipeIds = recipProvider.favoriteRecipeIds;
+    final recipeNames = recipProvider.recipeNames;
+    final favoriteRecipeIds = recipProvider.recipeFavoriteId;
 
-    final recipeImages = recipProvider.recipeImage;
+    final recipeImages = recipProvider.recipeImages;
     final recipeCalories = recipProvider.recipeCalories;
     final recipeIngredients = recipProvider.recipeIngredients;
     final recipeProcesses = recipProvider.recipeProcess;
