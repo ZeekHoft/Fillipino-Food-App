@@ -2,7 +2,6 @@ import 'package:flilipino_food_app/pages/favorite/favorite_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_provider.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
-import 'package:flilipino_food_app/pages/social/social_widgets/social_vew_post.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
