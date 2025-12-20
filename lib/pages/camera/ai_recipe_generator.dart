@@ -28,7 +28,7 @@ class _AIRecipeGeneratorState extends State<AIRecipeGenerator> {
   @override
   void initState() {
     super.initState();
-    _chatGptApiKey = dotenv.env["OPENAI_API_KEY"]!;
+    _chatGptApiKey = dotenv.env["API_KEY_CHAT_GPT"]!;
     print('API Key loaded: ${_chatGptApiKey.substring(0, 10)}...');
     print('API Key length: ${_chatGptApiKey.length}');
 
@@ -84,7 +84,7 @@ class _AIRecipeGeneratorState extends State<AIRecipeGenerator> {
           'Authorization': 'Bearer $_chatGptApiKey',
         },
         body: jsonEncode({
-          "model": "gpt-4o",
+          "model": "gpt-4o-mini",
           "messages": [
             {
               "role": "system",

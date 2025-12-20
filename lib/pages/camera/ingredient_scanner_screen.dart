@@ -42,7 +42,7 @@ class _IngredientScannerScreenState extends State<IngredientScannerScreen> {
   Future<void> _initializeDetectionService() async {
     await _detectionService.initialize();
     print(
-        '✅ Detection service initialized: ${_detectionService.isInitialized}');
+        'Detection service initialized: ${_detectionService.isInitialized}');
   }
 
   Future<void> _initializeCamera() async {
