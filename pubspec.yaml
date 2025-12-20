@@ -83,7 +83,7 @@ flutter:
         - assets/
         - assets/dotenv
         - assets/models/
-        - assets/labels
+        - assets/labels/
 
 
     # - .env
