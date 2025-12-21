@@ -1,5 +1,6 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SaveButton extends StatefulWidget {
   const SaveButton({super.key, required this.post, required this.provider});
@@ -21,7 +22,7 @@ class _SaveButtonState extends State<SaveButton> {
     final calories = widget.post["calories"].toString();
     final description = widget.post["postDescription"] ?? "";
     final username = widget.post["postUsername"] ?? "N/A username";
-    final timestamp = widget.post["dateTimePost"];
+    final timestamp = widget.post["dateTimePost"] as DateTime;
 
     return IconButton(
       onPressed: () {
@@ -33,7 +34,7 @@ class _SaveButtonState extends State<SaveButton> {
             description,
             int.tryParse(calories) ?? 0,
             username,
-            timestamp,
+            Timestamp.fromDate(timestamp),
           );
         });
       },
