@@ -67,7 +67,7 @@ class ProfileDataStoring extends ChangeNotifier {
         final userData = docSnapshot.data()!;
         _email = userData["email"] ?? currentUser.email ?? "N/A";
         _username = userData["username"] ?? "N/A";
-        _caloriesLimit = userData["caloric_limit"] ?? 0;
+        _caloriesLimit = userData["caloricLimit"] ?? 0;
         _allergies =
             (userData["dietaryRestrictions"] as List<dynamic>?)?.join(", ") ??
                 "None";

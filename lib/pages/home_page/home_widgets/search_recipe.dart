@@ -1,30 +1,36 @@
+//lib/pages/home_page/home_widgets/search_recipe.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/display_recipe.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class SearchRecipe extends StatefulWidget {
-  const SearchRecipe({super.key});
+  final List<String>? initialIngredients; // NEW: Accept initial ingredients
+
+  const SearchRecipe({super.key, this.initialIngredients});
 
   @override
   State<SearchRecipe> createState() => _SearchRecipeState();
 }
 
 class _SearchRecipeState extends State<SearchRecipe> {
-  //storing all results
   List _allResult = [];
-
-  //search list
   List _resutlList = [];
 
   final TextEditingController _searchController = TextEditingController();
 
-  //getting recipes
   @override
   void initState() {
+    super.initState();
+
+    // NEW: Set initial ingredients if provided
+    if (widget.initialIngredients != null &&
+        widget.initialIngredients!.isNotEmpty) {
+      _searchController.text = widget.initialIngredients!.join(', ');
+    }
+
     getRecipesStream();
     _searchController.addListener(_onSearchChanged);
-    super.initState();
   }
 
   _onSearchChanged() {
@@ -32,22 +38,18 @@ class _SearchRecipeState extends State<SearchRecipe> {
     searchResultList();
   }
 
-  //might need fixing here for the search parameter to take more than just 1 ingredients
   searchResultList() {
     var showResults = [];
     if (_searchController.text != "") {
-      //split the search querry to take more than 1 value
       List<String> searchIngredients = _searchController.text
           .toLowerCase()
           .split(',')
-          //trim all spaces so it can be read as a list in the FBA
           .map((ingredient) => ingredient.trim())
           .toList();
 
       for (var recipesSnapShot in _allResult) {
         var ingredients =
             recipesSnapShot['ingredients'].toString().toLowerCase();
-        //check if all thats being search is present
 
         bool containsAllIngredients = searchIngredients
             .every((ingredient) => ingredients.contains(ingredient));
@@ -61,14 +63,10 @@ class _SearchRecipeState extends State<SearchRecipe> {
     }
 
     setState(() {
-      //below just show results base on firebase input positioning
-      // _resutlList = showResults;
-      //descending order least to most length
       _resutlList = showResults.reversed.toList();
     });
   }
 
-  //getting values base on the fields
   getRecipesStream() async {
     var data = await FirebaseFirestore.instance
         .collection('recipes')
@@ -76,30 +74,23 @@ class _SearchRecipeState extends State<SearchRecipe> {
         .get();
 
     if (mounted) {
-      //mounted to help you manage state and avoid potential errors that can occur when interacting with a widget that is no longer part of the widget tree
       setState(() {
         _allResult = data.docs;
       });
+      // NEW: Trigger search if initial ingredients were provided
+      if (widget.initialIngredients != null &&
+          widget.initialIngredients!.isNotEmpty) {
+        searchResultList();
+      }
     }
   }
 
-  //making a button to claer all
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
     super.dispose();
   }
-
-  // didChangeDependencies is not ideal for fetching data every time dependencies change.
-  // initState is generally preferred for initial data loading.
-  // If you need to re-fetch on certain conditions, consider a specific method call
-  // @override
-  // void didChangeDependencies() {
-  //   getRecipesStream();
-
-  //   super.didChangeDependencies();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +106,8 @@ class _SearchRecipeState extends State<SearchRecipe> {
         backgroundColor: Theme.of(context).colorScheme.surfaceContainerHigh,
         title: TextField(
           controller: _searchController,
-          autofocus: true,
+          autofocus: widget.initialIngredients ==
+              null, // Only autofocus if no initial ingredients
           decoration: const InputDecoration(
             hintText: "Search a recipe...",
             border: OutlineInputBorder(
@@ -123,35 +115,58 @@ class _SearchRecipeState extends State<SearchRecipe> {
           ),
         ),
       ),
-      body: ListView.separated(
-        // itemCount: _allResult.length, show all the results being retrieved
-        separatorBuilder: (context, index) => const Divider(),
-        itemCount: _resutlList.length,
-        itemBuilder: (context, index) {
-          // give access to the document ID
-          String documentId = _resutlList[index].id;
-          return GestureDetector(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => DisplayRecipe(
-                    recipeName: _resutlList[index]['name'],
-                    recipeIngredients: _resutlList[index]['ingredients'],
-                    recipeProcess: _resutlList[index]['process'],
-                    recipeImage: _resutlList[index]['image'],
-                    recipeCalories: _resutlList[index]['calories'],
-                    documentId: documentId,
+      body: _resutlList.isEmpty
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.search_off,
+                    size: 64,
+                    color: Theme.of(context).colorScheme.outline,
                   ),
-                ),
-              );
-            },
-            child: ListTile(
-              title: Text(_resutlList[index]['name']),
-              subtitle: Text(_resutlList[index]['ingredients']),
+                  const SizedBox(height: 16),
+                  Text(
+                    'No recipes found',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Try different ingredients',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                  ),
+                ],
+              ),
+            )
+          : ListView.separated(
+              separatorBuilder: (context, index) => const Divider(),
+              itemCount: _resutlList.length,
+              itemBuilder: (context, index) {
+                String documentId = _resutlList[index].id;
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DisplayRecipe(
+                          recipeName: _resutlList[index]['name'],
+                          recipeIngredients: _resutlList[index]['ingredients'],
+                          recipeProcess: _resutlList[index]['process'],
+                          recipeImage: _resutlList[index]['image'],
+                          recipeCalories: _resutlList[index]['calories'],
+                          documentId: documentId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: ListTile(
+                    title: Text(_resutlList[index]['name']),
+                    subtitle: Text(_resutlList[index]['ingredients']),
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }

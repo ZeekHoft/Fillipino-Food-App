@@ -197,3 +197,21 @@ class DappliProgressIndicator extends StatelessWidget {
     );
   }
 }
+
+class FavoriteProgressIndicator extends StatelessWidget {
+  const FavoriteProgressIndicator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        SizedBox(
+          child: const CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
+        ),
+      ],
+    );
+  }
+}
