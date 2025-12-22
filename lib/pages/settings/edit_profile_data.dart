@@ -153,22 +153,27 @@ class _UpdateFormState extends State<UpdateForm> {
           child: Center(
             child: Column(
               children: [
+                Text("Allergies"),
                 EditUserDataFormText(
                   controller: dietaryRestrictionsController,
                   hint: 'Dietary Restrictions update',
                 ),
+                Text("Username"),
                 EditUserDataFormText(
                   controller: userNameController,
                   hint: 'User name update',
                 ),
+                Text("Caloric Limit"),
                 EditUserDataFormNumbers(
                   controller: caloriesLimitController,
                   hint: 'Calorie limit update',
                 ),
+                Text("Heigt CM"),
                 EditUserDataFormNumbers(
                   controller: heightController,
                   hint: 'Height update',
                 ),
+                Text("Weight"),
                 EditUserDataFormNumbers(
                   controller: weightController,
                   hint: 'Weight update',

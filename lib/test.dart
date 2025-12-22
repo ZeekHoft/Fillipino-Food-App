@@ -36,7 +36,6 @@ class _CameraScreenState extends State<CameraScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool _isLoading = false;
-  String? _capturedImagePath;
 
   @override
   void initState() {
@@ -60,7 +59,6 @@ class _CameraScreenState extends State<CameraScreen> {
       final image = await _controller.takePicture();
 
       setState(() {
-        _capturedImagePath = image.path;
         _isLoading = true;
       });
 

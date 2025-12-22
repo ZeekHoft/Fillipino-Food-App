@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 

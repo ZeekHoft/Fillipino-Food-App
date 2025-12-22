@@ -6,7 +6,6 @@ import 'package:flilipino_food_app/pages/home_page/home_page.dart';
 import 'package:flilipino_food_app/pages/settings/settings_page.dart';
 import 'package:flilipino_food_app/pages/home_page/home_widgets/search_recipe.dart';
 import 'package:flilipino_food_app/pages/social/social_page.dart';
-import 'package:flilipino_food_app/test.dart';
 import 'package:flilipino_food_app/util/profile_set_up_util.dart';
 import 'package:flutter/material.dart';
 

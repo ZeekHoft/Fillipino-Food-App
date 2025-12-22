@@ -26,6 +26,13 @@ class DisplayRecipe extends StatefulWidget {
 }
 
 class _DisplayRecipeState extends State<DisplayRecipe> {
+  bool _exceedCalorie(int calorieLimit, int calorieRecipe) {
+    if (calorieLimit >= calorieRecipe) {
+      return true;
+    }
+    return false;
+  }
+
   // Add this helper method in your _DisplayRecipeState class
   bool _hasAllergen(String ingredients, String allergies) {
     if (allergies.isEmpty) return false;
@@ -86,8 +93,12 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
     // final userEmail = context.watch<ProfileDataStoring>();
     final profileDataStoring = context.watch<ProfileDataStoring>();
     final allergies = profileDataStoring.allergies;
+    final userCalorieLimit = profileDataStoring.caloriesLimit;
+    final calories = profileDataStoring.caloriesLimit.toString();
 
     final hasAllergen = _hasAllergen(widget.recipeIngredients, allergies);
+    final exceedCalories =
+        _exceedCalorie(widget.recipeCalories, userCalorieLimit);
     final detectedAllergens =
         _getDetectedAllergens(widget.recipeIngredients, allergies);
 
@@ -191,6 +202,31 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                 ),
               ),
             ),
+          if (exceedCalories)
+            Center(
+              child: Card(
+                color: Theme.of(context).colorScheme.error,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.warning,
+                        color: Theme.of(context).colorScheme.onError,
+                      ),
+                      Text(
+                        "Calorie Limit: ${calories}.",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onError),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
           const SizedBox(height: 16),
           Center(
             child: SizedBox(

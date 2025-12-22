@@ -11,7 +11,9 @@ class EditUserDataFormText extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      decoration: InputDecoration(hintText: hint),
+      decoration: InputDecoration(
+          hintText: hint,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
     );
   }
 }
@@ -26,7 +28,9 @@ class EditUserDataFormNumbers extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      decoration: InputDecoration(hintText: hint),
+      decoration: InputDecoration(
+          hintText: hint,
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly,

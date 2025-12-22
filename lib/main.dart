@@ -19,7 +19,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  var userId;
   runApp(
     MultiProvider(
       providers: [
