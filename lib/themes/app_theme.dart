@@ -206,12 +206,10 @@ class FavoriteProgressIndicator extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Icon(
-          Icons.bookmark_add_outlined,
-        ),
-        // you can replace
         SizedBox(
-          child: const CircularProgressIndicator(),
+          child: const CircularProgressIndicator(
+            strokeWidth: 2,
+          ),
         ),
       ],
     );

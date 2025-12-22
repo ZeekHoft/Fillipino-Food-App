@@ -97,227 +97,292 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
     final calories = profileDataStoring.caloriesLimit.toString();
 
     final hasAllergen = _hasAllergen(widget.recipeIngredients, allergies);
-    final exceedCalories =
+    final exceedsCalories =
         _exceedCalorie(widget.recipeCalories, userCalorieLimit);
     final detectedAllergens =
         _getDetectedAllergens(widget.recipeIngredients, allergies);
 
     return Scaffold(
+      // Extends body behind the app bar for the "Image at top" look
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
-        forceMaterialTransparency: false,
-      ),
-      body: ListView(
-        padding: const EdgeInsetsDirectional.all(16),
-        children: [
-          Center(
-            child: FractionallySizedBox(
-              widthFactor: 0.70,
-              child: AspectRatio(
-                aspectRatio: 1.0,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Image.network(
-                    widget.recipeImage,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
+        backgroundColor: AppColors.transparentTheme,
+        elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: CircleAvatar(
+            backgroundColor: AppColors.whiteTheme,
+            child: const BackButton(color: AppColors.blackTheme),
           ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            spacing: 8,
-            children: [
-              Flexible(
-                fit: FlexFit.loose,
-                child: Text(
-                  widget.recipeName,
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.titleLarge,
-                  // softWrap: true,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(0.0),
-                child: _isLoading
-                    ? const FavoriteProgressIndicator()
-                    : IconButton(
-                        onPressed: () async {
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          await provider.toggleRecipeFavorite(
-                            widget.documentId, // Pass the document ID
-                            widget.recipeName,
-                            widget.recipeImage,
-                            widget.recipeCalories,
-                            widget.recipeIngredients,
-                            widget.recipeProcess,
-                          );
-                          if (mounted) {
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          }
-                        },
-                        icon: provider.isRecipeExist(widget
-                                .documentId) // Check existence with document ID
-                            ? const Icon(
-                                Icons.bookmark,
-                                color: AppColors.yellowTheme,
-                              )
-                            : const Icon(
-                                Icons.bookmark_add_outlined,
-                              ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: CircleAvatar(
+              backgroundColor: AppColors.whiteTheme,
+              child: _isLoading
+                  ? const SizedBox(
+                      width: 20, height: 20, child: FavoriteProgressIndicator())
+                  : IconButton(
+                      icon: Icon(
+                        provider.isRecipeExist(widget.documentId)
+                            ? Icons.bookmark
+                            : Icons.bookmark_border,
+                        color: AppColors.yellowTheme,
                       ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-          // Display allergen warning according to user
-          // TODO: add logic
-
-          if (hasAllergen)
-            Center(
-              child: Card(
-                color: Theme.of(context).colorScheme.error,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.warning,
-                        color: Theme.of(context).colorScheme.onError,
-                      ),
-                      Text(
-                        "Contains: ${detectedAllergens.join(', ')}",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onError),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          if (exceedCalories)
-            Center(
-              child: Card(
-                color: Theme.of(context).colorScheme.error,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.warning,
-                        color: Theme.of(context).colorScheme.onError,
-                      ),
-                      Text(
-                        "Calorie Limit: ${calories}.",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onError),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-
-          const SizedBox(height: 16),
-          Center(
-            child: SizedBox(
-              width: 400,
-              child: ElevatedButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    showDragHandle: true,
-                    enableDrag: true,
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => RecipeDetails(widget: widget),
-                  );
-                },
-                child: const Text("Recipe"),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Center(
-            child: SizedBox(
-              width: 400,
-              child: ElevatedButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    showDragHandle: true,
-                    enableDrag: true,
-                    context: context,
-                    isScrollControlled: true,
-                    builder: (context) => NutritionalDetails(widget: widget),
-                  );
-                },
-                child: const Text("Nutritional Facts"),
-              ),
+                      onPressed: () async {
+                        setState(() => _isLoading = true);
+                        await provider.toggleRecipeFavorite(
+                          widget.documentId,
+                          widget.recipeName,
+                          widget.recipeImage,
+                          widget.recipeCalories,
+                          widget.recipeIngredients,
+                          widget.recipeProcess,
+                        );
+                        if (mounted) setState(() => _isLoading = false);
+                      },
+                    ),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class RecipeDetails extends StatelessWidget {
-  const RecipeDetails({
-    super.key,
-    required this.widget,
-  });
-
-  final DisplayRecipe widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: SingleChildScrollView(
+      body: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Ingredients", style: Theme.of(context).textTheme.titleMedium),
-            Text(widget.recipeIngredients),
-            const SizedBox(height: 16),
-            Text(
-              "Process",
-              style: Theme.of(context).textTheme.titleMedium,
+            // HERO IMAGE
+            Hero(
+              tag: widget.documentId,
+              child: Image.network(
+                widget.recipeImage,
+                height: 350,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
-            Text(widget.recipeProcess),
+
+            Container(
+              transform: Matrix4.translationValues(
+                  0, -30, 0), // Pulls content over the image
+              decoration: const BoxDecoration(
+                color: AppColors.whiteTheme,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              ),
+              padding: const EdgeInsets.all(24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // RECIPE TITLE
+                  Text(
+                    widget.recipeName,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.blackTheme,
+                        ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // CALORIE AND WARNING CHIPS
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      Chip(
+                        avatar: const Icon(Icons.bolt,
+                            size: 18, color: AppColors.orangeTheme),
+                        label: Text("${widget.recipeCalories} kcal"),
+                        backgroundColor: Colors.orange.shade50,
+                      ),
+                      if (exceedsCalories)
+                        Chip(
+                          avatar: const Icon(Icons.warning_amber_rounded,
+                              size: 18, color: AppColors.redTheme),
+                          label: const Text("High Calorie"),
+                          backgroundColor: Colors.red.shade50,
+                        ),
+                    ],
+                  ),
+
+                  if (detectedAllergens.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.red.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red.shade100),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.no_food,
+                              color: AppColors.redTheme, size: 20),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              "Allergen Alert: ${detectedAllergens.join(', ')}",
+                              style: const TextStyle(
+                                  color: AppColors.redTheme,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+
+                  const SizedBox(height: 24),
+
+                  // INTERACTIVE BUTTONS
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _showRecipeSheet(context),
+                          icon: const Icon(Icons.restaurant_menu),
+                          label: const Text("View Recipe"),
+                          style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12)),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _showNutritionSheet(context),
+                          icon: const Icon(Icons.info_outline),
+                          label: const Text("Nutrition"),
+                          style: OutlinedButton.styleFrom(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12)),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 32),
+
+                  // PREVIEW SECTION
+                  Text("Ingredients Preview",
+                      style: Theme.of(context).textTheme.titleLarge),
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.recipeIngredients,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
   }
-}
 
-class NutritionalDetails extends StatelessWidget {
-  const NutritionalDetails({super.key, required this.widget});
-
-  final DisplayRecipe widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: SingleChildScrollView(
+  void _showRecipeSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (context) => SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Calories", style: Theme.of(context).textTheme.titleMedium),
-            Text(widget.recipeCalories.toString()),
+            Text("Ingredients", style: Theme.of(context).textTheme.titleLarge),
+            const Divider(height: 32),
+            Text(widget.recipeIngredients,
+                style: const TextStyle(fontSize: 16)),
+            const SizedBox(height: 32),
+            Text("Instructions", style: Theme.of(context).textTheme.titleLarge),
+            const Divider(height: 32),
+            Text(widget.recipeProcess, style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),
     );
   }
+
+  void _showNutritionSheet(BuildContext context) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Padding(
+              padding: EdgeInsetsGeometry.all(24.0),
+              child: Column(
+                children: [
+                  Text("Nutritional Facts",
+                      style: Theme.of(context).textTheme.titleLarge),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  ListTile(
+                    tileColor: AppColors.orangeTheme.withValues(alpha: 0.1),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
+                    leading: const Icon(Icons.local_fire_department,
+                        color: AppColors.orangeTheme),
+                    title: const Text("Total Calories"),
+                    trailing: Text("${widget.recipeCalories} kcal",
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18)),
+                  ),
+                ],
+              ),
+            ));
+  }
 }
+
+// OLD CODE DESING
+// class RecipeDetails extends StatelessWidget {
+//   const RecipeDetails({
+//     super.key,
+//     required this.widget,
+//   });
+
+//   final DisplayRecipe widget;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(24),
+//       child: SingleChildScrollView(
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             Text("Ingredients", style: Theme.of(context).textTheme.titleMedium),
+//             Text(widget.recipeIngredients),
+//             const SizedBox(height: 16),
+//             Text(
+//               "Process",
+//               style: Theme.of(context).textTheme.titleMedium,
+//             ),
+//             Text(widget.recipeProcess),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+// class NutritionalDetails extends StatelessWidget {
+//   const NutritionalDetails({super.key, required this.widget});
+
+//   final DisplayRecipe widget;
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Padding(
+//       padding: const EdgeInsets.all(24),
+//       child: SingleChildScrollView(
+//         child: Column(
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             Text("Calories", style: Theme.of(context).textTheme.titleMedium),
+//             Text(widget.recipeCalories.toString()),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }

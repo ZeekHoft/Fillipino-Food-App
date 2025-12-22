@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/common_widgets/edit_user_data_form.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
+import 'package:flilipino_food_app/themes/color_themes.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -146,54 +147,163 @@ class _UpdateFormState extends State<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        AbsorbPointer(
-          absorbing: _isLoading,
-          child: Center(
+    return SingleChildScrollView(
+      // Added to prevent overflow on keyboard popup
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          AbsorbPointer(
+            absorbing: _isLoading,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Allergies"),
-                EditUserDataFormText(
-                  controller: dietaryRestrictionsController,
-                  hint: 'Dietary Restrictions update',
-                ),
-                Text("Username"),
-                EditUserDataFormText(
-                  controller: userNameController,
-                  hint: 'User name update',
-                ),
-                Text("Caloric Limit"),
-                EditUserDataFormNumbers(
-                  controller: caloriesLimitController,
-                  hint: 'Calorie limit update',
-                ),
-                Text("Heigt CM"),
-                EditUserDataFormNumbers(
-                  controller: heightController,
-                  hint: 'Height update',
-                ),
-                Text("Weight"),
-                EditUserDataFormNumbers(
-                  controller: weightController,
-                  hint: 'Weight update',
-                ),
-                SizedBox(
-                  height: 40,
-                ),
+                _buildHeader("Personal Identity", Icons.person_outline),
+                _buildFormCard([
+                  _buildFieldLabel("Username"),
+                  EditUserDataFormText(
+                    controller: userNameController,
+                    hint: 'Enter your new username',
+                  ),
+                ]),
+                const SizedBox(height: 24),
+                _buildHeader("Body Metrics", Icons.straighten),
+                _buildFormCard([
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildFieldLabel("Height (CM)"),
+                            EditUserDataFormNumbers(
+                              controller: heightController,
+                              hint: 'CM',
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            _buildFieldLabel("Weight (KG)"),
+                            EditUserDataFormNumbers(
+                              controller: weightController,
+                              hint: 'KG',
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  _buildFieldLabel("Daily Caloric Limit"),
+                  EditUserDataFormNumbers(
+                    controller: caloriesLimitController,
+                    hint: 'e.g. 2000',
+                  ),
+                ]),
+                const SizedBox(height: 24),
+                _buildHeader("Dietary Safety", Icons.no_food_outlined),
+                _buildFormCard([
+                  _buildFieldLabel("Allergies (Separate by comma)"),
+                  EditUserDataFormText(
+                    controller: dietaryRestrictionsController,
+                    hint: 'Garlic, Peanuts, Shrimp...',
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    "This helps us flag recipes that might be unsafe for you.",
+                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                  ),
+                ]),
+                const SizedBox(height: 40),
                 Center(
-                    child: _isLoading
-                        ? const DappliProgressIndicator()
-                        : ElevatedButton(
-                            onPressed: () {
-                              updateUserData();
-                            },
-                            child: const Text("Update data")))
+                  child: _isLoading
+                      ? const DappliProgressIndicator()
+                      : SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
+                              foregroundColor: AppColors.blueTheme,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            onPressed: updateUserData,
+                            child: const Text(
+                              "SAVE CHANGES",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                ),
+                const SizedBox(height: 20),
               ],
             ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader(String title, IconData icon) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      child: Row(
+        children: [
+          Icon(icon, size: 20, color: AppColors.blueTheme),
+          const SizedBox(width: 8),
+          Text(
+            title.toUpperCase(),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              letterSpacing: 1.1,
+              color: AppColors.blueTheme,
+            ),
           ),
-        )
-      ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFieldLabel(String label) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        label,
+        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+      ),
+    );
+  }
+
+  Widget _buildFormCard(List<Widget> children) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.02),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: children,
+      ),
     );
   }
 }
