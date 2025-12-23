@@ -39,6 +39,7 @@ class _FavoritePageState extends State<FavoritePage>
     final socialProvider = Provider.of<FavoriteSocialProvider>(context);
 
     // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
+    final recipeNames = recipProvider.recipeNames;
     final favoriteRecipeIds = recipProvider.recipeFavoriteId;
 
     final recipeImages = recipProvider.recipeImages;
@@ -46,27 +47,27 @@ class _FavoritePageState extends State<FavoritePage>
     final List<dynamic> recipeIngredients = recipProvider.recipeIngredients;
     final List<dynamic> recipeProcesses = recipProvider.recipeProcess;
     // Get the list of IDs
-
     final socialPostFavorites = socialProvider.favoritePost;
 
     // This part of the code avoids having to encounter index errors by
-    // asynchronous checking recipe and social favorites
+    // asynchronus checking recipe and social favorites
+    final bool isLoadingRecipes = favoriteRecipeIds.isNotEmpty &&
+        (recipeNames.length != favoriteRecipeIds.length);
     final bool allFavoritesEmpty =
         favoriteRecipeIds.isEmpty && socialPostFavorites.isEmpty;
 
-    if (recipProvider.isLoading || socialProvider.isLoading) {
+    if (isLoadingRecipes || allFavoritesEmpty) {
       return const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            DappliProgressIndicator(),
-            SizedBox(
-              height: 20,
-            ),
-            Text("Waiting for favorites")
-          ],
-        ),
-      );
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          DappliProgressIndicator(),
+          SizedBox(
+            height: 20,
+          ),
+          Text("Waiting for favorites")
+        ],
+      ));
     } else if (allFavoritesEmpty) {
       return Center(
         child: Padding(
