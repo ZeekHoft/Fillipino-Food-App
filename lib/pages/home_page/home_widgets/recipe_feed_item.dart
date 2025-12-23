@@ -87,9 +87,8 @@ class RecipeFeedItem extends StatelessWidget {
 
   factory RecipeFeedItem.fromDocumentSnapshot(QueryDocumentSnapshot recipeDoc) {
     final data = recipeDoc.data() as Map<String, dynamic>;
-    final initialIngredients = data['ingredinets'] as List<dynamic>?;
+    final initialIngredients = data['ingredients'] as List<dynamic>?;
     final initialProcess = data['process'] as List<dynamic>?;
-
     return RecipeFeedItem(
       name: recipeDoc['name'].toString(),
       imageUrl: recipeDoc['image'].toString(),

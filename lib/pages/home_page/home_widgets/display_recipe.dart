@@ -34,12 +34,6 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
     return false;
   }
 
-  void main() {
-    final int count = widget.recipeIngredients.length;
-
-    print(count);
-  }
-
   // Add this helper method in your _DisplayRecipeState class
   bool _hasAllergen(String ingredients, String allergies) {
     if (allergies.isEmpty) return false;
@@ -314,7 +308,6 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
   }
 
   void _showNutritionSheet(BuildContext context) {
-    main();
     showModalBottomSheet(
         context: context,
         builder: (context) => Padding(

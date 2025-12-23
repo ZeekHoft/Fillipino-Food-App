@@ -62,6 +62,7 @@ class FavoriteProvider extends ChangeNotifier {
       _favoriteRecipes.map((r) => r.recipeCalories).toList();
   List<List<dynamic>> get recipeIngredients =>
       _favoriteRecipes.map((r) => r.recipeIngredients).toList();
+
   List<List<dynamic>> get recipeProcess =>
       _favoriteRecipes.map((r) => r.recipeProcess).toList();
 
