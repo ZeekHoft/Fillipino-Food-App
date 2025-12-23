@@ -13,6 +13,7 @@ class SocialPost {
   final String description;
   final int calories;
   final String username;
+  final Timestamp timestamp;
 
   SocialPost({
     required this.postId,
@@ -21,6 +22,7 @@ class SocialPost {
     required this.description,
     required this.calories,
     required this.username,
+    required this.timestamp,
   });
   // convert the object to a map in firestore
   Map<String, dynamic> toMap() {
@@ -46,12 +48,15 @@ class SocialPost {
       description: data['description'] as String? ?? 'N/A',
       calories: (data['calories'] as num?)?.toInt() ?? 0,
       username: data['postUsername'] as String? ?? 'N/A',
+      timestamp: data['timestamp'] as Timestamp,
     );
   }
 }
 
 class FavoriteSocialProvider extends ChangeNotifier {
   final List<SocialPost> _favoritePosts = [];
+  bool _isLoading = false;
+
   // replace the 5 parallel list into one list that contains all data
   List<SocialPost> get favoritePost => _favoritePosts;
 
@@ -66,6 +71,8 @@ class FavoriteSocialProvider extends ChangeNotifier {
       _favoritePosts.map((p) => p.description).toList();
   List<String> get postUsername =>
       _favoritePosts.map((p) => p.username).toList();
+  bool get isLoading => _isLoading;
+
   Future<void> _storeSocialFavoriteInFireBase(String postId, bool isAdding,
       {SocialPost? post}) async {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -145,6 +152,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
 
   void loadSocialFavorites() async {
     _favoritePosts.clear();
+    _isLoading = true;
 
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null || currentUser.email == null) {
@@ -183,6 +191,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
               description: data['description'] as String? ?? 'N/A',
               calories: (data['calories'] as num?)?.toInt() ?? 0,
               username: data['postUsername'] as String? ?? 'N/A',
+              timestamp: data['timestamp']! as Timestamp,
             ));
           } catch (e) {
             // Handle corrupted documents in the sub-collection
@@ -197,12 +206,19 @@ class FavoriteSocialProvider extends ChangeNotifier {
         print("Error in getting user data: $e");
       }
     } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }
 
-  Future<void> toggleSocialFavorite(String postId, String ingredient,
-      String process, String description, int calories, String username) async {
+  Future<void> toggleSocialFavorite(
+      String postId,
+      String ingredient,
+      String process,
+      String description,
+      int calories,
+      String username,
+      Timestamp timestamp) async {
     // Check if the post is already a favorite using the single list
     final existingIndex =
         _favoritePosts.indexWhere((post) => post.postId == postId);
@@ -220,6 +236,7 @@ class FavoriteSocialProvider extends ChangeNotifier {
         description: description,
         calories: calories,
         username: username,
+        timestamp: timestamp,
       );
       _favoritePosts.add(newPost);
       await _storeSocialFavoriteInFireBase(postId, true, post: newPost);

@@ -1,6 +1,8 @@
 import 'package:flilipino_food_app/pages/favorite/favorite_social_item.dart';
 import 'package:flilipino_food_app/pages/favorite/favorite_social_provider.dart';
-import 'package:flilipino_food_app/themes/app_theme.dart';
+import 'package:flilipino_food_app/pages/social/social_widgets/like_button.dart';
+import 'package:flilipino_food_app/pages/social/social_widgets/save_post_button.dart';
+import 'package:flilipino_food_app/pages/social/social_widgets/social_vew_post.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
 import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +48,8 @@ class _PostWidgetState extends State<PostWidget> {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) =>
-                FavoriteSocialItem(screenState: false, post: widget.post)));
+          builder: (context) => SocialVewPost(post: widget.post),
+        ));
       },
       child: Card(
         child: Padding(
@@ -209,120 +211,6 @@ class _PostWidgetState extends State<PostWidget> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class LikeButton extends StatefulWidget {
-  const LikeButton({
-    super.key,
-    required this.postId,
-    required this.userId,
-    required this.likedAccounts,
-  });
-
-  final String postId;
-  final String userId;
-  final Set? likedAccounts;
-
-  @override
-  State<LikeButton> createState() => _LikeButtonState();
-}
-
-class _LikeButtonState extends State<LikeButton> {
-  @override
-  Widget build(BuildContext context) {
-    bool likeState = false;
-
-    if (widget.likedAccounts != null) {
-      likeState = widget.likedAccounts!.contains(widget.userId);
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-            onPressed: () {
-              setState(() {
-                Provider.of<SocialDataStoring>(context, listen: false)
-                    .triggerLike(
-                  widget.postId,
-                  widget.userId,
-                  widget.likedAccounts!,
-                );
-              });
-              print("changed: ${widget.postId}");
-            },
-            icon: likeState
-                ? Icon(
-                    Icons.favorite,
-                    color: Colors.red.shade600,
-                  )
-                : Icon(Icons.favorite_border)),
-        // Like Count
-        Text(
-          widget.likedAccounts != null && widget.likedAccounts!.isNotEmpty
-              ? widget.likedAccounts!.length.toString()
-              : "0",
-        ),
-      ],
-    );
-  }
-}
-
-class SaveButton extends StatefulWidget {
-  const SaveButton({super.key, required this.post, required this.provider});
-
-  final Map post;
-  final FavoriteSocialProvider provider;
-
-  @override
-  State<SaveButton> createState() => _SaveButtonState();
-}
-
-class _SaveButtonState extends State<SaveButton> {
-  bool _isLoading = false;
-
-  @override
-  Widget build(BuildContext context) {
-    final postId = widget.post['postID'];
-
-    final ingredients = widget.post["ingredients"] as List<String>? ?? [];
-    final processSteps = widget.post["processSteps"] as List<String>? ?? [];
-    final calories = widget.post["calories"].toString();
-    final description = widget.post["postDescription"] ?? "";
-    final username = widget.post["postUsername"] ?? "N/A username";
-
-    return Padding(
-      padding: const EdgeInsets.all(0.0),
-      child: _isLoading
-          ? const FavoriteProgressIndicator()
-          : IconButton(
-              onPressed: () async {
-                setState(() {
-                  _isLoading = true;
-                });
-                await widget.provider.toggleSocialFavorite(
-                  postId.toString(),
-                  ingredients.join(', '),
-                  processSteps.join(', '),
-                  description,
-                  int.tryParse(calories) ?? 0,
-                  username,
-                );
-                if (mounted) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                }
-              },
-              icon: widget.provider
-                      .isSocialExist(widget.post["postID"]?.toString() ?? '')
-                  ? Icon(Icons.bookmark, color: Colors.amber.shade600)
-                  : const Icon(
-                      Icons.bookmark_add_outlined,
-                    ),
-            ),
     );
   }
 }
