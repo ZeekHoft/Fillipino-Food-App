@@ -208,6 +208,7 @@ class FavoriteProgressIndicator extends StatelessWidget {
       children: [
         SizedBox(
           child: const CircularProgressIndicator(
+            backgroundColor: Colors.amber,
             strokeWidth: 2,
           ),
         ),

@@ -13,8 +13,8 @@ class FavoriteItem extends StatelessWidget {
   });
 
   final String favName;
-  final String favIngredient;
-  final String favProcess;
+  final List<dynamic> favIngredient;
+  final List<dynamic> favProcess;
   final String favImage;
   final int favCalories;
   final String documentId; // Store documentId

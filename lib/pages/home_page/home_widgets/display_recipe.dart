@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DisplayRecipe extends StatefulWidget {
-  final String recipeName, recipeIngredients, recipeProcess, recipeImage;
+  final String recipeName, recipeImage;
+  final List<dynamic> recipeIngredients, recipeProcess;
   final int recipeCalories;
   final String documentId; // Add documentId here
 
@@ -31,6 +32,12 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
       return true;
     }
     return false;
+  }
+
+  void main() {
+    final int count = widget.recipeIngredients.length;
+
+    print(count);
   }
 
   // Add this helper method in your _DisplayRecipeState class
@@ -96,11 +103,14 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
     final userCalorieLimit = profileDataStoring.caloriesLimit;
     final calories = profileDataStoring.caloriesLimit.toString();
 
-    final hasAllergen = _hasAllergen(widget.recipeIngredients, allergies);
+    final ingredientsRecipes = widget.recipeIngredients.join(', ');
+    final processRecipe = widget.recipeProcess.join(', ');
+
+    final hasAllergen = _hasAllergen(ingredientsRecipes, allergies);
     final exceedsCalories =
         _exceedCalorie(widget.recipeCalories, userCalorieLimit);
     final detectedAllergens =
-        _getDetectedAllergens(widget.recipeIngredients, allergies);
+        _getDetectedAllergens(ingredientsRecipes, allergies);
 
     return Scaffold(
       // Extends body behind the app bar for the "Image at top" look
@@ -133,13 +143,12 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                       onPressed: () async {
                         setState(() => _isLoading = true);
                         await provider.toggleRecipeFavorite(
-                          widget.documentId,
-                          widget.recipeName,
-                          widget.recipeImage,
-                          widget.recipeCalories,
-                          widget.recipeIngredients,
-                          widget.recipeProcess,
-                        );
+                            widget.documentId,
+                            widget.recipeName,
+                            widget.recipeImage,
+                            widget.recipeCalories,
+                            widget.recipeIngredients,
+                            widget.recipeProcess);
                         if (mounted) setState(() => _isLoading = false);
                       },
                     ),
@@ -237,7 +246,8 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                     children: [
                       Expanded(
                         child: OutlinedButton.icon(
-                          onPressed: () => _showRecipeSheet(context),
+                          onPressed: () => _showRecipeSheet(
+                              context, ingredientsRecipes, processRecipe),
                           icon: const Icon(Icons.restaurant_menu),
                           label: const Text("View Recipe"),
                           style: OutlinedButton.styleFrom(
@@ -266,7 +276,7 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
                       style: Theme.of(context).textTheme.titleLarge),
                   const SizedBox(height: 8),
                   Text(
-                    widget.recipeIngredients,
+                    ingredientsRecipes,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.grey.shade600, fontSize: 16),
@@ -280,7 +290,7 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
     );
   }
 
-  void _showRecipeSheet(BuildContext context) {
+  void _showRecipeSheet(BuildContext context, ingredients, process) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -292,12 +302,11 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
           children: [
             Text("Ingredients", style: Theme.of(context).textTheme.titleLarge),
             const Divider(height: 32),
-            Text(widget.recipeIngredients,
-                style: const TextStyle(fontSize: 16)),
+            Text(ingredients, style: const TextStyle(fontSize: 16)),
             const SizedBox(height: 32),
             Text("Instructions", style: Theme.of(context).textTheme.titleLarge),
             const Divider(height: 32),
-            Text(widget.recipeProcess, style: const TextStyle(fontSize: 16)),
+            Text(process, style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),
@@ -305,6 +314,7 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
   }
 
   void _showNutritionSheet(BuildContext context) {
+    main();
     showModalBottomSheet(
         context: context,
         builder: (context) => Padding(
@@ -351,7 +361,7 @@ class _DisplayRecipeState extends State<DisplayRecipe> {
 //           crossAxisAlignment: CrossAxisAlignment.stretch,
 //           children: [
 //             Text("Ingredients", style: Theme.of(context).textTheme.titleMedium),
-//             Text(widget.recipeIngredients),
+//             Text(ingredientsRecipes),
 //             const SizedBox(height: 16),
 //             Text(
 //               "Process",
