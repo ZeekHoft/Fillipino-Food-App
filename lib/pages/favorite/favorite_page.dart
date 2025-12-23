@@ -41,6 +41,12 @@ class _FavoritePageState extends State<FavoritePage>
     // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
     final favoriteRecipeIds = recipProvider.recipeFavoriteId;
 
+    final recipeImages = recipProvider.recipeImages;
+    final recipeCalories = recipProvider.recipeCalories;
+    final List<dynamic> recipeIngredients = recipProvider.recipeIngredients;
+    final List<dynamic> recipeProcesses = recipProvider.recipeProcess;
+    // Get the list of IDs
+
     final socialPostFavorites = socialProvider.favoritePost;
 
     // This part of the code avoids having to encounter index errors by

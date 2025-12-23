@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 //reusable stream so that this can give accesss to other pages without re building the whole streambuilder
 class RecipeStreamBuilder extends InheritedWidget {
   final Stream<QuerySnapshot> recipeStream =
-      FirebaseFirestore.instance.collection('recipes').snapshots();
+      FirebaseFirestore.instance.collection('recipes_dappli').snapshots();
 
   RecipeStreamBuilder({super.key, required super.child});
 
