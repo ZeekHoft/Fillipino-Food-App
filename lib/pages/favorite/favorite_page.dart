@@ -34,8 +34,8 @@ class _FavoritePageState extends State<FavoritePage> {
 
     final recipeImages = recipProvider.recipeImages;
     final recipeCalories = recipProvider.recipeCalories;
-    final recipeIngredients = recipProvider.recipeIngredients;
-    final recipeProcesses = recipProvider.recipeProcess;
+    final List<dynamic> recipeIngredients = recipProvider.recipeIngredients;
+    final List<dynamic> recipeProcesses = recipProvider.recipeProcess;
     // Get the list of IDs
 
     final socialPostFavorites = socialProvider.favoritePost;

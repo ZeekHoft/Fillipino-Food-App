@@ -8,8 +8,8 @@ class DappliRecipe {
   final String recipeName;
   final String recipeImage;
   final int recipeCalories;
-  final String recipeIngredients;
-  final String recipeProcess;
+  final List<dynamic> recipeIngredients;
+  final List<dynamic> recipeProcess;
 
   DappliRecipe({
     required this.favoriteRecipeIds,
@@ -38,11 +38,14 @@ class DappliRecipe {
       recipeName: data['name'] as String? ?? 'N/A',
       recipeImage: data['image'] as String? ?? 'N/A',
       recipeCalories: (data['calories'] as num?)?.toInt() ?? 0,
-      recipeIngredients: data['ingredients'] as String? ?? 'N/A',
-      recipeProcess: data['process'] as String? ?? 'N/A',
+      recipeIngredients:
+          data['ingredients'] is List? ? data['ingredients'] : [],
+      recipeProcess: data['process'] is List? ? data['process'] : [],
     );
   }
 }
+// ['ingredinets'] as List<dynamic>?
+// ['process'] as List<dynamic>?
 
 class FavoriteProvider extends ChangeNotifier {
   final List<DappliRecipe> _favoriteRecipes = [];
@@ -57,10 +60,15 @@ class FavoriteProvider extends ChangeNotifier {
       _favoriteRecipes.map((r) => r.recipeImage).toList();
   List<int> get recipeCalories =>
       _favoriteRecipes.map((r) => r.recipeCalories).toList();
-  List<String> get recipeIngredients =>
+  List<List<dynamic>> get recipeIngredients =>
       _favoriteRecipes.map((r) => r.recipeIngredients).toList();
-  List<String> get recipeProcess =>
+  List<List<dynamic>> get recipeProcess =>
       _favoriteRecipes.map((r) => r.recipeProcess).toList();
+
+  // List<String> get recipeIngredients =>
+  //     _favoriteRecipes.map((r) => r.recipeIngredients).toList();
+  // List<String> get recipeProcess =>
+  //     _favoriteRecipes.map((r) => r.recipeProcess).toList();
 
   Future<void> _storeRecipeFavoriteInFireBase(String recipeId, bool isAdding,
       {DappliRecipe? recipe}) async {
@@ -148,8 +156,9 @@ class FavoriteProvider extends ChangeNotifier {
               recipeName: data['name'] as String? ?? 'N/A',
               recipeImage: data['image'] as String? ?? 'N/A',
               recipeCalories: (data['calories'] as num?)?.toInt() ?? 0,
-              recipeIngredients: data['ingredients'] as String? ?? 'N/A',
-              recipeProcess: data['process'] as String? ?? 'N/A',
+              recipeIngredients:
+                  data['ingredients'] is List? ? data['ingredients'] : [],
+              recipeProcess: data['process'] is List? ? data['process'] : [],
             ));
           } catch (e) {
             if (kDebugMode) {
@@ -168,7 +177,7 @@ class FavoriteProvider extends ChangeNotifier {
   }
 
   Future<void> toggleRecipeFavorite(String recipeId, String name, String image,
-      int calories, String ingredients, String process) async {
+      int calories, List<dynamic> ingredients, List<dynamic> process) async {
     final existingIndex = _favoriteRecipes
         .indexWhere((recipe) => recipe.favoriteRecipeIds == recipeId);
 
