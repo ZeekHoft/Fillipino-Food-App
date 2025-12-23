@@ -10,14 +10,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
-class SocialPost extends StatefulWidget {
-  const SocialPost({super.key});
+class SocialPostDialog extends StatefulWidget {
+  const SocialPostDialog({super.key});
 
   @override
-  State<SocialPost> createState() => _SocialPostState();
+  State<SocialPostDialog> createState() => _SocialPostDialogState();
 }
 
-class _SocialPostState extends State<SocialPost> {
+class _SocialPostDialogState extends State<SocialPostDialog> {
   final _formKey = GlobalKey<FormState>();
   // final _postPic = TextEditingController();
   final _postDescription = TextEditingController();

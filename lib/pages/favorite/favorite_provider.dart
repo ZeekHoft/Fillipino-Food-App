@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 class DappliRecipe {
   final String favoriteRecipeIds;
@@ -62,6 +61,9 @@ class FavoriteProvider extends ChangeNotifier {
   List<String> get recipeProcess =>
       _favoriteRecipes.map((r) => r.recipeProcess).toList();
 
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
   Future<void> _storeRecipeFavoriteInFireBase(String recipeId, bool isAdding,
       {DappliRecipe? recipe}) async {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -115,7 +117,7 @@ class FavoriteProvider extends ChangeNotifier {
 
   void loadRecipeFavorites() async {
     _favoriteRecipes.clear();
-
+    _isLoading = true;
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null || currentUser.email == null) {
       if (kDebugMode) {
@@ -155,6 +157,8 @@ class FavoriteProvider extends ChangeNotifier {
             if (kDebugMode) {
               print('Error parsing favorite document ${doc.id}: $e');
             }
+          } finally {
+            _isLoading = false;
           }
         }
       }
