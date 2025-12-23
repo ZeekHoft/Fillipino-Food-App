@@ -21,7 +21,7 @@ class _FavoritePageState extends State<FavoritePage>
   void initState() {
     super.initState();
     // This will trigger the loading of favorite IDs and then fetching their details from Firestore
-    Provider.of<FavoriteProvider>(context, listen: false).loadFavorites();
+    Provider.of<FavoriteProvider>(context, listen: false).loadRecipeFavorites();
     Provider.of<FavoriteSocialProvider>(context, listen: false)
         .loadSocialFavorites();
     _tabController = TabController(length: 2, vsync: this);
@@ -35,11 +35,12 @@ class _FavoritePageState extends State<FavoritePage>
 
   @override
   Widget build(BuildContext context) {
-    final recipeProvider = Provider.of<FavoriteProvider>(context);
+    final recipProvider = Provider.of<FavoriteProvider>(context);
     final socialProvider = Provider.of<FavoriteSocialProvider>(context);
 
     // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
-    final favoriteRecipeIds = recipeProvider.favoriteRecipeIds;
+    final favoriteRecipeIds = recipProvider.recipeFavoriteId;
+
     final socialPostFavorites = socialProvider.favoritePost;
 
     // This part of the code avoids having to encounter index errors by
@@ -47,7 +48,7 @@ class _FavoritePageState extends State<FavoritePage>
     final bool allFavoritesEmpty =
         favoriteRecipeIds.isEmpty && socialPostFavorites.isEmpty;
 
-    if (recipeProvider.isLoading || socialProvider.isLoading) {
+    if (recipProvider.isLoading || socialProvider.isLoading) {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -97,7 +98,7 @@ class _FavoritePageState extends State<FavoritePage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                FavoriteRecipesList(recipeProvider: recipeProvider),
+                FavoriteRecipesList(recipeProvider: recipProvider),
                 FavoritePostsList(socialProvider: socialProvider),
               ],
             ),
@@ -115,15 +116,15 @@ class FavoriteRecipesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final recipeNames = recipeProvider.recipeName;
-    final recipeImages = recipeProvider.recipeImage;
+    final recipeNames = recipeProvider.recipeNames;
+    final recipeImages = recipeProvider.recipeImages;
     final recipeCalories = recipeProvider.recipeCalories;
     final recipeProcesses = recipeProvider.recipeProcess;
-    final favoriteRecipeIds = recipeProvider.favoriteRecipeIds;
+    final favoriteRecipeIds = recipeProvider.recipeFavoriteId;
     final recipeIngredients = recipeProvider.recipeIngredients;
 
     return ListView.builder(
-      itemCount: recipeProvider.favoriteRecipeIds.length,
+      itemCount: favoriteRecipeIds.length,
       itemBuilder: (context, index) {
         return FavoriteItem(
           favName: recipeNames[index],

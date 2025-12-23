@@ -36,7 +36,6 @@ class _CameraScreenState extends State<CameraScreen> {
   late CameraController _controller;
   late Future<void> _initializeControllerFuture;
   bool _isLoading = false;
-  String? _capturedImagePath;
 
   @override
   void initState() {
@@ -60,7 +59,6 @@ class _CameraScreenState extends State<CameraScreen> {
       final image = await _controller.takePicture();
 
       setState(() {
-        _capturedImagePath = image.path;
         _isLoading = true;
       });
 
@@ -94,7 +92,7 @@ class _CameraScreenState extends State<CameraScreen> {
 
   Future<List<Recipe>> _getRecipesFromImage(String imagePath) async {
     // Replace with your OpenAI API key
-    final apiKey = dotenv.env["API_KEY_CHAT_GPT"]!;
+    final apiKey = dotenv.env["OPENAI_API_KEY"]!;
 
     final bytes = await File(imagePath).readAsBytes();
     final base64Image = base64Encode(bytes);
@@ -187,7 +185,7 @@ PREP TIME: [time]
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Filipino Recipe Finder'),
+        title: const Text('Filipino Recipe Finders'),
         centerTitle: true,
       ),
       body: Stack(

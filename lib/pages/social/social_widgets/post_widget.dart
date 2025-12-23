@@ -32,7 +32,6 @@ class _PostWidgetState extends State<PostWidget> {
     final provider = Provider.of<FavoriteSocialProvider>(context);
     final profileDataStoring = context.read<ProfileDataStoring>();
     final postId = widget.post['postID'];
-
     final ingredients = widget.post["ingredients"] as List<String>? ?? [];
     final processSteps = widget.post["processSteps"] as List<String>? ?? [];
     final calories = widget.post["calories"].toString();
@@ -44,6 +43,7 @@ class _PostWidgetState extends State<PostWidget> {
     final currentUserId = profileDataStoring.userId;
     final postUserId = widget.post["userId"];
     final isPostOwner = currentUserId != null && currentUserId == postUserId;
+
     // print(widget.post);
     return GestureDetector(
       onTap: () {

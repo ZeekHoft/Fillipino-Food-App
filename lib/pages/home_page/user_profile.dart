@@ -1,15 +1,45 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flilipino_food_app/themes/app_theme.dart';
 import 'package:flilipino_food_app/util/profile_data_storing.dart';
+import 'package:flilipino_food_app/util/social_data_storing.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 // Shows profile of user on top of home screen
-class UserProfile extends StatelessWidget {
+class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
+
+  @override
+  State<UserProfile> createState() => _UserProfileState();
+}
+
+class _UserProfileState extends State<UserProfile> {
+  int? numberOfPosts;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCountPosts();
+  }
+
+  Future<void> _getCountPosts() async {
+    final socialData = Provider.of<SocialDataStoring>(context, listen: false);
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if (currentUser != null) {
+      final count = await socialData.countUserPost(currentUser.uid);
+      // print(count);
+      if (mounted) {
+        setState(() {
+          numberOfPosts = count;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+
     //user watch for consistent chagnges such as names, allergies, dietary restriction etc... use read to only fetch the thing that is needed when something is finished
 
     final profileDataStoring = context.watch<ProfileDataStoring>();
@@ -70,11 +100,11 @@ class UserProfile extends StatelessWidget {
           ),
         ),
         _convertAllergies(allergies),
-        const IntrinsicHeight(
+        IntrinsicHeight(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              ProfileStat(count: 10, name: "posts"),
+              ProfileStat(count: numberOfPosts, name: "posts"),
               VerticalDivider(indent: 8, endIndent: 8),
               ProfileStat(count: 69, name: "followers"),
               VerticalDivider(indent: 8, endIndent: 8),
@@ -132,7 +162,7 @@ class AllergyChip extends StatelessWidget {
 class ProfileStat extends StatelessWidget {
   const ProfileStat({super.key, required this.count, required this.name});
 
-  final int count;
+  final int? count;
   final String name;
 
   @override

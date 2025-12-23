@@ -28,7 +28,10 @@ class ColoredInputNumber extends StatelessWidget {
         fillColor: Theme.of(context).colorScheme.secondaryContainer,
       ),
       keyboardType: TextInputType.number,
-      inputFormatters: [LengthLimitingTextInputFormatter(4)],
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly,
+        LengthLimitingTextInputFormatter(4)
+      ],
     );
   }
 }
