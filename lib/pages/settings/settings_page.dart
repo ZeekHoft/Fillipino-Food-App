@@ -28,17 +28,22 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         const SizedBox(height: 24),
         ListTile(
-            title: SettingsButtons(
-                // Reusable widget
-                pageRoute: EditProfileData(),
-                settingsIcon: const Icon(Icons.edit),
-                settingsText: const Text("Edit Profile"))),
+          title: const Text("Edit Profile"),
+          leading: const Icon(Icons.edit),
+          onTap: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => EditProfileData()));
+          },
+        ),
         ListTile(
-            title: SettingsButtons(
-                // Reusable widget
-                pageRoute: SocialPage(screenChnage: true),
-                settingsIcon: const Icon(Icons.history),
-                settingsText: const Text("History Posts"))),
+          title: const Text("History Posts"),
+          leading: const Icon(Icons.history),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SocialPage(screenChnage: true),
+            ));
+          },
+        ),
         const ListTile(
             leading: Icon(Icons.settings_outlined), title: Text("Settings")),
         const Divider(),
