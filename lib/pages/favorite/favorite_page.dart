@@ -56,7 +56,7 @@ class _FavoritePageState extends State<FavoritePage>
     final bool allFavoritesEmpty =
         favoriteRecipeIds.isEmpty && socialPostFavorites.isEmpty;
 
-    if (isLoadingRecipes || allFavoritesEmpty) {
+    if (recipProvider.isLoading || socialProvider.isLoading) {
       return const Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

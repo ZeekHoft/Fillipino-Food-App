@@ -49,6 +49,7 @@ class DappliRecipe {
 
 class FavoriteProvider extends ChangeNotifier {
   final List<DappliRecipe> _favoriteRecipes = [];
+  bool _isLoading = false;
 
   List<DappliRecipe> get favoriteRecipes => _favoriteRecipes;
 
@@ -65,6 +66,8 @@ class FavoriteProvider extends ChangeNotifier {
 
   List<List<dynamic>> get recipeProcess =>
       _favoriteRecipes.map((r) => r.recipeProcess).toList();
+
+  bool get isLoading => _isLoading;
 
   // List<String> get recipeIngredients =>
   //     _favoriteRecipes.map((r) => r.recipeIngredients).toList();
@@ -124,6 +127,7 @@ class FavoriteProvider extends ChangeNotifier {
 
   void loadRecipeFavorites() async {
     _favoriteRecipes.clear();
+    _isLoading = true;
 
     final currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser == null || currentUser.email == null) {
@@ -174,6 +178,7 @@ class FavoriteProvider extends ChangeNotifier {
       }
     } finally {
       notifyListeners();
+      _isLoading = false;
     }
   }
 
