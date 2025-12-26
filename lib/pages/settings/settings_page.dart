@@ -36,7 +36,7 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
         ListTile(
-          title: const Text("History Posts"),
+          title: const Text("Post History"),
           leading: const Icon(Icons.history),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
