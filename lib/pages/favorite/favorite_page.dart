@@ -130,6 +130,12 @@ class FavoriteRecipesList extends StatelessWidget {
     final favoriteRecipeIds = recipeProvider.recipeFavoriteId;
     final recipeIngredients = recipeProvider.recipeIngredients;
 
+    if (recipeNames.isEmpty) {
+      return Center(
+        child: Text("No saved recipes yet."),
+      );
+    }
+
     return ListView.builder(
       itemCount: favoriteRecipeIds.length,
       itemBuilder: (context, index) {
@@ -156,6 +162,12 @@ class FavoritePostsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (socialProvider.favoritePost.isEmpty) {
+      return Center(
+        child: Text("No saved posts yet."),
+      );
+    }
+
     return ListView.builder(
       itemCount: socialProvider.favoritePost.length,
       itemBuilder: (context, index) {
