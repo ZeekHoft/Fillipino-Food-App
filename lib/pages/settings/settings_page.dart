@@ -40,7 +40,7 @@ class _SettingsPageState extends State<SettingsPage> {
           leading: const Icon(Icons.history),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => SocialPage(screenChnage: true),
+              builder: (context) => SocialPage(showUserPosts: true),
             ));
           },
         ),
