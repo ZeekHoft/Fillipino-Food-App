@@ -21,12 +21,9 @@ class _SettingsPageState extends State<SettingsPage> {
     return ListView(
       children: [
         const SizedBox(height: 24),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child:
-              Text("Settings", style: Theme.of(context).textTheme.titleLarge),
-        ),
+        Image.asset('assets/dappli_logo.png', height: 180),
         const SizedBox(height: 24),
+        const Divider(),
         ListTile(
           title: const Text("Edit Profile"),
           leading: const Icon(Icons.edit),
