@@ -35,17 +35,17 @@ class _FavoritePageState extends State<FavoritePage>
 
   @override
   Widget build(BuildContext context) {
-    final recipProvider = Provider.of<FavoriteProvider>(context);
+    final recipeProvider = Provider.of<FavoriteProvider>(context);
     final socialProvider = Provider.of<FavoriteSocialProvider>(context);
 
     // Now, these lists are populated by the loadFavorites() method after fetching from Firestore
-    final recipeNames = recipProvider.recipeNames;
-    final favoriteRecipeIds = recipProvider.recipeFavoriteId;
+    final recipeNames = recipeProvider.recipeNames;
+    final favoriteRecipeIds = recipeProvider.recipeFavoriteId;
 
-    final recipeImages = recipProvider.recipeImages;
-    final recipeCalories = recipProvider.recipeCalories;
-    final List<dynamic> recipeIngredients = recipProvider.recipeIngredients;
-    final List<dynamic> recipeProcesses = recipProvider.recipeProcess;
+    final recipeImages = recipeProvider.recipeImages;
+    final recipeCalories = recipeProvider.recipeCalories;
+    final List<dynamic> recipeIngredients = recipeProvider.recipeIngredients;
+    final List<dynamic> recipeProcesses = recipeProvider.recipeProcess;
     // Get the list of IDs
     final socialPostFavorites = socialProvider.favoritePost;
 
@@ -56,7 +56,7 @@ class _FavoritePageState extends State<FavoritePage>
     final bool allFavoritesEmpty =
         favoriteRecipeIds.isEmpty && socialPostFavorites.isEmpty;
 
-    if (isLoadingRecipes || allFavoritesEmpty) {
+    if (recipeProvider.isLoading || socialProvider.isLoading) {
       return const Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -105,7 +105,7 @@ class _FavoritePageState extends State<FavoritePage>
             child: TabBarView(
               controller: _tabController,
               children: [
-                FavoriteRecipesList(recipeProvider: recipProvider),
+                FavoriteRecipesList(recipeProvider: recipeProvider),
                 FavoritePostsList(socialProvider: socialProvider),
               ],
             ),
@@ -129,6 +129,12 @@ class FavoriteRecipesList extends StatelessWidget {
     final recipeProcesses = recipeProvider.recipeProcess;
     final favoriteRecipeIds = recipeProvider.recipeFavoriteId;
     final recipeIngredients = recipeProvider.recipeIngredients;
+
+    if (recipeNames.isEmpty) {
+      return Center(
+        child: Text("No saved recipes yet."),
+      );
+    }
 
     return ListView.builder(
       itemCount: favoriteRecipeIds.length,
@@ -156,6 +162,12 @@ class FavoritePostsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (socialProvider.favoritePost.isEmpty) {
+      return Center(
+        child: Text("No saved posts yet."),
+      );
+    }
+
     return ListView.builder(
       itemCount: socialProvider.favoritePost.length,
       itemBuilder: (context, index) {

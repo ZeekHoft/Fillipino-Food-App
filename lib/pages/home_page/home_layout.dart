@@ -124,7 +124,7 @@ class _HomeLayoutState extends State<HomeLayout> {
       body: [
         const HomePage(),
         const SocialPage(
-          screenChnage: false,
+          showUserPosts: false,
         ),
         const FavoritePage(),
         const SettingsPage(),

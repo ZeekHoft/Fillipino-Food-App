@@ -21,24 +21,26 @@ class _SettingsPageState extends State<SettingsPage> {
     return ListView(
       children: [
         const SizedBox(height: 24),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child:
-              Text("Settings", style: Theme.of(context).textTheme.titleLarge),
-        ),
+        Image.asset('assets/dappli_logo.png', height: 180),
         const SizedBox(height: 24),
+        const Divider(),
         ListTile(
-            title: SettingsButtons(
-                // Reusable widget
-                pageRoute: EditProfileData(),
-                settingsIcon: const Icon(Icons.edit),
-                settingsText: const Text("Edit Profile"))),
+          title: const Text("Edit Profile"),
+          leading: const Icon(Icons.edit),
+          onTap: () {
+            Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => EditProfileData()));
+          },
+        ),
         ListTile(
-            title: SettingsButtons(
-                // Reusable widget
-                pageRoute: SocialPage(screenChnage: true),
-                settingsIcon: const Icon(Icons.history),
-                settingsText: const Text("History Posts"))),
+          title: const Text("Post History"),
+          leading: const Icon(Icons.history),
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => SocialPage(showUserPosts: true),
+            ));
+          },
+        ),
         const ListTile(
             leading: Icon(Icons.settings_outlined), title: Text("Settings")),
         const Divider(),
