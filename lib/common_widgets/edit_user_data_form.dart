@@ -12,8 +12,14 @@ class EditUserDataFormText extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-          hintText: hint,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
+        hintText: hint,
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.secondaryContainer,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
     );
   }
 }
@@ -29,8 +35,14 @@ class EditUserDataFormNumbers extends StatelessWidget {
     return TextFormField(
       controller: controller,
       decoration: InputDecoration(
-          hintText: hint,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16))),
+        hintText: hint,
+        filled: true,
+        fillColor: Theme.of(context).colorScheme.secondaryContainer,
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly,
