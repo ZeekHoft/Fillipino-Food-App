@@ -22,16 +22,7 @@ class _EditProfileDataState extends State<EditProfileData> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
-          titleSpacing: 10.0,
-          centerTitle: true,
-          leading: InkWell(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(
-              Icons.arrow_back_ios,
-            ),
-          ),
+          automaticallyImplyLeading: true,
         ),
         body: StreamBuilder(
           stream: FirebaseFirestore.instance
