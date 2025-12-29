@@ -237,18 +237,21 @@ class _UpdateFormState extends State<UpdateForm> {
 
   Widget _buildHeader(String title, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.only(left: 4, bottom: 12),
+      padding: const EdgeInsets.only(left: 8, bottom: 4),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppColors.blueTheme),
-          const SizedBox(width: 8),
+          Icon(
+            icon,
+            size: 21,
+            color: Theme.of(context).colorScheme.primaryFixedDim,
+          ),
+          const SizedBox(width: 4),
           Text(
             title.toUpperCase(),
             style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 13,
+              fontSize: 14,
               letterSpacing: 1.1,
-              color: AppColors.blueTheme,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],
