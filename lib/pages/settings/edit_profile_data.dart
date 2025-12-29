@@ -142,9 +142,9 @@ class _UpdateFormState extends State<UpdateForm> {
     return AbsorbPointer(
       absorbing: _isLoading,
       child: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             _buildHeader("Personal Identity", Icons.person_outline),
             _buildFormCard([
@@ -207,33 +207,28 @@ class _UpdateFormState extends State<UpdateForm> {
                 style: TextStyle(color: Colors.grey[600], fontSize: 12),
               ),
             ]),
-            const SizedBox(height: 40),
-            Center(
-              child: _isLoading
-                  ? const DappliProgressIndicator()
-                  : SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          foregroundColor: AppColors.blueTheme,
-                          elevation: 0,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                        ),
-                        onPressed: updateUserData,
-                        child: const Text(
-                          "SAVE CHANGES",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+            const SizedBox(height: 32),
+            _isLoading
+                ? const DappliProgressIndicator()
+                : ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
-            ),
-            const SizedBox(height: 20),
+                    onPressed: updateUserData,
+                    child: Text(
+                      "Save Changes",
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+            const SizedBox(height: 24),
           ],
         ),
       ),
