@@ -261,10 +261,13 @@ class _UpdateFormState extends State<UpdateForm> {
 
   Widget _buildFieldLabel(String label) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        label,
-        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+      padding: const EdgeInsets.only(bottom: 4, left: 8),
+      child: Opacity(
+        opacity: 0.8,
+        child: Text(
+          label,
+          style: const TextStyle(fontSize: 14),
+        ),
       ),
     );
   }
