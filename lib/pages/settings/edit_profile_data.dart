@@ -22,6 +22,7 @@ class _EditProfileDataState extends State<EditProfileData> {
     return Scaffold(
         appBar: AppBar(
           elevation: 0.0,
+          title: Text("Edit Profile"),
           automaticallyImplyLeading: true,
         ),
         body: StreamBuilder(
