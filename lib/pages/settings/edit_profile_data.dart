@@ -202,9 +202,12 @@ class _UpdateFormState extends State<UpdateForm> {
                 hint: 'Garlic, Peanuts, Shrimp...',
               ),
               const SizedBox(height: 8),
-              Text(
-                "This helps us flag recipes that might be unsafe for you.",
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  "This helps us flag recipes that might be unsafe for you.",
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                ),
               ),
             ]),
             const SizedBox(height: 32),
@@ -273,24 +276,18 @@ class _UpdateFormState extends State<UpdateForm> {
   }
 
   Widget _buildFormCard(List<Widget> children) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          )
-        ],
+    return Card(
+      color: Theme.of(context).colorScheme.surfaceContainerLowest,
+      elevation: 1.5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: children,
+        ),
       ),
     );
   }
