@@ -147,108 +147,103 @@ class _UpdateFormState extends State<UpdateForm> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      // Added to prevent overflow on keyboard popup
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        children: [
-          AbsorbPointer(
-            absorbing: _isLoading,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildHeader("Personal Identity", Icons.person_outline),
-                _buildFormCard([
-                  _buildFieldLabel("Username"),
-                  EditUserDataFormText(
-                    controller: userNameController,
-                    hint: 'Enter your new username',
-                  ),
-                ]),
-                const SizedBox(height: 24),
-                _buildHeader("Body Metrics", Icons.straighten),
-                _buildFormCard([
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildFieldLabel("Height (CM)"),
-                            EditUserDataFormNumbers(
-                              controller: heightController,
-                              hint: 'CM',
-                            ),
-                          ],
+    return AbsorbPointer(
+      absorbing: _isLoading,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader("Personal Identity", Icons.person_outline),
+            _buildFormCard([
+              _buildFieldLabel("Username"),
+              EditUserDataFormText(
+                controller: userNameController,
+                hint: 'Enter your new username',
+              ),
+            ]),
+            const SizedBox(height: 24),
+            _buildHeader("Body Metrics", Icons.straighten),
+            _buildFormCard([
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFieldLabel("Height (CM)"),
+                        EditUserDataFormNumbers(
+                          controller: heightController,
+                          hint: 'CM',
                         ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            _buildFieldLabel("Weight (KG)"),
-                            EditUserDataFormNumbers(
-                              controller: weightController,
-                              hint: 'KG',
-                            ),
-                          ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildFieldLabel("Weight (KG)"),
+                        EditUserDataFormNumbers(
+                          controller: weightController,
+                          hint: 'KG',
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 16),
-                  _buildFieldLabel("Daily Caloric Limit"),
-                  EditUserDataFormNumbers(
-                    controller: caloriesLimitController,
-                    hint: 'e.g. 2000',
-                  ),
-                ]),
-                const SizedBox(height: 24),
-                _buildHeader("Dietary Safety", Icons.no_food_outlined),
-                _buildFormCard([
-                  _buildFieldLabel("Allergies (Separate by comma)"),
-                  EditUserDataFormText(
-                    controller: dietaryRestrictionsController,
-                    hint: 'Garlic, Peanuts, Shrimp...',
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    "This helps us flag recipes that might be unsafe for you.",
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                  ),
-                ]),
-                const SizedBox(height: 40),
-                Center(
-                  child: _isLoading
-                      ? const DappliProgressIndicator()
-                      : SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
-                              foregroundColor: AppColors.blueTheme,
-                              elevation: 0,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                            ),
-                            onPressed: updateUserData,
-                            child: const Text(
-                              "SAVE CHANGES",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildFieldLabel("Daily Caloric Limit"),
+              EditUserDataFormNumbers(
+                controller: caloriesLimitController,
+                hint: 'e.g. 2000',
+              ),
+            ]),
+            const SizedBox(height: 24),
+            _buildHeader("Dietary Safety", Icons.no_food_outlined),
+            _buildFormCard([
+              _buildFieldLabel("Allergies (Separate by comma)"),
+              EditUserDataFormText(
+                controller: dietaryRestrictionsController,
+                hint: 'Garlic, Peanuts, Shrimp...',
+              ),
+              const SizedBox(height: 8),
+              Text(
+                "This helps us flag recipes that might be unsafe for you.",
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+              ),
+            ]),
+            const SizedBox(height: 40),
+            Center(
+              child: _isLoading
+                  ? const DappliProgressIndicator()
+                  : SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          foregroundColor: AppColors.blueTheme,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
                           ),
                         ),
-                ),
-                const SizedBox(height: 20),
-              ],
+                        onPressed: updateUserData,
+                        child: const Text(
+                          "SAVE CHANGES",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
             ),
-          )
-        ],
+            const SizedBox(height: 20),
+          ],
+        ),
       ),
     );
   }
