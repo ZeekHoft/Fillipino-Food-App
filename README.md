@@ -1,16 +1,19 @@
-# flilipino_food_app
+# Dappli
 
-A new Flutter project.
+A food and recipe sharing app featuring Filipino food.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+### AI Recipe Scanning
 
-A few resources to get you started if this is your first Flutter project:
+- Scan raw ingredients in your kitchen to discover suggested recipes
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Dietary Considerations
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Allergy and calorie intake warning for each recipe
+
+### Social Features
+
+- Follow and interact other users
+- Post your own recipes to share with other users
+- Browse the latest and trending recipes
