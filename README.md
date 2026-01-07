@@ -51,7 +51,7 @@ flutter pub get
 
 ### Running the project
 
-Use an Android simulator from Android Studio or from a manual install of devtools. You can also connect to a physical Android device with USB debugging turned on. Use the following command:
+Use an Android Emulator from [Android Studio](https://developer.android.com/studio) or from a manual install of [command line tools](https://developer.android.com/studio#command-line-tools-only). You can also connect to a physical Android device with USB debugging turned on. Use the following command:
 
 ```
 flutter run
