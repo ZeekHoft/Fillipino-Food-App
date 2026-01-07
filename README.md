@@ -56,3 +56,24 @@ Use an Android simulator from Android Studio or from a manual install of devtool
 ```
 flutter run
 ```
+
+## Project Structure
+
+```bash
+Fillipino-Food-App/lib/
+├── common_widgets/                 # widgets used throughout multiple files
+├── models/                         # model classes
+├── pages/                          # frontend layer
+|   ├── authentication_page/        # login and register pages
+|   └── camera/                     # camera scanning features
+|   └── favorite/                   # bookmarked and saved recipes page
+|   └── home_page/                  # homepage
+|   └── settings/                   # settings
+|   └── social/                     # social page
+├── services/                       # services
+├── themes/                         # themes
+|   └── app_theme.dart              # theme class with predefined colors
+├── util/                           # utilities
+├── firebase_options.dart           # Firebase config
+├── main.dart                       # app starts here
+```
