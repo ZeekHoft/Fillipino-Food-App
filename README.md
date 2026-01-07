@@ -77,3 +77,33 @@ Fillipino-Food-App/lib/
 ├── firebase_options.dart           # Firebase config
 ├── main.dart                       # app starts here
 ```
+
+## Developer Team
+
+<table>
+	<tbody>
+		<tr>
+      <td align="center">
+        <img src="https://github.com/ZeekHoft.png" width="100;" alt="lead dev"/>
+        <br />
+        <sub>Lead/Backend Programmer</sub>
+        <br />
+        <a href="https://github.com/ZeekHoft"><b>ZeekHoft</b></a>
+      </td>
+      <td align="center">
+        <img src="https://github.com/h1tmd.png" width="100;" alt="frontend dev"/>
+        <br />
+        <sub>Frontend Developer</sub>
+        <br />
+        <a href="https://github.com/h1tmd"><b>h1tmd</b></a>
+      </td>
+      <td align="center">
+        <img src="https://github.com/jvvpns.png" width="100;" alt="dev"/>
+        <br />
+        <sub>Developer</sub>
+        <br />
+        <a href="https://github.com/jvvpns"><b>jvvpns</b></a>
+      </td>
+		</tr>
+	<tbody>
+</table>
