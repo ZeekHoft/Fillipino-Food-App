@@ -1,6 +1,16 @@
+
 # Dappli 🍴
 
 A food and recipe mobile application featuring Filipino food. Built with [Flutter](https://flutter.dev/).
+## Preview
+
+![598668666_1890976981625711_194397787441846552_n](https://github.com/user-attachments/assets/06d057bd-b00a-4cd8-89b1-1c3709d0aaeb)
+![600844810_1509011416865829_8672939461427477350_n](https://github.com/user-attachments/assets/050d7a65-0bf3-4f01-8923-5173f55b68d7)
+![598564056_853143504244226_9154190133146219319_n](https://github.com/user-attachments/assets/d2a69a09-506c-4135-8eaa-033dc55ac156)
+![598750435_1107915377961607_897789440599227421_n](https://github.com/user-attachments/assets/5fc4d80d-cfd2-445f-97ae-c182ccdb6a73)
+![604674832_1248187640548595_842506550185983451_n](https://github.com/user-attachments/assets/1cd69b03-599b-4d04-aa8f-387f0c434048)
+![605492307_2626209011097544_6469497240837722954_n](https://github.com/user-attachments/assets/0579dd44-7744-4b3b-9766-e66bb45a5362)
+![601678311_1838376540139725_7785688088858220026_n](https://github.com/user-attachments/assets/fc21077c-9c15-4d3b-a225-59344b2c41a7)
 
 ## Features
 
